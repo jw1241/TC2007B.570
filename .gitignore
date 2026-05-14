@@ -1,0 +1,70 @@
+# =========================
+# Operating System Files
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# =========================
+# IDEs and Editors
+# =========================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# =========================
+# Node.js & Dependencias Globales
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# =========================
+# Variables de Entorno y Secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Back_end (Node.js / Express)
+# =========================
+Back_end/dist/
+Back_end/build/
+Back_end/logs/
+Back_end/*.log
+Back_end/coverage/
+Back_end/.nyc_output/
+Back_end/node_modules/
+
+# =========================
+# Front_end (Ionic / Angular)
+# =========================
+Front_end/dist/
+Front_end/www/
+Front_end/build/
+Front_end/out-tsc/
+Front_end/.angular/
+Front_end/.cache/
+Front_end/node_modules/
+
+# Plugins y configuraciones móviles (Capacitor/Cordova)
+Front_end/plugins/
+Front_end/platforms/
+Front_end/ios/App/public/
+Front_end/android/app/src/main/assets/public/
+
+# Testing Frontend
+Front_end/coverage/
+Front_end/e2e/*.js
+Front_end/e2e/*.map

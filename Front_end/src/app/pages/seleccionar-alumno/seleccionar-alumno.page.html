@@ -1,37 +1,48 @@
 <ion-content [fullscreen]="true" class="bg-background">
   <div class="bg-background text-on-background min-h-screen flex flex-col antialiased">
     <!-- TopAppBar -->
-    <header class="sticky top-0 w-full z-40 flex justify-between items-center px-[16px] md:px-[40px] bg-surface shadow-sm h-14 border-b border-outline-variant/20">
-      <div class="active:scale-95 cursor-pointer flex items-center justify-center min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-colors duration-200 rounded-full">
-        <img alt="Profile picture of the parent" class="w-8 h-8 rounded-full border border-outline-variant/50 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZ_3v5Il6BGq-o1m6EslKHxsUvOxKWa6tMV2Q9vAWEQZk19AH3BV6I7aEkEs5i5qU8UXiA0HAPLuxteVV0scz-6_ViQlIrIZO6FYJPhv1NGmExwm8BkUaXwi2Du6KDhnJAGE96EJlPHvDXOJzp9lLjm8XvE_84DqoyGc5KMk4-ruLLmQJT2Mq6hJu7UQpAbfQZ2imoZrYMlgzYuzriPqe20CRkSa-qt4deJ7b-xFTKcv5Y6eQdm8g9AmPX1O7HrAhnobBnEns-rLc"/>
+    <header
+      class="sticky top-0 w-full z-40 flex justify-between items-center px-[16px] md:px-[40px] bg-surface shadow-sm h-14 border-b border-outline-variant/20">
+      <div
+        class="active:scale-95 cursor-pointer flex items-center justify-center min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-colors duration-200 rounded-full">
+        <img alt="Profile picture of the parent"
+          class="w-8 h-8 rounded-full border border-outline-variant/50 object-cover"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZ_3v5Il6BGq-o1m6EslKHxsUvOxKWa6tMV2Q9vAWEQZk19AH3BV6I7aEkEs5i5qU8UXiA0HAPLuxteVV0scz-6_ViQlIrIZO6FYJPhv1NGmExwm8BkUaXwi2Du6KDhnJAGE96EJlPHvDXOJzp9lLjm8XvE_84DqoyGc5KMk4-ruLLmQJT2Mq6hJu7UQpAbfQZ2imoZrYMlgzYuzriPqe20CRkSa-qt4deJ7b-xFTKcv5Y6eQdm8g9AmPX1O7HrAhnobBnEns-rLc" />
       </div>
-      <div class="font-headline-md text-headline-md font-bold text-primary">EduParent</div>
-      <div class="active:scale-95 cursor-pointer flex items-center justify-center min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-colors duration-200 text-on-surface-variant rounded-full">
+      <div class="font-headline-md text-headline-md font-bold text-primary">Escuela Metropolitana "La Luz"</div>
+      <div
+        class="active:scale-95 cursor-pointer flex items-center justify-center min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-colors duration-200 text-on-surface-variant rounded-full">
         <span class="material-symbols-outlined">notifications</span>
       </div>
     </header>
 
     <!-- Main Content Canvas -->
-    <main class="flex-grow flex flex-col items-center justify-center px-4 md:px-10 py-12 md:py-20 w-full max-w-container-max mx-auto">
+    <main
+      class="flex-grow flex flex-col items-center justify-center px-4 md:px-10 py-12 md:py-20 w-full max-w-container-max mx-auto">
       <!-- Header Section -->
       <div class="text-center mb-12 max-w-2xl">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-surface-container-high text-primary mb-6 shadow-sm">
+        <div
+          class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-surface-container-high text-primary mb-6 shadow-sm">
           <span class="material-symbols-outlined text-[32px]">school</span>
         </div>
         <h1 class="font-display-lg text-display-lg text-primary mb-4">Bienvenido, Familia García</h1>
-        <p class="font-body-lg text-body-lg text-on-surface-variant">¿De quién te gustaría revisar la información hoy? Selecciona un perfil para continuar.</p>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">¿De quién te gustaría revisar la información hoy?
+          Selecciona un perfil para continuar.</p>
       </div>
 
       <!-- Student Selection Bento Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
         <!-- Student Card 1: Juan -->
-        <button (click)="onSelectStudent()" class="group relative flex flex-col bg-surface-container-lowest rounded-[24px] shadow-sm hover:shadow-md border border-outline-variant/30 hover:border-primary/40 transition-all duration-300 overflow-hidden text-left active:scale-[0.98]">
+        <button (click)="onSelectStudent()"
+          class="group relative flex flex-col bg-surface-container-lowest rounded-[24px] shadow-sm hover:shadow-md border border-outline-variant/30 hover:border-primary/40 transition-all duration-300 overflow-hidden text-left active:scale-[0.98]">
           <!-- Decorative Top Banner -->
           <div class="h-24 w-full bg-gradient-to-r from-primary-container to-surface-tint opacity-90"></div>
           <div class="px-6 pb-6 pt-0 relative flex flex-col flex-grow w-full">
             <!-- Avatar overlapping banner -->
-            <div class="w-20 h-20 rounded-full border-4 border-surface-container-lowest bg-surface-container-low shadow-sm -mt-10 mb-4 flex-shrink-0 overflow-hidden relative z-10">
-              <img alt="Foto de Juan" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaJMs2q8-rlypDJG-SdqRAFKF_An3102jUwIszZ4ThnN69YuqX3snPvm5YAWJalBnu62h5afwzkbHHRXwnwAbpERYKXtriTh7xLMCpqMr5gVJXUkRzlohpZxrBtT2Um7SJk5dyoBV9BAI_RcwHIioNbglVGNl1Shd5zje_6oa_uMp1GT5ik26lt2afbQKR4oqCDscpRteqqoAa1_1UsaTui0U31xOa_X_1L6uv8pC1uaxKFtq_q5ECXHEJSs1DBXoB9AQITSo0H04"/>
+            <div
+              class="w-20 h-20 rounded-full border-4 border-surface-container-lowest bg-surface-container-low shadow-sm -mt-10 mb-4 flex-shrink-0 overflow-hidden relative z-10">
+              <img alt="Foto de Juan" class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaJMs2q8-rlypDJG-SdqRAFKF_An3102jUwIszZ4ThnN69YuqX3snPvm5YAWJalBnu62h5afwzkbHHRXwnwAbpERYKXtriTh7xLMCpqMr5gVJXUkRzlohpZxrBtT2Um7SJk5dyoBV9BAI_RcwHIioNbglVGNl1Shd5zje_6oa_uMp1GT5ik26lt2afbQKR4oqCDscpRteqqoAa1_1UsaTui0U31xOa_X_1L6uv8pC1uaxKFtq_q5ECXHEJSs1DBXoB9AQITSo0H04" />
             </div>
             <h2 class="font-headline-md text-headline-md text-on-surface mb-1">Juan García</h2>
             <p class="font-body-md text-body-md text-on-surface-variant mb-4 flex items-center gap-2">
@@ -40,28 +51,34 @@
             </p>
             <!-- Status / Quick Info Chips -->
             <div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-outline-variant/20 w-full">
-              <span class="inline-flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface">
+              <span
+                class="inline-flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface">
                 <span class="w-2 h-2 rounded-full bg-secondary"></span> Activo
               </span>
-              <span class="inline-flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface">
+              <span
+                class="inline-flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface">
                 Grupo A
               </span>
             </div>
             <!-- Hover Action Indicator -->
-            <div class="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-primary">
+            <div
+              class="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-primary">
               <span class="material-symbols-outlined text-[28px]">arrow_forward</span>
             </div>
           </div>
         </button>
 
         <!-- Student Card 2: Ana -->
-        <button (click)="onSelectStudent()" class="group relative flex flex-col bg-surface-container-lowest rounded-[24px] shadow-sm hover:shadow-md border border-outline-variant/30 hover:border-primary/40 transition-all duration-300 overflow-hidden text-left active:scale-[0.98]">
+        <button (click)="onSelectStudent()"
+          class="group relative flex flex-col bg-surface-container-lowest rounded-[24px] shadow-sm hover:shadow-md border border-outline-variant/30 hover:border-primary/40 transition-all duration-300 overflow-hidden text-left active:scale-[0.98]">
           <!-- Decorative Top Banner -->
           <div class="h-24 w-full bg-gradient-to-r from-surface-tint to-primary-container opacity-90"></div>
           <div class="px-6 pb-6 pt-0 relative flex flex-col flex-grow w-full">
             <!-- Avatar overlapping banner -->
-            <div class="w-20 h-20 rounded-full border-4 border-surface-container-lowest bg-surface-container-low shadow-sm -mt-10 mb-4 flex-shrink-0 overflow-hidden relative z-10">
-              <img alt="Foto de Ana" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSOwIYKUD840NQq3Mg6tZFtYVnlspuKCz9hZYUKpgpEMnkQ9cXvtm5VZFNfvVmeNsgmLs1vhBOdBn7i-bXL11I2QYVoGOVTVWP0O-6VVPGoMypWaVkqyMVeIdqFuu3QwdawnfPIDvCfF5zbZZqkxPpzULXBhHZg1RxBe6zwE_HMlNoa1FkBD3kXKhlK0pFXbjjR5yZTjbI_1Wu1yeVjsnxTU0mgE9a5TL8cQs6f-dU9cJplCVFPaGTRRZvbUyd6_2SluRePhVzIsA"/>
+            <div
+              class="w-20 h-20 rounded-full border-4 border-surface-container-lowest bg-surface-container-low shadow-sm -mt-10 mb-4 flex-shrink-0 overflow-hidden relative z-10">
+              <img alt="Foto de Ana" class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSOwIYKUD840NQq3Mg6tZFtYVnlspuKCz9hZYUKpgpEMnkQ9cXvtm5VZFNfvVmeNsgmLs1vhBOdBn7i-bXL11I2QYVoGOVTVWP0O-6VVPGoMypWaVkqyMVeIdqFuu3QwdawnfPIDvCfF5zbZZqkxPpzULXBhHZg1RxBe6zwE_HMlNoa1FkBD3kXKhlK0pFXbjjR5yZTjbI_1Wu1yeVjsnxTU0mgE9a5TL8cQs6f-dU9cJplCVFPaGTRRZvbUyd6_2SluRePhVzIsA" />
             </div>
             <h2 class="font-headline-md text-headline-md text-on-surface mb-1">Ana García</h2>
             <p class="font-body-md text-body-md text-on-surface-variant mb-4 flex items-center gap-2">
@@ -70,27 +87,35 @@
             </p>
             <!-- Status / Quick Info Chips -->
             <div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-outline-variant/20 w-full">
-              <span class="inline-flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface">
+              <span
+                class="inline-flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface">
                 <span class="w-2 h-2 rounded-full bg-secondary"></span> Activo
               </span>
-              <span class="inline-flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface">
+              <span
+                class="inline-flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-lg font-label-md text-label-md text-on-surface">
                 Grupo B
               </span>
             </div>
             <!-- Hover Action Indicator -->
-            <div class="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-primary">
+            <div
+              class="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-primary">
               <span class="material-symbols-outlined text-[28px]">arrow_forward</span>
             </div>
           </div>
         </button>
 
         <!-- Add Another Student Card (Ghost / Dash style) -->
-        <button class="group flex flex-col items-center justify-center bg-transparent border-2 border-dashed border-outline-variant rounded-[24px] hover:border-primary hover:bg-surface-container-lowest transition-all duration-300 text-center p-8 min-h-[300px] active:scale-[0.98]">
-          <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:bg-primary-container group-hover:text-primary transition-colors mb-4">
+        <button
+          class="group flex flex-col items-center justify-center bg-transparent border-2 border-dashed border-outline-variant rounded-[24px] hover:border-primary hover:bg-surface-container-lowest transition-all duration-300 text-center p-8 min-h-[300px] active:scale-[0.98]">
+          <div
+            class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:bg-primary-container group-hover:text-primary transition-colors mb-4">
             <span class="material-symbols-outlined text-[32px]">add</span>
           </div>
-          <h3 class="font-headline-md text-headline-md text-on-surface-variant group-hover:text-primary transition-colors mb-2">Vincular otro alumno</h3>
-          <p class="font-body-md text-body-md text-on-surface-variant">Ingresa el código de vinculación provisto por la institución.</p>
+          <h3
+            class="font-headline-md text-headline-md text-on-surface-variant group-hover:text-primary transition-colors mb-2">
+            Vincular otro alumno</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Ingresa el código de vinculación provisto por la
+            institución.</p>
         </button>
       </div>
     </main>

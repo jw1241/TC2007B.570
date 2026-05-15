@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 
-<html lang="es"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>EduParent - Mensajes</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Escuela Metropolitana "La Luz" - Mensajes</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
         .material-symbols-outlined {
             font-family: 'Material Symbols Outlined';
             font-weight: normal;
@@ -22,10 +29,11 @@
             word-wrap: normal;
             direction: ltr;
             -webkit-font-feature-settings: 'liga';
+            font-feature-settings: 'liga';
             -webkit-font-smoothing: antialiased;
         }
     </style>
-<script id="tailwind-config">
+    <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -116,136 +124,184 @@
             }
         }
     </script>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
 <body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen flex flex-col antialiased">
-<!-- TopAppBar -->
-<header class="sticky top-0 w-full z-40 flex justify-between items-center px-margin-mobile md:px-margin-desktop bg-surface dark:bg-surface-dim shadow-sm h-14">
-<div class="flex items-center gap-4">
-<div class="h-8 w-8 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant flex-shrink-0 cursor-pointer active:scale-95 transition-transform">
-<img alt="Profile" class="h-full w-full object-cover" data-alt="A professional headshot of an adult woman acting as a parent avatar in a modern educational app. She has a warm, approachable smile, well-lit with soft, natural light emphasizing trust and reliability. The background is a clean, neutral out-of-focus office setting, aligning with a corporate-modern aesthetic with navy and white undertones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuddUkdgLoojWg_KlbJjm4fcNV1bJmdsnXrndrm_0zOMh5FkAu3dJ5UW5NjBriE6VsRugpYAoJNP_rJepuhDrf_JelXM3do88hdqNLq36RxUMv2LYKNBE1Zv0t0kAvawb3zCeXMyOANfO2kVfW5vlks3gvivCfNkJR-AfGMFxK_aBfVdI-b6jqDjC5_B-Wyjze8XQcxckQojq3I_BtJcUCTeOCASq5-S6ZS-B8sS6-qbWzyGX9QE3dQmAWQ9TNg-RurLQkHSUcxRo"/>
-</div>
-<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim tracking-tight">EduParent</h1>
-</div>
-<!-- Desktop Nav Placeholder (Hidden on Mobile) -->
-<nav class="hidden md:flex gap-8 items-center">
-<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Inicio</a>
-<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Boletas</a>
-<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1" href="#">Mensajes</a>
-</nav>
-<button class="text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200 active:scale-95 cursor-pointer flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full">
-<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-</button>
-</header>
-<!-- Main Content Canvas -->
-<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-6 pb-24 md:pb-12">
-<div class="flex flex-col gap-6 max-w-3xl mx-auto w-full">
-<!-- Header Section -->
-<div class="flex flex-col gap-4">
-<h2 class="font-headline-md text-headline-md text-primary">Bandeja de entrada</h2>
-<!-- Search Bar -->
-<div class="relative w-full">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
-<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-3 pl-12 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" placeholder="Buscar docentes o materias..." type="text"/>
-</div>
-<!-- Filters -->
-<div class="flex gap-2 mt-2 overflow-x-auto pb-2 scrollbar-hide">
-<button class="px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md whitespace-nowrap shadow-sm">Todos</button>
-<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low transition-colors whitespace-nowrap">No leídos (1)</button>
-<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low transition-colors whitespace-nowrap">Tutoría</button>
-</div>
-</div>
-<!-- Messages List (Bento-inspired floating cards) -->
-<div class="flex flex-col gap-3">
-<!-- Chat Card 1 (Unread) -->
-<div class="group relative bg-surface-container-lowest rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:-translate-y-[1px] hover:shadow-[0_4px_16px_rgba(0,32,70,0.06)] transition-all border border-outline-variant border-l-4 border-l-primary">
-<div class="relative">
-<div class="h-14 w-14 rounded-full overflow-hidden bg-surface-container-high border-2 border-surface flex-shrink-0">
-<img alt="Prof. María López" class="h-full w-full object-cover" data-alt="A professional portrait of a female teacher, Prof. María López, wearing glasses and a smart-casual blazer. The setting is a brightly lit, modern classroom or office, conveying authority and approachability. The image uses a clean, high-key lighting style typical of premium corporate educational platforms, with subtle hints of deep navy in her attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5cVdLKkLXDS7QjgKXeVjdsfV-IbPD8tOBWEXbtJCryyVxYR19DA8mssebQtDFPI54vVnsLF02w0K0oPep_PAc8VfHSpnA1OOCaoF21c-bNvsk0mKrkBfVFNDHsdlUI8CnNEMx6v1SkJsFYs-90jtLRQESUuy8Blj91nTcMNPnG1edpqWuVpt7qE-5qOvUGB8c5Ys4QOUe9MxgFRlWAPNFryXFFQkr7LRJTeTmHYPkP0rVQUve_99XKpnxOH9bCGtY8qbkBdjmYag"/>
-</div>
-<!-- Status Dot (Offline/Away implicitly, no dot) -->
-</div>
-<div class="flex-grow min-w-0">
-<div class="flex justify-between items-start mb-0.5">
-<h3 class="font-label-md text-label-md text-on-surface truncate pr-2">Prof. María López</h3>
-<span class="font-caption text-caption text-primary whitespace-nowrap font-bold">10:30 AM</span>
-</div>
-<p class="font-caption text-caption text-primary mb-1">Matemáticas Avanzadas</p>
-<p class="font-body-md text-body-md text-on-surface font-semibold truncate">Re: Dudas sobre la guía de ejercicios del tema 4. Necesitamos revisar...</p>
-</div>
-<div class="flex flex-col items-end justify-center gap-2 flex-shrink-0">
-<div class="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
-<span class="font-caption text-caption text-on-primary font-bold">1</span>
-</div>
-</div>
-</div>
-<!-- Chat Card 2 (Read, Online) -->
-<div class="group relative bg-surface-container-lowest rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:-translate-y-[1px] hover:shadow-[0_4px_16px_rgba(0,32,70,0.06)] transition-all border border-outline-variant/50">
-<div class="relative">
-<div class="h-14 w-14 rounded-full overflow-hidden bg-surface-container-high flex-shrink-0">
-<img alt="Prof. Carlos Ruiz" class="h-full w-full object-cover" data-alt="A confident, professional headshot of a male teacher, Prof. Carlos Ruiz, in a crisp blue shirt. He is set against a luminous, blurred modern architectural background. The overall tone is academic, trustworthy, and clean, perfectly matching a premium digital education portal's light-mode aesthetic with cool color temperatures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALFgaLgYy-41v7rliQb7AFFWvpve7XajNuuLMzulymeVnIX6hErf06wGmr0ISfW-E7im7VSYibKv9sfjRGtFGrhdy0jVy3MRGpGQl8w5KEwo7MApiMhp03nIJn4lQqVZZiDV4o4tV8jVPTRk_wkXiKDoMF844a_RJ5lFC24w7i-m663Tu47-r6CJiMRLbMJCoYxxN8_61XdX0RJEe168ucp_EoBY7rOVKaF1A_3aow3IFHHeXHjhkfR44_byZqFQl0pznEGsHxCM0"/>
-</div>
-<!-- Active Dot -->
-<div class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-secondary-fixed border-2 border-surface-container-lowest"></div>
-</div>
-<div class="flex-grow min-w-0">
-<div class="flex justify-between items-start mb-0.5">
-<h3 class="font-label-md text-label-md text-on-surface truncate pr-2">Prof. Carlos Ruiz</h3>
-<span class="font-caption text-caption text-on-surface-variant whitespace-nowrap">Ayer</span>
-</div>
-<p class="font-caption text-caption text-on-surface-variant mb-1">Historia Universal</p>
-<p class="font-body-md text-body-md text-on-surface-variant truncate">El proyecto final ha sido evaluado con éxito, la calificación ya está...</p>
-</div>
-</div>
-<!-- Chat Card 3 (Read, Online) -->
-<div class="group relative bg-surface-container-lowest rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:-translate-y-[1px] hover:shadow-[0_4px_16px_rgba(0,32,70,0.06)] transition-all border border-outline-variant/50">
-<div class="relative">
-<div class="h-14 w-14 rounded-full overflow-hidden bg-surface-container-high flex-shrink-0">
-<img alt="Prof. Elena García" class="h-full w-full object-cover" data-alt="A warm, engaging portrait of a female teacher, Prof. Elena García, holding a tablet in a well-lit library setting. The image communicates knowledge and digital readiness. The color palette focuses on whites, soft grays, and natural wood tones, maintaining the corporate-modern, comfortable density standard of the application framework." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyqYybV0xeve4pUN24yALG8kubn1MRSCbDyHWLoMMck8Z74CxIKcjXcZaPCqwtFQDkbPWgH1hV9L3hWWndNn8TpNi-YOzRsIH4EJbKR0eg2lukap-RZyTILEb1v0I-MHaTxH29woXc0IGNq5j011oEb9R6p5tSWwo82gFIns6XgLxQp_G-G_CLn9-5evVtLjJQuompPciqYwHqLBU8r1CHrlf9DejBzp3FlRY5_bV0H2b4Ma7cjyODr5B3AaYTroh53QQwWCQ2fsw"/>
-</div>
-<!-- Active Dot -->
-<div class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-secondary-fixed border-2 border-surface-container-lowest"></div>
-</div>
-<div class="flex-grow min-w-0">
-<div class="flex justify-between items-start mb-0.5">
-<h3 class="font-label-md text-label-md text-on-surface truncate pr-2">Prof. Elena García</h3>
-<span class="font-caption text-caption text-on-surface-variant whitespace-nowrap">Mar, 12 Oct</span>
-</div>
-<p class="font-caption text-caption text-on-surface-variant mb-1">Literatura y Redacción</p>
-<p class="font-body-md text-body-md text-on-surface-variant truncate">Gracias por confirmar la asistencia a la reunión de padres de familia.</p>
-</div>
-</div>
-</div>
-</div>
-</main>
-<!-- BottomNavBar (Mobile Only Pivot) -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface dark:bg-surface-dim h-16 shadow-[0_-4px_16px_rgba(0,0,0,0.03)] border-t border-outline-variant/30">
-<!-- Inactive -->
-<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant min-h-[44px] min-w-[44px] transition-transform active:scale-90 hover:bg-surface-container-low rounded-xl px-2 w-16">
-<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="home">home</span>
-<span class="font-label-md text-[10px] leading-[12px] truncate">Inicio</span>
-</button>
-<!-- Inactive -->
-<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant min-h-[44px] min-w-[44px] transition-transform active:scale-90 hover:bg-surface-container-low rounded-xl px-2 w-16">
-<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="description">description</span>
-<span class="font-label-md text-[10px] leading-[12px] truncate">Boletas</span>
-</button>
-<!-- ACTIVE -->
-<button class="flex flex-col items-center justify-center text-primary dark:text-secondary-fixed font-bold bg-surface-container dark:bg-surface-container-highest rounded-xl px-2 min-h-[44px] min-w-[44px] transition-transform active:scale-90 w-16 py-1">
-<div class="relative">
-<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="mail" style="font-variation-settings: 'FILL' 1;">mail</span>
-<span class="absolute -top-1 -right-1 h-3 w-3 bg-error rounded-full border-2 border-surface-container"></span>
-</div>
-<span class="font-label-md text-[10px] leading-[12px] truncate">Mensajes</span>
-</button>
-<!-- Inactive -->
-<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant min-h-[44px] min-w-[44px] transition-transform active:scale-90 hover:bg-surface-container-low rounded-xl px-2 w-16">
-<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="person">person</span>
-<span class="font-label-md text-[10px] leading-[12px] truncate">Perfil</span>
-</button>
-</nav>
-</body></html>
+    <!-- TopAppBar -->
+    <header
+        class="sticky top-0 w-full z-40 flex justify-between items-center px-margin-mobile md:px-margin-desktop bg-surface dark:bg-surface-dim shadow-sm h-14">
+        <div class="flex items-center gap-4">
+            <div
+                class="h-8 w-8 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant flex-shrink-0 cursor-pointer active:scale-95 transition-transform">
+                <img alt="Profile" class="h-full w-full object-cover"
+                    data-alt="A professional headshot of an adult woman acting as a parent avatar in a modern educational app. She has a warm, approachable smile, well-lit with soft, natural light emphasizing trust and reliability. The background is a clean, neutral out-of-focus office setting, aligning with a corporate-modern aesthetic with navy and white undertones."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuddUkdgLoojWg_KlbJjm4fcNV1bJmdsnXrndrm_0zOMh5FkAu3dJ5UW5NjBriE6VsRugpYAoJNP_rJepuhDrf_JelXM3do88hdqNLq36RxUMv2LYKNBE1Zv0t0kAvawb3zCeXMyOANfO2kVfW5vlks3gvivCfNkJR-AfGMFxK_aBfVdI-b6jqDjC5_B-Wyjze8XQcxckQojq3I_BtJcUCTeOCASq5-S6ZS-B8sS6-qbWzyGX9QE3dQmAWQ9TNg-RurLQkHSUcxRo" />
+            </div>
+            <h1
+                class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim tracking-tight">
+                Escuela Metropolitana "La Luz"</h1>
+        </div>
+        <!-- Desktop Nav Placeholder (Hidden on Mobile) -->
+        <nav class="hidden md:flex gap-8 items-center">
+            <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
+                href="#">Inicio</a>
+            <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
+                href="#">Boletas</a>
+            <a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1" href="#">Mensajes</a>
+        </nav>
+        <button
+            class="text-on-surface-variant hover:bg-surface-container-low transition-colors duration-200 active:scale-95 cursor-pointer flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full">
+            <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+        </button>
+    </header>
+    <!-- Main Content Canvas -->
+    <main
+        class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-6 pb-24 md:pb-12">
+        <div class="flex flex-col gap-6 max-w-3xl mx-auto w-full">
+            <!-- Header Section -->
+            <div class="flex flex-col gap-4">
+                <h2 class="font-headline-md text-headline-md text-primary">Bandeja de entrada</h2>
+                <!-- Search Bar -->
+                <div class="relative w-full">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline"
+                        data-icon="search">search</span>
+                    <input
+                        class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-3 pl-12 pr-4 font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm"
+                        placeholder="Buscar docentes o materias..." type="text" />
+                </div>
+                <!-- Filters -->
+                <div class="flex gap-2 mt-2 overflow-x-auto pb-2 scrollbar-hide">
+                    <button
+                        class="px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md whitespace-nowrap shadow-sm">Todos</button>
+                    <button
+                        class="px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low transition-colors whitespace-nowrap">No
+                        leídos (1)</button>
+                    <button
+                        class="px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-low transition-colors whitespace-nowrap">Tutoría</button>
+                </div>
+            </div>
+            <!-- Messages List (Bento-inspired floating cards) -->
+            <div class="flex flex-col gap-3">
+                <!-- Chat Card 1 (Unread) -->
+                <div
+                    class="group relative bg-surface-container-lowest rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:-translate-y-[1px] hover:shadow-[0_4px_16px_rgba(0,32,70,0.06)] transition-all border border-outline-variant border-l-4 border-l-primary">
+                    <div class="relative">
+                        <div
+                            class="h-14 w-14 rounded-full overflow-hidden bg-surface-container-high border-2 border-surface flex-shrink-0">
+                            <img alt="Prof. María López" class="h-full w-full object-cover"
+                                data-alt="A professional portrait of a female teacher, Prof. María López, wearing glasses and a smart-casual blazer. The setting is a brightly lit, modern classroom or office, conveying authority and approachability. The image uses a clean, high-key lighting style typical of premium corporate educational platforms, with subtle hints of deep navy in her attire."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5cVdLKkLXDS7QjgKXeVjdsfV-IbPD8tOBWEXbtJCryyVxYR19DA8mssebQtDFPI54vVnsLF02w0K0oPep_PAc8VfHSpnA1OOCaoF21c-bNvsk0mKrkBfVFNDHsdlUI8CnNEMx6v1SkJsFYs-90jtLRQESUuy8Blj91nTcMNPnG1edpqWuVpt7qE-5qOvUGB8c5Ys4QOUe9MxgFRlWAPNFryXFFQkr7LRJTeTmHYPkP0rVQUve_99XKpnxOH9bCGtY8qbkBdjmYag" />
+                        </div>
+                        <!-- Status Dot (Offline/Away implicitly, no dot) -->
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <div class="flex justify-between items-start mb-0.5">
+                            <h3 class="font-label-md text-label-md text-on-surface truncate pr-2">Prof. María López</h3>
+                            <span class="font-caption text-caption text-primary whitespace-nowrap font-bold">10:30
+                                AM</span>
+                        </div>
+                        <p class="font-caption text-caption text-primary mb-1">Matemáticas Avanzadas</p>
+                        <p class="font-body-md text-body-md text-on-surface font-semibold truncate">Re: Dudas sobre la
+                            guía de ejercicios del tema 4. Necesitamos revisar...</p>
+                    </div>
+                    <div class="flex flex-col items-end justify-center gap-2 flex-shrink-0">
+                        <div class="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
+                            <span class="font-caption text-caption text-on-primary font-bold">1</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Chat Card 2 (Read, Online) -->
+                <div
+                    class="group relative bg-surface-container-lowest rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:-translate-y-[1px] hover:shadow-[0_4px_16px_rgba(0,32,70,0.06)] transition-all border border-outline-variant/50">
+                    <div class="relative">
+                        <div class="h-14 w-14 rounded-full overflow-hidden bg-surface-container-high flex-shrink-0">
+                            <img alt="Prof. Carlos Ruiz" class="h-full w-full object-cover"
+                                data-alt="A confident, professional headshot of a male teacher, Prof. Carlos Ruiz, in a crisp blue shirt. He is set against a luminous, blurred modern architectural background. The overall tone is academic, trustworthy, and clean, perfectly matching a premium digital education portal's light-mode aesthetic with cool color temperatures."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuALFgaLgYy-41v7rliQb7AFFWvpve7XajNuuLMzulymeVnIX6hErf06wGmr0ISfW-E7im7VSYibKv9sfjRGtFGrhdy0jVy3MRGpGQl8w5KEwo7MApiMhp03nIJn4lQqVZZiDV4o4tV8jVPTRk_wkXiKDoMF844a_RJ5lFC24w7i-m663Tu47-r6CJiMRLbMJCoYxxN8_61XdX0RJEe168ucp_EoBY7rOVKaF1A_3aow3IFHHeXHjhkfR44_byZqFQl0pznEGsHxCM0" />
+                        </div>
+                        <!-- Active Dot -->
+                        <div
+                            class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-secondary-fixed border-2 border-surface-container-lowest">
+                        </div>
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <div class="flex justify-between items-start mb-0.5">
+                            <h3 class="font-label-md text-label-md text-on-surface truncate pr-2">Prof. Carlos Ruiz</h3>
+                            <span
+                                class="font-caption text-caption text-on-surface-variant whitespace-nowrap">Ayer</span>
+                        </div>
+                        <p class="font-caption text-caption text-on-surface-variant mb-1">Historia Universal</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant truncate">El proyecto final ha sido
+                            evaluado con éxito, la calificación ya está...</p>
+                    </div>
+                </div>
+                <!-- Chat Card 3 (Read, Online) -->
+                <div
+                    class="group relative bg-surface-container-lowest rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:-translate-y-[1px] hover:shadow-[0_4px_16px_rgba(0,32,70,0.06)] transition-all border border-outline-variant/50">
+                    <div class="relative">
+                        <div class="h-14 w-14 rounded-full overflow-hidden bg-surface-container-high flex-shrink-0">
+                            <img alt="Prof. Elena García" class="h-full w-full object-cover"
+                                data-alt="A warm, engaging portrait of a female teacher, Prof. Elena García, holding a tablet in a well-lit library setting. The image communicates knowledge and digital readiness. The color palette focuses on whites, soft grays, and natural wood tones, maintaining the corporate-modern, comfortable density standard of the application framework."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyqYybV0xeve4pUN24yALG8kubn1MRSCbDyHWLoMMck8Z74CxIKcjXcZaPCqwtFQDkbPWgH1hV9L3hWWndNn8TpNi-YOzRsIH4EJbKR0eg2lukap-RZyTILEb1v0I-MHaTxH29woXc0IGNq5j011oEb9R6p5tSWwo82gFIns6XgLxQp_G-G_CLn9-5evVtLjJQuompPciqYwHqLBU8r1CHrlf9DejBzp3FlRY5_bV0H2b4Ma7cjyODr5B3AaYTroh53QQwWCQ2fsw" />
+                        </div>
+                        <!-- Active Dot -->
+                        <div
+                            class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-secondary-fixed border-2 border-surface-container-lowest">
+                        </div>
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <div class="flex justify-between items-start mb-0.5">
+                            <h3 class="font-label-md text-label-md text-on-surface truncate pr-2">Prof. Elena García
+                            </h3>
+                            <span class="font-caption text-caption text-on-surface-variant whitespace-nowrap">Mar, 12
+                                Oct</span>
+                        </div>
+                        <p class="font-caption text-caption text-on-surface-variant mb-1">Literatura y Redacción</p>
+                        <p class="font-body-md text-body-md text-on-surface-variant truncate">Gracias por confirmar la
+                            asistencia a la reunión de padres de familia.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- BottomNavBar (Mobile Only Pivot) -->
+    <nav
+        class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface dark:bg-surface-dim h-16 shadow-[0_-4px_16px_rgba(0,0,0,0.03)] border-t border-outline-variant/30">
+        <!-- Inactive -->
+        <button
+            class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant min-h-[44px] min-w-[44px] transition-transform active:scale-90 hover:bg-surface-container-low rounded-xl px-2 w-16">
+            <span class="material-symbols-outlined mb-1 text-[24px]" data-icon="home">home</span>
+            <span class="font-label-md text-[10px] leading-[12px] truncate">Inicio</span>
+        </button>
+        <!-- Inactive -->
+        <button
+            class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant min-h-[44px] min-w-[44px] transition-transform active:scale-90 hover:bg-surface-container-low rounded-xl px-2 w-16">
+            <span class="material-symbols-outlined mb-1 text-[24px]" data-icon="description">description</span>
+            <span class="font-label-md text-[10px] leading-[12px] truncate">Boletas</span>
+        </button>
+        <!-- ACTIVE -->
+        <button
+            class="flex flex-col items-center justify-center text-primary dark:text-secondary-fixed font-bold bg-surface-container dark:bg-surface-container-highest rounded-xl px-2 min-h-[44px] min-w-[44px] transition-transform active:scale-90 w-16 py-1">
+            <div class="relative">
+                <span class="material-symbols-outlined mb-1 text-[24px]" data-icon="mail"
+                    style="font-variation-settings: 'FILL' 1;">mail</span>
+                <span
+                    class="absolute -top-1 -right-1 h-3 w-3 bg-error rounded-full border-2 border-surface-container"></span>
+            </div>
+            <span class="font-label-md text-[10px] leading-[12px] truncate">Mensajes</span>
+        </button>
+        <!-- Inactive -->
+        <button
+            class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant min-h-[44px] min-w-[44px] transition-transform active:scale-90 hover:bg-surface-container-low rounded-xl px-2 w-16">
+            <span class="material-symbols-outlined mb-1 text-[24px]" data-icon="person">person</span>
+            <span class="font-label-md text-[10px] leading-[12px] truncate">Perfil</span>
+        </button>
+    </nav>
+</body>
+
+</html>

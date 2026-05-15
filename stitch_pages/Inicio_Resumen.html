@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 
-<html lang="es"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>EduParent - Resumen del Alumno</title>
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<!-- Material Symbols -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Escuela Metropolitana "La Luz" - Resumen del Alumno</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
     </style>
-<!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- Tailwind Configuration -->
-<script id="tailwind-config">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Configuration -->
+    <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -110,132 +117,158 @@
             }
         }
     </script>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
 <body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
-<!-- TopAppBar -->
-<header class="sticky top-0 w-full z-40 flex justify-between items-center px-margin-mobile bg-surface shadow-sm h-14">
-<!-- Leading: Avatar -->
-<div class="flex items-center justify-center min-h-[44px] min-w-[44px] cursor-pointer hover:bg-surface-container-low transition-colors duration-200 active:scale-95 rounded-full">
-<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant">
-<img alt="Profile picture of the parent" class="w-full h-full object-cover" data-alt="A professional headshot of a smiling parent in a bright, modern setting. The lighting is soft and even, highlighting a trustworthy and approachable expression, fitting a clean, corporate light-mode application aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD88H2OgKfVNe4CL662dXVoxuY5cHPqzhiwUTEeDQ6Ll_Cxqmg6IBxZnzFuf63NKao_54T11LoUNJhe2eFNHd3hpZAHPVkWSqVLyWHuSwia7X9_V_q528hXze7U99ZKg0xyFGwZgVUyJr7hanu-cf0ZaLOA9r-DRR3mdhTpT6w5DCX51sgOkigaXIZZSZXja9ZKk7f2KBzv16_mEIkaDJjXDhu3qr3wLlTHPE-7ta0G1M3Xy1E89yeW4-3RpiiDVtF3uCWMoHm52rk"/>
-</div>
-</div>
-<!-- Headline -->
-<h1 class="font-headline-sm text-headline-sm mobile:font-headline-lg-mobile mobile:text-headline-lg-mobile font-bold text-primary">EduParent</h1>
-<!-- Trailing: Icon -->
-<div class="flex items-center justify-center min-h-[44px] min-w-[44px] cursor-pointer hover:bg-surface-container-low transition-colors duration-200 active:scale-95 text-primary">
-<span class="material-symbols-outlined">notifications</span>
-</div>
-</header>
-<!-- Main Content Canvas -->
-<main class="flex-grow px-margin-mobile py-6 pb-24 overflow-y-auto">
-<!-- Student Identity Header -->
-<section class="flex items-center gap-4 mb-6">
-<div class="w-16 h-16 rounded-full overflow-hidden border-2 border-primary-fixed shadow-sm">
-<img alt="Student Profile" class="w-full h-full object-cover" data-alt="A brightly lit portrait of a young male student in a school uniform. The background is a soft, out-of-focus educational setting. The lighting is high-key and natural, conveying a sense of academic focus and positivity within a clean UI context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfJRp0ua3AeCfKiUukMBgj33CvkKeFFZuh5IdOwqmiBnQcGbrLEI1vWTsyb_kmXPtdzCXi9O1N1v5q0TQ_38DUlbaXYLUcVGwfGZCfQaI9ukSpH2sQaQ0kXvSrB_Cmmff8jpGSQoY_tklnFIKEKFemJiKuRVo_Izd1jD87zAOpsc40Klb61xUpKLhFL2jym_CrKJhbzFxSSzRTzd3IEt9RSOsW7C82wOVfprmhjAmCgxeChK2peR20CIyUN4l7Z_v3xeDIo9qfljQ"/>
-</div>
-<div>
-<h2 class="font-headline-md text-headline-md text-on-surface">Mateo García</h2>
-<div class="flex items-center gap-1 mt-0.5">
-<span class="inline-block w-2 h-2 rounded-full bg-secondary"></span>
-<p class="font-caption text-caption text-on-surface-variant">Ciclo Escolar 2023-2024</p>
-</div>
-</div>
-</section>
-<!-- Bento Grid Dashboard -->
-<div class="grid grid-cols-2 gap-4">
-<!-- Attendance Card (Spans 1 col) -->
-<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col justify-between border border-outline-variant/30 relative overflow-hidden group">
-<div class="flex items-center justify-between mb-2">
-<div class="flex items-center gap-2 text-on-surface-variant">
-<span class="material-symbols-outlined text-[20px]">calendar_today</span>
-<span class="font-label-md text-label-md">Asistencia</span>
-</div>
-</div>
-<div class="mt-2">
-<span class="font-display-lg text-display-lg text-secondary">95%</span>
-</div>
-<div class="w-full bg-surface-container mt-3 rounded-full h-2">
-<div class="bg-secondary h-2 rounded-full" style="width: 95%"></div>
-</div>
-</div>
-<!-- Current/Next Class (Spans 1 col) -->
-<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col justify-between border border-outline-variant/30">
-<div class="flex items-center gap-2 text-on-surface-variant mb-2">
-<span class="material-symbols-outlined text-[20px]">schedule</span>
-<span class="font-label-md text-label-md">En curso</span>
-</div>
-<div class="mt-auto">
-<h3 class="font-body-lg text-body-lg font-semibold text-on-surface">Ciencias Nat.</h3>
-<p class="font-caption text-caption text-on-surface-variant mt-1 flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">location_on</span> Lab. Biología
+    <!-- TopAppBar -->
+    <header
+        class="sticky top-0 w-full z-40 flex justify-between items-center px-margin-mobile bg-surface shadow-sm h-14">
+        <!-- Leading: Avatar -->
+        <div
+            class="flex items-center justify-center min-h-[44px] min-w-[44px] cursor-pointer hover:bg-surface-container-low transition-colors duration-200 active:scale-95 rounded-full">
+            <div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant">
+                <img alt="Profile picture of the parent" class="w-full h-full object-cover"
+                    data-alt="A professional headshot of a smiling parent in a bright, modern setting. The lighting is soft and even, highlighting a trustworthy and approachable expression, fitting a clean, corporate light-mode application aesthetic."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD88H2OgKfVNe4CL662dXVoxuY5cHPqzhiwUTEeDQ6Ll_Cxqmg6IBxZnzFuf63NKao_54T11LoUNJhe2eFNHd3hpZAHPVkWSqVLyWHuSwia7X9_V_q528hXze7U99ZKg0xyFGwZgVUyJr7hanu-cf0ZaLOA9r-DRR3mdhTpT6w5DCX51sgOkigaXIZZSZXja9ZKk7f2KBzv16_mEIkaDJjXDhu3qr3wLlTHPE-7ta0G1M3Xy1E89yeW4-3RpiiDVtF3uCWMoHm52rk" />
+            </div>
+        </div>
+        <!-- Headline -->
+        <h1
+            class="font-headline-sm text-headline-sm mobile:font-headline-lg-mobile mobile:text-headline-lg-mobile font-bold text-primary">
+            Escuela Metropolitana "La Luz"</h1>
+        <!-- Trailing: Icon -->
+        <div
+            class="flex items-center justify-center min-h-[44px] min-w-[44px] cursor-pointer hover:bg-surface-container-low transition-colors duration-200 active:scale-95 text-primary">
+            <span class="material-symbols-outlined">notifications</span>
+        </div>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="flex-grow px-margin-mobile py-6 pb-24 overflow-y-auto">
+        <!-- Student Identity Header -->
+        <section class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-primary-fixed shadow-sm">
+                <img alt="Student Profile" class="w-full h-full object-cover"
+                    data-alt="A brightly lit portrait of a young male student in a school uniform. The background is a soft, out-of-focus educational setting. The lighting is high-key and natural, conveying a sense of academic focus and positivity within a clean UI context."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfJRp0ua3AeCfKiUukMBgj33CvkKeFFZuh5IdOwqmiBnQcGbrLEI1vWTsyb_kmXPtdzCXi9O1N1v5q0TQ_38DUlbaXYLUcVGwfGZCfQaI9ukSpH2sQaQ0kXvSrB_Cmmff8jpGSQoY_tklnFIKEKFemJiKuRVo_Izd1jD87zAOpsc40Klb61xUpKLhFL2jym_CrKJhbzFxSSzRTzd3IEt9RSOsW7C82wOVfprmhjAmCgxeChK2peR20CIyUN4l7Z_v3xeDIo9qfljQ" />
+            </div>
+            <div>
+                <h2 class="font-headline-md text-headline-md text-on-surface">Mateo García</h2>
+                <div class="flex items-center gap-1 mt-0.5">
+                    <span class="inline-block w-2 h-2 rounded-full bg-secondary"></span>
+                    <p class="font-caption text-caption text-on-surface-variant">Ciclo Escolar 2023-2024</p>
+                </div>
+            </div>
+        </section>
+        <!-- Bento Grid Dashboard -->
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Attendance Card (Spans 1 col) -->
+            <div
+                class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col justify-between border border-outline-variant/30 relative overflow-hidden group">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+                        <span class="font-label-md text-label-md">Asistencia</span>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <span class="font-display-lg text-display-lg text-secondary">95%</span>
+                </div>
+                <div class="w-full bg-surface-container mt-3 rounded-full h-2">
+                    <div class="bg-secondary h-2 rounded-full" style="width: 95%"></div>
+                </div>
+            </div>
+            <!-- Current/Next Class (Spans 1 col) -->
+            <div
+                class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col justify-between border border-outline-variant/30">
+                <div class="flex items-center gap-2 text-on-surface-variant mb-2">
+                    <span class="material-symbols-outlined text-[20px]">schedule</span>
+                    <span class="font-label-md text-label-md">En curso</span>
+                </div>
+                <div class="mt-auto">
+                    <h3 class="font-body-lg text-body-lg font-semibold text-on-surface">Ciencias Nat.</h3>
+                    <p class="font-caption text-caption text-on-surface-variant mt-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">location_on</span> Lab. Biología
                     </p>
-</div>
-</div>
-<!-- Grades Summary Header -->
-<div class="col-span-2 mt-4 mb-1 flex items-center justify-between">
-<h3 class="font-body-lg text-body-lg font-semibold text-on-surface">Desempeño Destacado</h3>
-<button class="text-primary font-label-md text-label-md hover:underline">Ver detalle</button>
-</div>
-<!-- Highest Grade Card -->
-<div class="bg-surface-container-highest rounded-xl p-5 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-sm">
-<div class="absolute -top-6 -right-6 w-24 h-24 bg-primary-fixed-dim rounded-full opacity-40 blur-xl"></div>
-<span class="font-caption text-caption text-primary mb-1 uppercase tracking-wider font-bold z-10">Más Alta</span>
-<span class="font-display-lg text-display-lg text-primary z-10 my-1">10</span>
-<div class="flex items-center gap-1 z-10">
-<span class="material-symbols-outlined text-[16px] text-on-surface">calculate</span>
-<span class="font-label-md text-label-md text-on-surface">Matemáticas</span>
-</div>
-</div>
-<!-- Lowest Grade Card -->
-<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-5 flex flex-col items-center justify-center text-center shadow-sm">
-<span class="font-caption text-caption text-on-surface-variant mb-1 uppercase tracking-wider font-bold">Área de mejora</span>
-<span class="font-display-lg text-display-lg text-on-surface my-1">7.0</span>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-on-surface-variant">history_edu</span>
-<span class="font-label-md text-label-md text-on-surface-variant">Historia</span>
-</div>
-</div>
-</div>
-<!-- Quick Notice (Contextual Information) -->
-<div class="mt-6">
-<div class="bg-inverse-surface rounded-xl p-4 flex items-start gap-4 shadow-md">
-<div class="bg-surface-container-lowest p-2 rounded-full text-inverse-surface mt-1">
-<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
-</div>
-<div>
-<h4 class="font-label-md text-label-md text-inverse-on-surface mb-1">Proyecto de Ciencias</h4>
-<p class="font-caption text-caption text-inverse-on-surface opacity-90">Entregado con éxito el día de hoy. Pendiente de calificación.</p>
-</div>
-</div>
-</div>
-</main>
-<!-- BottomNavBar -->
-<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface border-t border-outline-variant h-16">
-<!-- Tab 1: Inicio (ACTIVE) -->
-<button class="flex flex-col items-center justify-center text-primary font-bold bg-surface-container rounded-xl px-2 min-h-[44px] min-w-[44px] transition-transform active:scale-90">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
-<span class="font-label-md text-label-md mt-1">Inicio</span>
-</button>
-<!-- Tab 2: Boletas (INACTIVE) -->
-<button class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
-<span class="material-symbols-outlined">description</span>
-<span class="font-label-md text-label-md mt-1">Boletas</span>
-</button>
-<!-- Tab 3: Mensajes (INACTIVE) -->
-<button class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
-<span class="material-symbols-outlined">mail</span>
-<span class="font-label-md text-label-md mt-1">Mensajes</span>
-</button>
-<!-- Tab 4: Perfil (INACTIVE) -->
-<button class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
-<span class="material-symbols-outlined">person</span>
-<span class="font-label-md text-label-md mt-1">Perfil</span>
-</button>
-</nav>
-</body></html>
+                </div>
+            </div>
+            <!-- Grades Summary Header -->
+            <div class="col-span-2 mt-4 mb-1 flex items-center justify-between">
+                <h3 class="font-body-lg text-body-lg font-semibold text-on-surface">Desempeño Destacado</h3>
+                <button class="text-primary font-label-md text-label-md hover:underline">Ver detalle</button>
+            </div>
+            <!-- Highest Grade Card -->
+            <div
+                class="bg-surface-container-highest rounded-xl p-5 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-sm">
+                <div class="absolute -top-6 -right-6 w-24 h-24 bg-primary-fixed-dim rounded-full opacity-40 blur-xl">
+                </div>
+                <span class="font-caption text-caption text-primary mb-1 uppercase tracking-wider font-bold z-10">Más
+                    Alta</span>
+                <span class="font-display-lg text-display-lg text-primary z-10 my-1">10</span>
+                <div class="flex items-center gap-1 z-10">
+                    <span class="material-symbols-outlined text-[16px] text-on-surface">calculate</span>
+                    <span class="font-label-md text-label-md text-on-surface">Matemáticas</span>
+                </div>
+            </div>
+            <!-- Lowest Grade Card -->
+            <div
+                class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-5 flex flex-col items-center justify-center text-center shadow-sm">
+                <span
+                    class="font-caption text-caption text-on-surface-variant mb-1 uppercase tracking-wider font-bold">Área
+                    de mejora</span>
+                <span class="font-display-lg text-display-lg text-on-surface my-1">7.0</span>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px] text-on-surface-variant">history_edu</span>
+                    <span class="font-label-md text-label-md text-on-surface-variant">Historia</span>
+                </div>
+            </div>
+        </div>
+        <!-- Quick Notice (Contextual Information) -->
+        <div class="mt-6">
+            <div class="bg-inverse-surface rounded-xl p-4 flex items-start gap-4 shadow-md">
+                <div class="bg-surface-container-lowest p-2 rounded-full text-inverse-surface mt-1">
+                    <span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+                </div>
+                <div>
+                    <h4 class="font-label-md text-label-md text-inverse-on-surface mb-1">Proyecto de Ciencias</h4>
+                    <p class="font-caption text-caption text-inverse-on-surface opacity-90">Entregado con éxito el día
+                        de hoy. Pendiente de calificación.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- BottomNavBar -->
+    <nav
+        class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface border-t border-outline-variant h-16">
+        <!-- Tab 1: Inicio (ACTIVE) -->
+        <button
+            class="flex flex-col items-center justify-center text-primary font-bold bg-surface-container rounded-xl px-2 min-h-[44px] min-w-[44px] transition-transform active:scale-90">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+            <span class="font-label-md text-label-md mt-1">Inicio</span>
+        </button>
+        <!-- Tab 2: Boletas (INACTIVE) -->
+        <button
+            class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
+            <span class="material-symbols-outlined">description</span>
+            <span class="font-label-md text-label-md mt-1">Boletas</span>
+        </button>
+        <!-- Tab 3: Mensajes (INACTIVE) -->
+        <button
+            class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
+            <span class="material-symbols-outlined">mail</span>
+            <span class="font-label-md text-label-md mt-1">Mensajes</span>
+        </button>
+        <!-- Tab 4: Perfil (INACTIVE) -->
+        <button
+            class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
+            <span class="material-symbols-outlined">person</span>
+            <span class="font-label-md text-label-md mt-1">Perfil</span>
+        </button>
+    </nav>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<ion-content class="ion-padding" style="--background: #f8f9ff;">
+  <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <!-- Login Container: Glassmorphism / Modern Card Approach -->
+    <div class="w-full max-w-md bg-[#ffffff] rounded-xl shadow-[0_16px_40px_-15px_rgba(0,32,70,0.08)] border border-[#c4c6cf]/30 overflow-hidden">
+      <!-- Header Section -->
+      <div class="px-8 pt-10 pb-6 flex flex-col items-center border-b border-[#c4c6cf]/20 bg-[#eff4ff]/50">
+        <!-- Institutional Logo -->
+        <div class="w-24 h-24 mb-4 rounded-full bg-[#f8f9ff] shadow-sm flex items-center justify-center border border-[#c4c6cf]/20 overflow-hidden">
+          <img alt="Escuela Metropolitana La Luz Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcTWCjl-iswn9qGwnguEnmCjn29P95J5eJcgVmSm-NintYMIKF7lpE0P_1gvyd1BCZFtKAtfHruKCz7klA9sXpOfpzIQRkSutztO_sgTxMl9UyK9D_8iFjX0_bTPR4LEiuqJxro6cJ_FQ7Xnk17eMfhjeTMRRjF93F_k_0tWPTsyMC4oDzq6z96jN6uCQs4Zl_f6BJ6HbyNXFj_KYMvEEJnJO1AnKrD0vb2-b_cr_62foul5WzCTEFA89lFl3dFUVL1UYdDOKA9zs"/>
+        </div>
+        <h1 class="text-2xl font-bold text-[#002046] text-center" style="font-family: 'Manrope', sans-serif;">Escuela Metropolitana "La Luz"</h1>
+        <p class="text-base text-[#44474e] text-center mt-2" style="font-family: 'Manrope', sans-serif;">Portal para Padres</p>
+      </div>
+
+      <!-- Form Section -->
+      <div class="px-8 py-8">
+        <form (ngSubmit)="onLogin()" class="space-y-6">
+          <!-- Email / Registration Number Field -->
+          <div>
+            <label class="block text-sm font-semibold text-[#0b1c30] mb-2" for="identifier" style="font-family: 'Manrope', sans-serif;">Correo Institucional o Matrícula</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="material-symbols-outlined text-[#74777f]">person</span>
+              </div>
+              <input class="block w-full pl-10 pr-3 py-3 border border-[#c4c6cf] rounded-lg text-[#0b1c30] bg-[#ffffff] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors placeholder-[#74777f]" id="identifier" name="identifier" autocomplete="username" placeholder="ej. perez.juan@laluz.edu" required="" type="text"/>
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div>
+            <label class="block text-sm font-semibold text-[#0b1c30] mb-2" for="password" style="font-family: 'Manrope', sans-serif;">Contraseña</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="material-symbols-outlined text-[#74777f]">lock</span>
+              </div>
+              <input class="block w-full pl-10 pr-10 py-3 border border-[#c4c6cf] rounded-lg text-[#0b1c30] bg-[#ffffff] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors placeholder-[#74777f]" id="password" name="password" autocomplete="current-password" placeholder="••••••••" required="" type="password"/>
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
+                <span class="material-symbols-outlined text-[#74777f] hover:text-[#44474e] transition-colors">visibility_off</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center justify-between mt-4">
+            <div class="flex items-center">
+              <input class="h-4 w-4 text-[#002046] focus:ring-[#002046] border-[#c4c6cf] rounded" id="remember-me" name="remember-me" type="checkbox"/>
+              <label class="ml-2 block text-base text-[#44474e]" for="remember-me" style="font-family: 'Manrope', sans-serif;">
+                Recordarme
+              </label>
+            </div>
+            <div class="text-sm">
+              <a class="font-semibold text-sm text-[#002046] hover:text-[#465f88] transition-colors" href="#" style="font-family: 'Manrope', sans-serif;">¿Olvidaste tu contraseña?</a>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-4">
+            <button class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-semibold text-sm text-[#ffffff] bg-[#002046] hover:bg-[#465f88] hover:shadow-[0_4px_12px_rgba(0,32,70,0.15)] hover:-translate-y-[1px] transition-all duration-200" type="submit" style="font-family: 'Manrope', sans-serif;">
+              Acceso Institucional
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer / Help Link -->
+      <div class="px-8 py-4 bg-[#eff4ff] border-t border-[#c4c6cf]/20 text-center">
+        <p class="text-xs font-medium text-[#44474e] flex items-center justify-center gap-1" style="font-family: 'Manrope', sans-serif;">
+          <span class="material-symbols-outlined text-[16px]">help</span>
+          ¿Necesita ayuda? <a class="text-[#002046] font-medium hover:underline" href="#">Contacte a Soporte Técnico</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</ion-content>

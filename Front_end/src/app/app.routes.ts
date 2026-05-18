@@ -42,4 +42,29 @@ export const routes: Routes = [
     redirectTo: 'iniciar-sesion',
     pathMatch: 'full',
   },
+  {
+    path: 'recuperar-contrasena',
+    loadComponent: () => import('./pages/recuperar-contrasena/recuperar-contrasena.page')
+      .then( m => m.RecuperarContrasenaPage)
+  },
+  {
+    path: 'enviar-codigo',
+    loadComponent: () =>
+      import('./pages/enviar-codigo/enviar-codigo.page')
+        .then(m => m.EnviarCodigoPage)
+  },
+  {
+    path: 'registro',
+    loadComponent: () => import('./pages/registro/registro.page').then( m => m.RegistroPage)
+  },
+  {
+  path: 'registro',
+  loadComponent: () =>
+    import('./pages/registro/registro.page').then(m => m.RegistroPage)
+  }, 
+  {
+    path: 'registro2',
+    loadComponent: () =>
+      import('./pages/registro2/registro2.page').then(m => m.Registro2Page)
+  }
 ];

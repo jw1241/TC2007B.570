@@ -49,7 +49,14 @@
               </label>
             </div>
             <div class="text-sm">
-              <a class="font-semibold text-sm text-[#002046] hover:text-[#465f88] transition-colors" href="#" style="font-family: 'Manrope', sans-serif;">¿Olvidaste tu contraseña?</a>
+              <a
+                class="font-semibold text-sm text-[#002046] hover:text-[#465f88] transition-colors"
+                href="javascript:void(0)"
+                (click)="recuperarcontrasena()"
+                style="font-family: 'Manrope', sans-serif;"
+              >
+                ¿Olvidaste tu contraseña?
+              </a>
             </div>
           </div>
 
@@ -62,6 +69,23 @@
         </form>
       </div>
 
+      <!-- Register Link -->
+      <div class="px-8 py-5 text-center border-t border-[#c4c6cf]/20 bg-[#ffffff]">
+        <p
+          class="text-sm text-[#44474e]"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          ¿No tienes cuenta?
+          <a
+            href="javascript:void(0)"
+            (click)="Registro()"
+            class="font-semibold text-[#002046] hover:text-[#465f88] transition-colors"
+          >
+            Regístrate aquí
+          </a>
+        </p>
+      </div>
+
       <!-- Footer / Help Link -->
       <div class="px-8 py-4 bg-[#eff4ff] border-t border-[#c4c6cf]/20 text-center">
         <p class="text-xs font-medium text-[#44474e] flex items-center justify-center gap-1" style="font-family: 'Manrope', sans-serif;">
@@ -69,6 +93,8 @@
           ¿Necesita ayuda? <a class="text-[#002046] font-medium hover:underline" href="#">Contacte a Soporte Técnico</a>
         </p>
       </div>
+
     </div>
   </div>
+
 </ion-content>

@@ -23,4 +23,12 @@ export class IniciarSesionPage implements OnInit {
     this.router.navigate(['/seleccionar-alumno']);
   }
 
+  recuperarcontrasena() {
+    this.router.navigate(['/recuperar-contrasena']);
+  }
+
+  Registro() {
+    this.router.navigate(['/registro']);
+  }
+
 }

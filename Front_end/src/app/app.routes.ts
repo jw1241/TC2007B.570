@@ -38,6 +38,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/perfil/perfil.page').then((m) => m.PerfilPage),
   },
   {
+    path: 'captura-calificaciones',
+    loadComponent: () => import('./pages/captura-calificaciones/captura-calificaciones.page').then((m) => m.CapturaCalificacionesPage),
+  },
+  {
+    path: 'panel-administracion',
+    loadComponent: () => import('./pages/panel-administracion/panel-administracion.page').then((m) => m.PanelAdministracionPage),
+  },
+  {
     path: '',
     redirectTo: 'iniciar-sesion',
     pathMatch: 'full',

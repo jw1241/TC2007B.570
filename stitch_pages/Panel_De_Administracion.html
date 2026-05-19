@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Panel de Administración - Escuela Metropolitana La Luz</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#d6e3ff",
+                        "on-tertiary-container": "#cd950d",
+                        "surface-container-high": "#dce9ff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#2d1e00",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#344e00",
+                        "surface-tint": "#465f88",
+                        "background": "#f8f9ff",
+                        "inverse-surface": "#213145",
+                        "inverse-primary": "#aec7f7",
+                        "surface-dim": "#cbdbf5",
+                        "tertiary-fixed": "#ffdea7",
+                        "on-primary-container": "#87a0cd",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-fixed-dim": "#aec7f7",
+                        "on-background": "#0b1c30",
+                        "secondary": "#466800",
+                        "on-secondary-fixed": "#121f00",
+                        "on-primary-fixed": "#001b3d",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#fabc3c",
+                        "on-surface": "#0b1c30",
+                        "surface": "#f8f9ff",
+                        "on-surface-variant": "#44474e",
+                        "on-tertiary-fixed-variant": "#5e4200",
+                        "primary-container": "#1b365d",
+                        "on-secondary-container": "#4b6f00",
+                        "secondary-fixed-dim": "#9cd92d",
+                        "surface-bright": "#f8f9ff",
+                        "primary": "#002046",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container": "#e5eeff",
+                        "on-primary-fixed-variant": "#2e476f",
+                        "tertiary-container": "#483200",
+                        "secondary-container": "#b7f64a",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#271900",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c4c6cf",
+                        "secondary-fixed": "#b7f64a",
+                        "outline": "#74777f",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "base": "8px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Manrope"],
+                        "caption": ["Manrope"],
+                        "label-md": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "headline-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased min-h-screen flex">
+<!-- NavigationDrawer (Desktop) -->
+<nav class="hidden md:block bg-surface-container dark:bg-inverse-surface shadow-lg rounded-r-xl h-full w-80 fixed left-0 top-0 z-40 py-6 transition-transform transform -translate-x-full md:translate-x-0" id="desktop-drawer">
+<div class="px-6 mb-8 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-md text-headline-md">
+                L
+            </div>
+<div>
+<h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Admin Portal</h2>
+<p class="font-caption text-caption text-on-surface-variant">Metropolitana La Luz</p>
+<p class="font-caption text-caption text-outline">v1.0.4</p>
+</div>
+</div>
+<ul class="space-y-2">
+<li>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-3 mx-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high dark:hover:bg-primary-container" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-4 bg-secondary-container text-on-secondary-container rounded-full px-4 py-3 mx-2 font-label-md text-label-md translate-x-1 transition-all" href="#">
+<span class="material-symbols-outlined icon-fill" data-icon="group" data-weight="fill">group</span>
+                    Students
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-3 mx-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high dark:hover:bg-primary-container" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+                    Teachers
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-3 mx-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high dark:hover:bg-primary-container" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+                    Subjects
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-3 mx-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high dark:hover:bg-primary-container" href="#">
+<span class="material-symbols-outlined" data-icon="grade">grade</span>
+                    Grades
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-3 mx-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high dark:hover:bg-primary-container" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col md:ml-80 transition-all duration-300 min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-background shadow-sm sticky top-0 z-30 w-full h-20">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-full">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-primary dark:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-primary-container transition-colors rounded-full p-2" id="mobile-menu-btn">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-display-lg text-display-lg font-extrabold text-primary dark:text-primary-fixed hidden md:block">Escuela Metropolitana La Luz</h1>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed md:hidden">La Luz</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full p-2">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full p-2 relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden cursor-pointer hover:bg-surface-container-low transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="person">person</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full relative pb-24 md:pb-margin-desktop">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Gestión Académica</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Administra los registros de estudiantes y personal docente.</p>
+</div>
+<!-- Tabs -->
+<div class="flex bg-surface-container-low rounded-lg p-1 border border-outline-variant">
+<button class="px-6 py-2 rounded-md bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all" id="tab-students">
+                        Alumnos
+                    </button>
+<button class="px-6 py-2 rounded-md text-on-surface-variant hover:bg-surface-variant font-label-md text-label-md transition-all" id="tab-teachers">
+                        Profesores
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout for Data -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Summary Card -->
+<div class="col-span-1 lg:col-span-3 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-6 w-full md:w-auto">
+<div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-3xl" data-icon="analytics">analytics</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant">Total Estudiantes Activos</p>
+<h3 class="font-display-lg text-display-lg text-primary">1,248</h3>
+</div>
+</div>
+<div class="w-full md:w-auto flex gap-4">
+<div class="bg-surface-container rounded-lg p-4 flex-1 md:w-32 text-center">
+<p class="font-caption text-caption text-on-surface-variant">Nuevos Ingresos</p>
+<p class="font-headline-md text-headline-md text-secondary">+42</p>
+</div>
+<div class="bg-surface-container rounded-lg p-4 flex-1 md:w-32 text-center">
+<p class="font-caption text-caption text-on-surface-variant">Bajas Temporales</p>
+<p class="font-headline-md text-headline-md text-error">12</p>
+</div>
+</div>
+</div>
+<!-- Record Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="h-2 w-full bg-secondary absolute top-0 left-0"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline-md text-headline-md">
+                                    AM
+                                </div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Ana Martínez</h4>
+<p class="font-caption text-caption text-on-surface-variant">Matrícula: 2023-001</p>
+</div>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded-full font-caption text-caption">Activo</span>
+</div>
+<div class="space-y-2 mb-6">
+<div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-sm" data-icon="email">email</span>
+                                a.martinez@laluz.edu.mx
+                            </div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-sm" data-icon="menu_book">menu_book</span>
+                                3er Semestre - Preparatoria
+                            </div>
+</div>
+<div class="flex justify-end gap-2 border-t border-outline-variant pt-4 mt-auto">
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Record Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="h-2 w-full bg-secondary absolute top-0 left-0"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline-md text-headline-md">
+                                    CG
+                                </div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Carlos Gómez</h4>
+<p class="font-caption text-caption text-on-surface-variant">Matrícula: 2022-045</p>
+</div>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded-full font-caption text-caption">Activo</span>
+</div>
+<div class="space-y-2 mb-6">
+<div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-sm" data-icon="email">email</span>
+                                c.gomez@laluz.edu.mx
+                            </div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-sm" data-icon="menu_book">menu_book</span>
+                                5to Semestre - Preparatoria
+                            </div>
+</div>
+<div class="flex justify-end gap-2 border-t border-outline-variant pt-4 mt-auto">
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Record Card 3 (Inactive) -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group opacity-75 hover:opacity-100">
+<div class="h-2 w-full bg-outline absolute top-0 left-0"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-headline-md text-headline-md">
+                                    LR
+                                </div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Laura Ruiz</h4>
+<p class="font-caption text-caption text-on-surface-variant">Matrícula: 2021-112</p>
+</div>
+</div>
+<span class="bg-surface-variant text-on-surface-variant px-2 py-1 rounded-full font-caption text-caption">Baja Temp.</span>
+</div>
+<div class="space-y-2 mb-6">
+<div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-sm" data-icon="email">email</span>
+                                l.ruiz@laluz.edu.mx
+                            </div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-sm" data-icon="menu_book">menu_book</span>
+                                1er Semestre - Universidad
+                            </div>
+</div>
+<div class="flex justify-end gap-2 border-t border-outline-variant pt-4 mt-auto">
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed bottom-24 md:bottom-8 right-6 md:right-8 bg-secondary hover:bg-secondary-fixed-dim text-on-secondary rounded-2xl p-4 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex items-center justify-center z-40 group">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform" data-icon="add">add</span>
+</button>
+</div>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-inverse-surface border-t border-outline-variant rounded-t-xl shadow-md">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/50 font-caption text-caption w-16 h-14 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+            Home
+        </a>
+<a class="flex flex-col items-center justify-center bg-secondary text-on-secondary rounded-xl px-4 py-1 font-caption text-caption w-20 h-14 shadow-sm scale-100 transition-all" href="#">
+<span class="material-symbols-outlined icon-fill mb-1" data-icon="school" data-weight="fill">school</span>
+            Academic
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/50 font-caption text-caption w-16 h-14 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="edit_square">edit_square</span>
+            Grades
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/50 font-caption text-caption w-16 h-14 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+            Account
+        </a>
+</nav>
+<script>
+        // Simple JS for tab switching visual feedback
+        document.getElementById('tab-teachers').addEventListener('click', function() {
+            this.classList.remove('text-on-surface-variant', 'hover:bg-surface-variant');
+            this.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+            
+            let studentsTab = document.getElementById('tab-students');
+            studentsTab.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+            studentsTab.classList.add('text-on-surface-variant', 'hover:bg-surface-variant');
+        });
+
+        document.getElementById('tab-students').addEventListener('click', function() {
+            this.classList.remove('text-on-surface-variant', 'hover:bg-surface-variant');
+            this.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+            
+            let teachersTab = document.getElementById('tab-teachers');
+            teachersTab.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+            teachersTab.classList.add('text-on-surface-variant', 'hover:bg-surface-variant');
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const drawer = document.getElementById('desktop-drawer');
+            drawer.classList.remove('hidden');
+            drawer.classList.toggle('-translate-x-full');
+            // In a real implementation, add an overlay back-drop here
+        });
+    </script>
+</body></html>

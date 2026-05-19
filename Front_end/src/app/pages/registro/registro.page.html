@@ -1,0 +1,140 @@
+<ion-content class="ion-padding" style="--background: #f8f9ff;">
+  <div class="min-h-full flex items-center justify-center py-10 px-4">
+    
+    <!-- Main Card -->
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-[0_16px_40px_-15px_rgba(0,32,70,0.08)] border border-[#c4c6cf]/30 overflow-hidden">
+
+      <!-- Top Section -->
+      <div class="px-6 pt-6 pb-4 border-b border-[#c4c6cf]/20 bg-[#eff4ff]/60">
+
+        <!-- Back Button -->
+        <button
+          (click)="volver()"
+          class="flex items-center gap-1 text-[#002046] font-medium mb-6 hover:text-[#465f88] transition-colors"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          <span class="material-symbols-outlined text-[20px]">
+            arrow_back_ios
+          </span>
+          Volver
+        </button>
+
+        <!-- Step Indicator -->
+        <div class="flex items-center justify-center mb-6">
+
+          <!-- Step 1 -->
+          <div class="flex items-center">
+            <div class="w-9 h-9 rounded-full bg-[#002046] text-white flex items-center justify-center font-bold">
+              1
+            </div>
+          </div>
+
+          <!-- Line -->
+          <div class="w-16 h-[2px] bg-[#002046] mx-2"></div>
+
+          <!-- Step 2 -->
+          <div class="w-9 h-9 rounded-full bg-[#d7dbe5] text-[#74777f] flex items-center justify-center font-bold">
+            2
+          </div>
+        </div>
+
+        <!-- Header -->
+        <div class="flex flex-col items-center text-center">
+          <div class="w-20 h-20 rounded-full bg-[#f8f9ff] flex items-center justify-center shadow-sm border border-[#c4c6cf]/20 mb-4">
+            <span class="material-symbols-outlined text-[42px] text-[#002046]">
+              account_circle
+            </span>
+          </div>
+
+          <h1
+            class="text-3xl font-bold text-[#002046]"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Registro
+          </h1>
+
+          <p
+            class="text-base text-[#44474e] mt-2 font-medium"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Información del estudiante
+          </p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="px-6 py-8">
+        <form (ngSubmit)="continuar()" class="space-y-5">
+
+          <!-- Student ID -->
+          <div>
+            <label
+              class="block text-sm font-semibold text-[#0b1c30] mb-2"
+              style="font-family: 'Manrope', sans-serif;"
+            >
+              Número de identificación del estudiante
+            </label>
+
+            <input
+              type="text"
+              [(ngModel)]="studentId"
+              name="studentId"
+              required
+              placeholder="Ingrese el número"
+              class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg bg-white text-[#0b1c30] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors"
+            />
+          </div>
+
+          <!-- Birth Date -->
+          <div>
+            <label
+              class="block text-sm font-semibold text-[#0b1c30] mb-2"
+              style="font-family: 'Manrope', sans-serif;"
+            >
+              Fecha de nacimiento
+            </label>
+
+            <input
+              type="date"
+              [(ngModel)]="birthDate"
+              name="birthDate"
+              required
+              class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg bg-white text-[#0b1c30] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors"
+            />
+          </div>
+
+          <!-- Registration Code -->
+          <div>
+            <label
+              class="block text-sm font-semibold text-[#0b1c30] mb-2"
+              style="font-family: 'Manrope', sans-serif;"
+            >
+              Código de registro
+            </label>
+
+            <input
+              type="text"
+              [(ngModel)]="registrationCode"
+              name="registrationCode"
+              required
+              placeholder="Ingrese el código"
+              class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg bg-white text-[#0b1c30] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors"
+            />
+          </div>
+
+          <!-- Continue Button -->
+          <div class="pt-4">
+            <button
+              type="submit"
+              class="w-full py-3 rounded-lg bg-[#002046] text-white font-semibold hover:bg-[#465f88] hover:-translate-y-[1px] transition-all duration-200 shadow-sm"
+              style="font-family: 'Manrope', sans-serif;"
+            >
+              Continuar
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</ion-content>

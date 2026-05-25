@@ -1,7 +1,7 @@
 # Contexto del Proyecto: Sistema de Boletas Escolares
 
 ## Descripción General
-El proyecto es una plataforma web responsiva (React + TypeScript) para la gestión, captura y consulta de boletas de calificaciones de la Escuela Metropolitana "La Luz". El objetivo principal es descentralizar la captura de calificaciones y proveer un portal seguro para que los padres consulten el progreso académico de sus hijos. 
+El proyecto es una plataforma web responsiva (Ionic + Angular) para la gestión, captura y consulta de boletas de calificaciones de la Escuela Metropolitana "La Luz". El objetivo principal es descentralizar la captura de calificaciones y proveer un portal seguro para que los padres consulten el progreso académico de sus hijos. 
 
 El backend y la base de datos están gestionados con Supabase (PostgreSQL). La base de datos ya cuenta con políticas RLS (Row Level Security) robustas. **El frontend debe respetar y reflejar estas restricciones de acceso en sus rutas y componentes.**
 

@@ -2,10 +2,6 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-  },
-  {
     path: 'iniciar-sesion',
     loadComponent: () => import('./pages/iniciar-sesion/iniciar-sesion.page').then((m) => m.IniciarSesionPage),
   },
@@ -62,10 +58,6 @@ export const routes: Routes = [
         .then(m => m.EnviarCodigoPage)
   },
   {
-    path: 'registro',
-    loadComponent: () => import('./pages/registro/registro.page').then( m => m.RegistroPage)
-  },
-  {
   path: 'registro',
   loadComponent: () =>
     import('./pages/registro/registro.page').then(m => m.RegistroPage)
@@ -74,5 +66,10 @@ export const routes: Routes = [
     path: 'registro2',
     loadComponent: () =>
       import('./pages/registro2/registro2.page').then(m => m.Registro2Page)
-  }
+  },
+  {
+      path: 'soporte-tecnico',
+      loadComponent: () =>
+        import('./pages/soporte-tecnico/soporte-tecnico.page').then(m => m.SoporteTecnicoPage)
+    }
 ];

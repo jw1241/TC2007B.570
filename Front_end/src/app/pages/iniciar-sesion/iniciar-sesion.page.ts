@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { SupabaseService } from '../../services/supabase';
+import { StudentService } from '../../services/student';
 
 @Component({
   selector: 'app-iniciar-sesion',
@@ -13,22 +15,86 @@ import { Router } from '@angular/router';
 })
 export class IniciarSesionPage implements OnInit {
 
-  constructor(private router: Router) { }
+  identifier = '';
+  password = '';
 
-  ngOnInit() {
-  }
+  constructor(
+    private router: Router,
+    private supabaseService: SupabaseService,
+    private studentService: StudentService
+  ) {}
 
-  onLogin() {
-    // Redirigir al inicio o a la vista de seleccionar alumno de forma genérica
+  ngOnInit() {}
+
+  // async onLogin() {
+
+  //   const { data, error } =
+  //     await this.supabaseService.supabase.auth.signInWithPassword({
+
+  //       email: this.identifier,
+  //       password: this.password
+
+  //     });
+
+  //   if (error) {
+
+  //     alert(error.message);
+  //     return;
+
+  //   }
+
+  //   this.router.navigate(['/seleccionar-alumno']);
+  // }
+
+  
+
+  async onLogin() {
+
+  console.log('Identifier:', this.identifier);
+  console.log('Password:', this.password);
+
+  try {
+
+    const { data, error } =
+      await this.supabaseService.supabase.auth.signInWithPassword({
+
+        email: this.identifier,
+        password: this.password
+
+      });
+
+    console.log('Supabase response:', data);
+    console.log('Supabase error:', error);
+
+    if (error) {
+
+      alert(error.message);
+      return;
+
+    }
+
+    console.log('LOGIN SUCCESS');
+
     this.router.navigate(['/seleccionar-alumno']);
+
+  } catch (err) {
+
+    console.error('CATCH ERROR:', err);
+
   }
 
-  recuperarcontrasena() {
+}
+
+recuperarcontrasena() {
     this.router.navigate(['/recuperar-contrasena']);
   }
 
   Registro() {
     this.router.navigate(['/registro']);
+  }
+
+  soporteTecnico() {
+    this.router.navigate(['/soporte-tecnico']);
   }
 
 }

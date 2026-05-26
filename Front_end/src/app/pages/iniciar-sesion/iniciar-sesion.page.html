@@ -22,7 +22,16 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="material-symbols-outlined text-[#74777f]">person</span>
               </div>
-              <input class="block w-full pl-10 pr-3 py-3 border border-[#c4c6cf] rounded-lg text-[#0b1c30] bg-[#ffffff] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors placeholder-[#74777f]" id="identifier" name="identifier" autocomplete="username" placeholder="ej. perez.juan@laluz.edu" required="" type="text"/>
+              <input
+                [(ngModel)]="identifier"
+                class="block w-full pl-10 pr-3 py-3 border border-[#c4c6cf] rounded-lg text-[#0b1c30] bg-[#ffffff] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors placeholder-[#74777f]"
+                id="identifier"
+                name="identifier"
+                autocomplete="username"
+                placeholder="ej. perez.juan@laluz.edu"
+                required
+                type="text"
+              />
             </div>
           </div>
 
@@ -33,7 +42,16 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="material-symbols-outlined text-[#74777f]">lock</span>
               </div>
-              <input class="block w-full pl-10 pr-10 py-3 border border-[#c4c6cf] rounded-lg text-[#0b1c30] bg-[#ffffff] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors placeholder-[#74777f]" id="password" name="password" autocomplete="current-password" placeholder="••••••••" required="" type="password"/>
+              <input
+                [(ngModel)]="password"
+                class="block w-full pl-10 pr-10 py-3 border border-[#c4c6cf] rounded-lg text-[#0b1c30] bg-[#ffffff] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors placeholder-[#74777f]"
+                id="password"
+                name="password"
+                autocomplete="current-password"
+                placeholder="••••••••"
+                required
+                type="password"
+              />
               <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
                 <span class="material-symbols-outlined text-[#74777f] hover:text-[#44474e] transition-colors">visibility_off</span>
               </div>
@@ -88,11 +106,29 @@
 
       <!-- Footer / Help Link -->
       <div class="px-8 py-4 bg-[#eff4ff] border-t border-[#c4c6cf]/20 text-center">
-        <p class="text-xs font-medium text-[#44474e] flex items-center justify-center gap-1" style="font-family: 'Manrope', sans-serif;">
-          <span class="material-symbols-outlined text-[16px]">help</span>
-          ¿Necesita ayuda? <a class="text-[#002046] font-medium hover:underline" href="#">Contacte a Soporte Técnico</a>
-        </p>
+
+      <div
+        class="text-xs font-medium text-[#44474e] flex items-center justify-center gap-1"
+        style="font-family: 'Manrope', sans-serif;"
+      >
+
+        <span class="material-symbols-outlined text-[16px]">
+          help
+        </span>
+
+        <span>¿Necesita ayuda?</span>
+
+        <button
+          type="button"
+          (click)="soporteTecnico()"
+          class="text-[#002046] font-medium hover:underline"
+        >
+          Contacte a Soporte Técnico
+        </button>
+
       </div>
+
+    </div>
 
     </div>
   </div>

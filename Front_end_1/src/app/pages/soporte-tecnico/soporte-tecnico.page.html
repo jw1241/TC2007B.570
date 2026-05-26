@@ -1,0 +1,353 @@
+<ion-content class="ion-padding" style="--background: #f8f9ff;">
+
+  <div class="min-h-full flex items-center justify-center py-10 px-4">
+
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-[0_16px_40px_-15px_rgba(0,32,70,0.08)] border border-[#c4c6cf]/30 overflow-hidden">
+
+      <!-- SUCCESS SCREEN -->
+      <div *ngIf="ticketSubmitted" class="px-8 py-14 text-center">
+
+        <div class="flex justify-center mb-5">
+          <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+            <span class="material-symbols-outlined text-green-600 text-5xl">
+              check_circle
+            </span>
+          </div>
+        </div>
+
+        <h2
+          class="text-3xl font-bold text-[#002046]"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          Solicitud Enviada
+        </h2>
+
+        <p
+          class="text-[#44474e] mt-3"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          Su solicitud de soporte fue enviada exitosamente.
+        </p>
+
+        <div class="mt-8 bg-[#eff4ff] rounded-xl p-6 border border-[#c4c6cf]/20">
+
+          <p
+            class="text-sm text-[#44474e]"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Número de Ticket
+          </p>
+
+          <h1
+            class="text-4xl font-bold text-[#002046] mt-2 tracking-wider"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            {{ generatedTicket }}
+          </h1>
+
+        </div>
+
+        <p
+          class="text-sm text-[#74777f] mt-6"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          Guarde este número para futuras consultas.
+        </p>
+
+        <button
+          (click)="volverLogin()"
+          class="mt-8 w-full py-3 rounded-lg bg-[#002046] text-white font-semibold hover:bg-[#465f88] transition-all"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          Regresar al Inicio de Sesión
+        </button>
+
+      </div>
+
+      <!-- FORM SCREEN -->
+      <div *ngIf="!ticketSubmitted">
+
+        <!-- Top Navigation -->
+        <div class="flex justify-between items-center px-6 py-4 bg-[#eff4ff] border-b border-[#c4c6cf]/20">
+
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#002046]">
+              support_agent
+            </span>
+
+            <span
+              class="font-bold text-[#002046]"
+              style="font-family: 'Manrope', sans-serif;"
+            >
+              Soporte Técnico
+            </span>
+          </div>
+
+          <button
+            (click)="volverLogin()"
+            class="text-sm font-semibold text-[#002046] hover:text-[#465f88] transition-colors"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Volver al Inicio
+          </button>
+
+        </div>
+
+      <!-- SUCCESS SCREEN -->
+      <div *ngIf="ticketSubmitted" class="px-8 py-14 text-center">
+
+        <div class="flex justify-center mb-5">
+          <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+            <span class="material-symbols-outlined text-green-600 text-5xl">
+              check_circle
+            </span>
+          </div>
+        </div>
+
+        <h2
+          class="text-3xl font-bold text-[#002046]"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          Solicitud Enviada
+        </h2>
+
+        <p
+          class="text-[#44474e] mt-3"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          Su solicitud de soporte fue enviada exitosamente.
+        </p>
+
+        <div class="mt-8 bg-[#eff4ff] rounded-xl p-6 border border-[#c4c6cf]/20">
+
+          <p
+            class="text-sm text-[#44474e]"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Número de Ticket
+          </p>
+
+          <h1
+            class="text-4xl font-bold text-[#002046] mt-2 tracking-wider"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            {{ generatedTicket }}
+          </h1>
+
+        </div>
+
+        <p
+          class="text-sm text-[#74777f] mt-6"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          Guarde este número para futuras consultas.
+        </p>
+
+        <button
+          (click)="volverLogin()"
+          class="mt-8 w-full py-3 rounded-lg bg-[#002046] text-white font-semibold hover:bg-[#465f88] transition-all"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          Regresar al Inicio de Sesión
+        </button>
+
+      </div>
+
+      <!-- FORM -->
+      <div *ngIf="!ticketSubmitted">
+
+        <!-- Header -->
+        <div class="px-8 pt-8 pb-6 border-b border-[#c4c6cf]/20">
+
+          <h1
+            class="text-2xl font-bold text-[#002046]"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Formulario de Soporte
+          </h1>
+
+          <p
+            class="text-sm text-[#44474e] mt-2"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Ingrese la matrícula del alumno para completar automáticamente la información.
+          </p>
+
+        </div>
+
+        <!-- Form -->
+        <div class="px-8 py-8">
+
+          <form (ngSubmit)="enviarSoporte()" class="space-y-6">
+
+            <!-- Student ID -->
+            <div>
+              <label class="block text-sm font-semibold text-[#0b1c30] mb-2">
+                Matrícula del Alumno
+              </label>
+
+              <div class="flex gap-3">
+
+                <input
+                  type="text"
+                  [(ngModel)]="studentId"
+                  name="studentId"
+                  required
+                  placeholder="Ej. 202400123"
+                  class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg"
+                />
+
+                <button
+                  type="button"
+                  (click)="buscarAlumno()"
+                  class="px-5 rounded-lg bg-[#002046] text-white font-semibold hover:bg-[#465f88]"
+                >
+                  Buscar
+                </button>
+
+              </div>
+            </div>
+
+            <!-- Autofilled Student Info -->
+            <div *ngIf="studentFound" class="bg-[#eff4ff] border border-[#c4c6cf]/20 rounded-xl p-5">
+
+              <h3 class="font-bold text-[#002046] mb-4">
+                Información del Alumno
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div>
+                  <p class="text-xs text-[#74777f]">Nombre</p>
+                  <p class="font-semibold text-[#0b1c30]">
+                    {{ studentName }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-xs text-[#74777f]">Fecha de Nacimiento</p>
+                  <p class="font-semibold text-[#0b1c30]">
+                    {{ birthDate }}
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Registration Code -->
+            <div>
+              <label class="block text-sm font-semibold text-[#0b1c30] mb-2">
+                Código de Registro
+                <span class="text-[#74777f] font-normal">(Opcional)</span>
+              </label>
+
+              <input
+                type="text"
+                [(ngModel)]="registrationCode"
+                name="registrationCode"
+                placeholder="Ingrese el código si lo tiene"
+                class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg"
+              />
+            </div>
+
+            <!-- Subject -->
+            <div>
+              <label class="block text-sm font-semibold text-[#0b1c30] mb-2">
+                Tema / Asunto
+              </label>
+
+              <select
+                [(ngModel)]="subject"
+                name="subject"
+                required
+                class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg"
+              >
+                <option value="">Seleccione una opción</option>
+                <option value="Acceso a cuenta">Acceso a cuenta</option>
+                <option value="Recuperar contraseña">Recuperar contraseña</option>
+                <option value="Problema con calificaciones">Problema con calificaciones</option>
+                <option value="Problema técnico">Problema técnico</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label class="block text-sm font-semibold text-[#0b1c30] mb-2">
+                Describa el Problema
+              </label>
+
+              <textarea
+                [(ngModel)]="issueDescription"
+                name="issueDescription"
+                required
+                rows="5"
+                placeholder="Explique detalladamente el problema..."
+                class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg resize-none"
+              ></textarea>
+            </div>
+
+            <!-- Screenshot Upload -->
+            <div>
+              <label class="block text-sm font-semibold text-[#0b1c30] mb-2">
+                Adjuntar Capturas
+                <span class="text-[#74777f] font-normal">(Opcional)</span>
+              </label>
+
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                (change)="onFileSelected($event)"
+                class="w-full px-4 py-3 border border-dashed border-[#c4c6cf] rounded-lg bg-[#f8f9ff]"
+              />
+
+              <p class="text-xs text-[#74777f] mt-2">
+                Puede subir capturas de pantalla del problema.
+              </p>
+            </div>
+
+            <!-- Selected Files -->
+            <div *ngIf="selectedFiles.length > 0">
+
+              <h3 class="text-sm font-semibold text-[#002046] mb-2">
+                Archivos Seleccionados
+              </h3>
+
+              <div
+                *ngFor="let file of selectedFiles"
+                class="flex items-center gap-2 bg-[#eff4ff] rounded-lg px-4 py-3 mb-2"
+              >
+                <span class="material-symbols-outlined text-[#002046]">
+                  image
+                </span>
+
+                <span class="text-sm text-[#44474e]">
+                  {{ file.name }}
+                </span>
+              </div>
+
+            </div>
+
+            <!-- Submit -->
+            <button
+              type="submit"
+              class="w-full py-3 rounded-lg bg-[#002046] text-white font-semibold hover:bg-[#465f88] transition-all"
+            >
+              Enviar Solicitud
+            </button>
+
+          </form>
+
+        </div>
+        
+      </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>

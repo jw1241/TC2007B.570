@@ -1,0 +1,276 @@
+<ion-content [fullscreen]="true" class="bg-background">
+  <div class="bg-background text-on-background antialiased min-h-screen flex">
+    
+    <!-- Overlay for mobile menu -->
+    <div *ngIf="isMenuOpen" class="fixed inset-0 bg-black/50 z-30 md:hidden" (click)="toggleMenu()"></div>
+
+    <!-- NavigationDrawer (Desktop) -->
+    <nav class="bg-surface-container dark:bg-inverse-surface shadow-lg rounded-r-xl h-full w-80 fixed left-0 top-0 z-40 py-6 transition-transform transform"
+         [ngClass]="isMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
+      <div class="px-6 mb-8 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-md text-headline-md">
+            L
+        </div>
+        <div>
+          <h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Admin Portal</h2>
+          <p class="font-caption text-caption text-on-surface-variant">Metropolitana La Luz</p>
+          <p class="font-caption text-caption text-outline">v1.0.4</p>
+        </div>
+      </div>
+      <ul class="space-y-2">
+        <li>
+          <a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-3 mx-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high dark:hover:bg-primary-container" href="javascript:void(0)">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a class="flex items-center gap-4 bg-secondary-container text-on-secondary-container rounded-full px-4 py-3 mx-2 font-label-md text-label-md translate-x-1 transition-all" href="javascript:void(0)">
+            <span class="material-symbols-outlined icon-fill">group</span>
+            Students
+          </a>
+        </li>
+        <li>
+          <a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-3 mx-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high dark:hover:bg-primary-container" href="javascript:void(0)">
+            <span class="material-symbols-outlined">school</span>
+            Teachers
+          </a>
+        </li>
+        <li>
+          <a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-3 mx-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high dark:hover:bg-primary-container" href="javascript:void(0)">
+            <span class="material-symbols-outlined">menu_book</span>
+            Subjects
+          </a>
+        </li>
+        <li>
+          <a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-3 mx-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high dark:hover:bg-primary-container" href="javascript:void(0)" (click)="navigateTo('/captura-calificaciones')">
+            <span class="material-symbols-outlined">grade</span>
+            Grades
+          </a>
+        </li>
+        <li>
+          <a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-variant rounded-full px-4 py-3 mx-2 font-label-md text-label-md transition-colors hover:bg-surface-container-high dark:hover:bg-primary-container" href="javascript:void(0)" (click)="navigateTo('/iniciar-sesion')">
+            <span class="material-symbols-outlined">settings</span>
+            Settings / Logout
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col md:ml-80 transition-all duration-300 min-h-screen">
+      <!-- TopAppBar -->
+      <header class="bg-surface dark:bg-on-background shadow-sm sticky top-0 z-30 w-full h-20">
+        <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-full">
+          <div class="flex items-center gap-4">
+            <button class="md:hidden text-primary dark:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-primary-container transition-colors rounded-full p-2" (click)="toggleMenu()">
+              <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="font-display-lg text-display-lg font-extrabold text-primary dark:text-primary-fixed hidden md:block">Escuela Metropolitana La Luz</h1>
+            <h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed md:hidden">La Luz</h1>
+          </div>
+          <div class="flex items-center gap-4">
+            <button class="text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full p-2">
+              <span class="material-symbols-outlined">search</span>
+            </button>
+            <button class="text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full p-2 relative">
+              <span class="material-symbols-outlined">notifications</span>
+              <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden cursor-pointer hover:bg-surface-container-low transition-colors flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary">person</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Canvas -->
+      <main class="flex-1 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full relative pb-24 md:pb-margin-desktop">
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Gestión Académica</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant">Administra los registros de estudiantes y personal docente.</p>
+          </div>
+          
+          <!-- Tabs -->
+          <div class="flex bg-surface-container-low rounded-lg p-1 border border-outline-variant">
+            <button class="px-6 py-2 rounded-md font-label-md text-label-md transition-all" 
+                    [ngClass]="activeTab === 'alumnos' ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-variant'"
+                    (click)="setTab('alumnos')">
+                Alumnos
+            </button>
+            <button class="px-6 py-2 rounded-md font-label-md text-label-md transition-all" 
+                    [ngClass]="activeTab === 'profesores' ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-variant'"
+                    (click)="setTab('profesores')">
+                Profesores
+            </button>
+          </div>
+        </div>
+
+        <!-- Bento Grid Layout for Data -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Summary Card -->
+          <div class="col-span-1 lg:col-span-3 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-6 w-full md:w-auto">
+              <div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+                <span class="material-symbols-outlined text-3xl">analytics</span>
+              </div>
+              <div>
+                <p class="font-label-md text-label-md text-on-surface-variant">Total {{ activeTab === 'alumnos' ? 'Estudiantes' : 'Profesores' }} Activos</p>
+                <h3 class="font-display-lg text-display-lg text-primary">{{ activeTab === 'alumnos' ? '1,248' : '84' }}</h3>
+              </div>
+            </div>
+            <div class="w-full md:w-auto flex gap-4">
+              <div class="bg-surface-container rounded-lg p-4 flex-1 md:w-32 text-center">
+                <p class="font-caption text-caption text-on-surface-variant">Nuevos Ingresos</p>
+                <p class="font-headline-md text-headline-md text-secondary">+{{ activeTab === 'alumnos' ? '42' : '3' }}</p>
+              </div>
+              <div class="bg-surface-container rounded-lg p-4 flex-1 md:w-32 text-center">
+                <p class="font-caption text-caption text-on-surface-variant">Bajas Temporales</p>
+                <p class="font-headline-md text-headline-md text-error">{{ activeTab === 'alumnos' ? '12' : '1' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Record Card 1 -->
+          <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="h-2 w-full bg-secondary absolute top-0 left-0"></div>
+            <div class="p-6">
+              <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline-md text-headline-md">
+                      AM
+                  </div>
+                  <div>
+                    <h4 class="font-headline-md text-headline-md text-on-surface">Ana Martínez</h4>
+                    <p class="font-caption text-caption text-on-surface-variant">{{ activeTab === 'alumnos' ? 'Matrícula: 2023-001' : 'ID: DOC-042' }}</p>
+                  </div>
+                </div>
+                <span class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded-full font-caption text-caption">Activo</span>
+              </div>
+              <div class="space-y-2 mb-6">
+                <div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+                  <span class="material-symbols-outlined text-sm">email</span>
+                  a.martinez@laluz.edu.mx
+                </div>
+                <div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+                  <span class="material-symbols-outlined text-sm">menu_book</span>
+                  {{ activeTab === 'alumnos' ? '3er Semestre - Preparatoria' : 'Matemáticas' }}
+                </div>
+              </div>
+              <div class="flex justify-end gap-2 border-t border-outline-variant pt-4 mt-auto">
+                <button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button class="p-2 text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Record Card 2 -->
+          <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+            <div class="h-2 w-full bg-secondary absolute top-0 left-0"></div>
+            <div class="p-6">
+              <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline-md text-headline-md">
+                      CG
+                  </div>
+                  <div>
+                    <h4 class="font-headline-md text-headline-md text-on-surface">Carlos Gómez</h4>
+                    <p class="font-caption text-caption text-on-surface-variant">{{ activeTab === 'alumnos' ? 'Matrícula: 2022-045' : 'ID: DOC-015' }}</p>
+                  </div>
+                </div>
+                <span class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded-full font-caption text-caption">Activo</span>
+              </div>
+              <div class="space-y-2 mb-6">
+                <div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+                  <span class="material-symbols-outlined text-sm">email</span>
+                  c.gomez@laluz.edu.mx
+                </div>
+                <div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+                  <span class="material-symbols-outlined text-sm">menu_book</span>
+                  {{ activeTab === 'alumnos' ? '5to Semestre - Preparatoria' : 'Literatura' }}
+                </div>
+              </div>
+              <div class="flex justify-end gap-2 border-t border-outline-variant pt-4 mt-auto">
+                <button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button class="p-2 text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Record Card 3 (Inactive) -->
+          <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group opacity-75 hover:opacity-100">
+            <div class="h-2 w-full bg-outline absolute top-0 left-0"></div>
+            <div class="p-6">
+              <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-headline-md text-headline-md">
+                      LR
+                  </div>
+                  <div>
+                    <h4 class="font-headline-md text-headline-md text-on-surface">Laura Ruiz</h4>
+                    <p class="font-caption text-caption text-on-surface-variant">{{ activeTab === 'alumnos' ? 'Matrícula: 2021-112' : 'ID: DOC-099' }}</p>
+                  </div>
+                </div>
+                <span class="bg-surface-variant text-on-surface-variant px-2 py-1 rounded-full font-caption text-caption">Baja Temp.</span>
+              </div>
+              <div class="space-y-2 mb-6">
+                <div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+                  <span class="material-symbols-outlined text-sm">email</span>
+                  l.ruiz@laluz.edu.mx
+                </div>
+                <div class="flex items-center gap-2 text-on-surface-variant font-body-md text-body-md">
+                  <span class="material-symbols-outlined text-sm">menu_book</span>
+                  {{ activeTab === 'alumnos' ? '1er Semestre - Universidad' : 'Física' }}
+                </div>
+              </div>
+              <div class="flex justify-end gap-2 border-t border-outline-variant pt-4 mt-auto">
+                <button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-low rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button class="p-2 text-error hover:bg-error-container hover:text-on-error-container rounded-lg transition-colors">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Floating Action Button (FAB) -->
+      <button class="fixed bottom-24 md:bottom-8 right-6 md:right-8 bg-secondary hover:bg-secondary-fixed-dim text-on-secondary rounded-2xl p-4 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex items-center justify-center z-40 group">
+        <span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform">add</span>
+      </button>
+    </div>
+
+    <!-- BottomNavBar (Mobile) -->
+    <nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-inverse-surface border-t border-outline-variant rounded-t-xl shadow-md">
+      <a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/50 font-caption text-caption w-16 h-14 rounded-xl transition-all" href="javascript:void(0)" (click)="navigateTo('/panel-administracion')">
+        <span class="material-symbols-outlined mb-1">home</span>
+        Home
+      </a>
+      <a class="flex flex-col items-center justify-center bg-secondary text-on-secondary rounded-xl px-4 py-1 font-caption text-caption w-20 h-14 shadow-sm scale-100 transition-all" href="javascript:void(0)">
+        <span class="material-symbols-outlined icon-fill mb-1">school</span>
+        Academic
+      </a>
+      <a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/50 font-caption text-caption w-16 h-14 rounded-xl transition-all" href="javascript:void(0)" (click)="navigateTo('/captura-calificaciones')">
+        <span class="material-symbols-outlined mb-1">edit_square</span>
+        Grades
+      </a>
+      <a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/50 font-caption text-caption w-16 h-14 rounded-xl transition-all" href="javascript:void(0)">
+        <span class="material-symbols-outlined mb-1">person</span>
+        Account
+      </a>
+    </nav>
+
+  </div>
+</ion-content>

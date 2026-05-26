@@ -1,0 +1,151 @@
+<ion-content [fullscreen]="true" class="bg-background">
+  <div class="bg-background text-on-background font-body-md antialiased min-h-screen pt-24 pb-16">
+    <header class="fixed top-0 w-full z-50 bg-surface shadow-sm">
+    <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-20">
+    <button aria-label="Menu" class="flex items-center justify-center p-2 rounded-full hover:bg-surface-container-low transition-colors text-primary">
+    <span class="material-symbols-outlined" data-icon="menu">menu</span>
+    </button>
+    <div class="font-headline-md text-headline-md text-primary truncate hidden md:block">Escuela Metropolitana La Luz</div>
+    <div class="font-label-md text-label-md font-bold text-primary truncate md:hidden">E.M. La Luz</div>
+    <div class="flex items-center gap-4">
+    <div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-outline-variant cursor-pointer" (click)="navigateTo('/perfil')">
+    <img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged male teacher with short dark hair, wearing a neat navy blue collared shirt. The lighting is bright and even, set against a neutral, light gray studio background. The style is modern, approachable, and highly professional, fitting for a corporate or academic profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYln-Y54lCO50F7Iz9BhYrj5__BjSO34vtG5xDJ3OIEnWRS1LoIeSDk1BoRHzcsMR2oHq5HO8WBgvov7TE-It7ZZKLybdBSRYDlU3IBRh-qlu2Pe5Xo6oeV1bC7d4Y8sodksE2s1Pmk7wYLekIQMsr-J4Tvb9te2urz6KptIpaQIiTzdwLkr3XSrgxEsQe1qE-iFWYmcaI-jy_vvt4OijNMVHaRlERDX1APe6xHJIclvLLWyZ4c3deGbTVskPBz8wTb9YMgJLFuR4"/>
+    </div>
+    </div>
+    </div>
+    </header>
+    <main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop space-y-8">
+    <!-- Page Header -->
+    <div class="flex flex-col gap-2">
+    <h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary">Captura de Calificaciones</h1>
+    <p class="font-body-md text-body-md text-on-surface-variant">Seleccione una materia para ingresar las calificaciones del periodo actual.</p>
+    </div>
+    <!-- Subject Selection (Bento/Card Style) -->
+    <section class="space-y-4">
+    <h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Materia Activa</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- Active Subject -->
+    <button class="flex flex-col items-start p-4 rounded-xl border border-primary bg-primary-container text-on-primary-container shadow-sm transition-transform hover:-translate-y-1 text-left relative overflow-hidden group">
+    <div class="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-40 transition-opacity">
+    <span class="material-symbols-outlined text-4xl" data-icon="functions">functions</span>
+    </div>
+    <span class="font-caption text-caption text-on-primary-container/80 mb-1">Grupo 302-A</span>
+    <span class="font-headline-md text-headline-md">Matemáticas III</span>
+    <div class="mt-4 flex items-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-secondary"></span>
+    <span class="font-caption text-caption">Captura Pendiente</span>
+    </div>
+    </button>
+    <!-- Inactive Subject -->
+    <button class="flex flex-col items-start p-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low hover:border-outline shadow-sm transition-transform hover:-translate-y-1 text-left relative overflow-hidden group">
+    <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity text-on-surface">
+    <span class="material-symbols-outlined text-4xl" data-icon="science">science</span>
+    </div>
+    <span class="font-caption text-caption text-on-surface-variant mb-1">Grupo 302-A</span>
+    <span class="font-headline-md text-headline-md text-on-surface">Física Básica</span>
+    <div class="mt-4 flex items-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+    <span class="font-caption text-caption text-on-surface-variant">Sin Iniciar</span>
+    </div>
+    </button>
+    <!-- Inactive Subject -->
+    <button class="flex flex-col items-start p-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low hover:border-outline shadow-sm transition-transform hover:-translate-y-1 text-left relative overflow-hidden group">
+    <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity text-on-surface">
+    <span class="material-symbols-outlined text-4xl" data-icon="menu_book">menu_book</span>
+    </div>
+    <span class="font-caption text-caption text-on-surface-variant mb-1">Grupo 301-B</span>
+    <span class="font-headline-md text-headline-md text-on-surface">Literatura Universal</span>
+    <div class="mt-4 flex items-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-secondary"></span>
+    <span class="font-caption text-caption text-on-surface-variant">Completado</span>
+    </div>
+    </button>
+    </div>
+    </section>
+    <!-- Dense Data Entry Table -->
+    <section class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden flex flex-col">
+    <!-- Table Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-outline-variant bg-surface-container-low/50">
+    <div class="font-label-md text-label-md text-primary">Listado de Alumnos (28)</div>
+    <div class="relative">
+    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+    <input class="pl-9 pr-3 py-1.5 bg-surface border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-48 md:w-64 transition-all" placeholder="Buscar alumno..." type="text"/>
+    </div>
+    </div>
+    <!-- Table Header -->
+    <div class="grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_1fr_auto] gap-4 px-6 py-3 border-b border-outline-variant bg-surface-container-lowest font-label-md text-label-md text-on-surface-variant">
+    <div class="w-8">No.</div>
+    <div>Nombre del Alumno</div>
+    <div class="hidden md:block">Matrícula</div>
+    <div class="text-right w-24">Calificación</div>
+    </div>
+    <!-- Table Body (List) -->
+    <div class="flex flex-col overflow-y-auto max-h-[500px]">
+    <!-- Row 1 -->
+    <div class="grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_1fr_auto] gap-4 px-6 py-3 border-b border-outline-variant items-center hover:bg-surface-container-low/30 transition-colors">
+    <div class="font-caption text-caption text-on-surface-variant w-8">01</div>
+    <div class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md text-label-md">AG</div>
+    <span class="font-body-md text-body-md text-on-surface font-medium">Aguilar García, María Fernanda</span>
+    </div>
+    <div class="hidden md:block font-body-md text-body-md text-on-surface-variant">202104501</div>
+    <div class="flex justify-end w-24">
+    <input class="w-full text-right px-3 py-1.5 border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" max="100" min="0" placeholder="--" step="1" type="number"/>
+    </div>
+    </div>
+    <!-- Row 2 -->
+    <div class="grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_1fr_auto] gap-4 px-6 py-3 border-b border-outline-variant items-center hover:bg-surface-container-low/30 transition-colors">
+    <div class="font-caption text-caption text-on-surface-variant w-8">02</div>
+    <div class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md text-label-md">BS</div>
+    <span class="font-body-md text-body-md text-on-surface font-medium">Bautista Salinas, Jorge</span>
+    </div>
+    <div class="hidden md:block font-body-md text-body-md text-on-surface-variant">202104522</div>
+    <div class="flex justify-end w-24">
+    <input class="w-full text-right px-3 py-1.5 border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" max="100" min="0" placeholder="--" step="1" type="number" value="85"/>
+    </div>
+    </div>
+    <!-- Row 3 -->
+    <div class="grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_1fr_auto] gap-4 px-6 py-3 border-b border-outline-variant items-center hover:bg-surface-container-low/30 transition-colors">
+    <div class="font-caption text-caption text-on-surface-variant w-8">03</div>
+    <div class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md text-label-md">CM</div>
+    <span class="font-body-md text-body-md text-on-surface font-medium">Castillo Martínez, Ana Lucía</span>
+    </div>
+    <div class="hidden md:block font-body-md text-body-md text-on-surface-variant">202104610</div>
+    <div class="flex justify-end w-24">
+    <input class="w-full text-right px-3 py-1.5 border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" max="100" min="0" placeholder="--" step="1" type="number"/>
+    </div>
+    </div>
+    <!-- Row 4 -->
+    <div class="grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_1fr_auto] gap-4 px-6 py-3 border-b border-outline-variant items-center hover:bg-surface-container-low/30 transition-colors">
+    <div class="font-caption text-caption text-on-surface-variant w-8">04</div>
+    <div class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md text-label-md">DL</div>
+    <span class="font-body-md text-body-md text-on-surface font-medium">Domínguez López, Carlos Enrique</span>
+    </div>
+    <div class="hidden md:block font-body-md text-body-md text-on-surface-variant">202104615</div>
+    <div class="flex justify-end w-24">
+    <input class="w-full text-right px-3 py-1.5 border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" max="100" min="0" placeholder="--" step="1" type="number" value="92"/>
+    </div>
+    </div>
+    </div>
+    <!-- Table Footer / Summary -->
+    <div class="px-6 py-4 bg-surface-container-lowest border-t border-outline-variant flex justify-between items-center text-on-surface-variant">
+    <span class="font-caption text-caption">Mostrando 4 de 28 alumnos</span>
+    <span class="font-label-md text-label-md">Promedio Preliminar: <strong class="text-primary">88.5</strong></span>
+    </div>
+    </section>
+    <!-- Action Bar -->
+    <div class="flex flex-col-reverse sm:flex-row justify-end items-center gap-4 pt-4">
+    <button class="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-outline font-label-md text-label-md text-primary hover:bg-surface-container-low transition-colors" (click)="navigateTo('/panel-administracion')">
+                    Descartar
+                </button>
+    <button class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-primary/90 shadow-sm transition-colors flex items-center justify-center gap-2" (click)="navigateTo('/panel-administracion')">
+    <span class="material-symbols-outlined text-sm" data-icon="save">save</span>
+                    Guardar Cambios
+                </button>
+    </div>
+    </main>
+  </div>
+</ion-content>

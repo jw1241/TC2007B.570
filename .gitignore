@@ -46,6 +46,8 @@ Back_end/*.log
 Back_end/coverage/
 Back_end/.nyc_output/
 Back_end/node_modules/
+Back_end/.env
+
 
 # =========================
 # Front_end (Ionic / Angular)

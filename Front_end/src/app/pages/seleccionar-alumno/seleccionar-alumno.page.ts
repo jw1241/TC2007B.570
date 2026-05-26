@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { SupabaseService} from '../../services/supabase';
+import { AuthService } from '../../services/auth.service';
 import { StudentService } from '../../services/student';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-seleccionar-alumno',
@@ -19,100 +20,29 @@ export class SeleccionarAlumnoPage implements OnInit {
 
   constructor(
     private router: Router,
-    private supabaseService: SupabaseService,
-    private studentService: StudentService
-  ) {}
+    private authService: AuthService,
+    private studentService: StudentService,
+    private http: HttpClient
+  ) { }
 
-  async ngOnInit() {
-
-    // Current authenticated user
-    const {
-      data: { user }
-    } = await this.supabaseService.supabase.auth.getUser();
-
-    if (!user) {
-
+  ngOnInit() {
+    // Almacenaremos el token para validar que existe sesión local
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
       this.router.navigate(['/iniciar-sesion']);
       return;
-
     }
 
-    // Fetch user profile
-    console.log('AUTH USER:', user);
-    console.log('AUTH USER ID:', user.id);
+    // TODO: Llamar al backend para obtener el perfil del usuario autenticado
+    // this.http.get('http://localhost:3000/api/perfil').subscribe(...)
 
-    const response =
-      await this.supabaseService.supabase
-        .from('usuarios')
-        .select(`
-          id,
-          nombre_completo,
-          email,
-          roles (
-            nombre_rol
-          )
-        `)
-        .eq('id', user.id);
-
-    console.log('FULL RESPONSE:', response);
-
-    const { data: usuarioData, error: usuarioError } =
-      await this.supabaseService.supabase
-        .from('usuarios')
-        .select(`
-          id,
-          nombre_completo,
-          email,
-          roles (
-            nombre_rol
-          )
-        `)
-        .eq('id', user.id)
-        .single();
-
-    if (usuarioError) {
-
-      console.error(usuarioError);
-      return;
-
-    }
-
-    this.usuario = usuarioData;
-
-    // Fetch linked students
-    const { data, error } =
-      await this.supabaseService.supabase
-        .from('parentescos')
-        .select(`
-          alumnos (
-            id,
-            matricula,
-            nombre_completo,
-            fecha_nacimiento,
-            grupos (
-              grado,
-              seccion
-            )
-          )
-        `)
-        .eq('padre_id', user.id);
-
-        console.log('ALUMNOS DATA:', data);
-        console.log('ALUMNOS ERROR:', error);
-
-    if (error) {
-
-      console.error(error);
-      return;
-
-    }
-
-    this.alumnos =
-  data
-    ?.filter((item: any) => item.alumnos)
-    .map((item: any) => item.alumnos) || [];
-
-  console.log('FINAL ALUMNOS:', this.alumnos);
+    // TODO: Llamar al backend para obtener los alumnos ligados (parentescos)
+    // this.http.get('http://localhost:3000/api/padres/hijos').subscribe(...)
+    
+    // Por ahora, para que compile y no truene:
+    this.usuario = { nombre_completo: 'Usuario Cargando...' };
+    this.alumnos = [];
   }
 
 
@@ -125,17 +55,21 @@ export class SeleccionarAlumnoPage implements OnInit {
     this.router.navigate(['/inicio-resumen']);
   }
 
-  async logout() {
-
-    // Close Supabase session
-    await this.supabaseService.supabase.auth.signOut();
+  logout() {
+    // Remove local token
+    localStorage.removeItem('token');
+    
+    // Inform backend to logout
+    this.authService.logout().subscribe({
+      next: () => console.log('Logged out successfully'),
+      error: (err) => console.error('Logout error', err)
+    });
 
     // Clear selected student
     this.studentService.clearAlumno();
 
     // Redirect to login
     this.router.navigate(['/iniciar-sesion']);
-    
   }
 
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-recuperar-contrasena',
@@ -14,8 +15,12 @@ import { Router } from '@angular/router';
 export class RecuperarContrasenaPage {
 
   email: string = '';
+  errorMessage: string = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   volver() {
     this.router.navigate(['/iniciar-sesion']);
@@ -23,14 +28,22 @@ export class RecuperarContrasenaPage {
 
   codigo() {
     console.log(this.email);
+    this.errorMessage = '';
     
-    this.router.navigate(['/enviar-codigo'],
-  {
-        queryParams: {
-          email: this.email
-        }
+    // Enviar solicitud de recuperación al Backend (No a Supabase directamente)
+    this.authService.resetPasswordForEmail(this.email).subscribe({
+      next: (response) => {
+        console.log('Correo enviado correctamente', response);
+        // Redirigir a la pantalla de confirmación
+        this.router.navigate(['/enviar-codigo'], {
+          queryParams: { email: this.email }
+        });
+      },
+      error: (error) => {
+        this.errorMessage = error.error?.message || 'Error al enviar el correo';
+        console.error('Error:', this.errorMessage);
       }
-    );
+    });
   }
 
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { SupabaseService } from '../../services/supabase';
+import { AuthService } from '../../services/auth.service';
 import { StudentService } from '../../services/student';
 
 @Component({
@@ -20,7 +20,7 @@ export class IniciarSesionPage implements OnInit {
 
   constructor(
     private router: Router,
-    private supabaseService: SupabaseService,
+    private authService: AuthService,
     private studentService: StudentService
   ) {}
 
@@ -48,42 +48,25 @@ export class IniciarSesionPage implements OnInit {
 
   
 
-  async onLogin() {
+  onLogin() {
+    console.log('Identifier:', this.identifier);
+    console.log('Password:', this.password);
 
-  console.log('Identifier:', this.identifier);
-  console.log('Password:', this.password);
-
-  try {
-
-    const { data, error } =
-      await this.supabaseService.supabase.auth.signInWithPassword({
-
-        email: this.identifier,
-        password: this.password
-
-      });
-
-    console.log('Supabase response:', data);
-    console.log('Supabase error:', error);
-
-    if (error) {
-
-      alert(error.message);
-      return;
-
-    }
-
-    console.log('LOGIN SUCCESS');
-
-    this.router.navigate(['/seleccionar-alumno']);
-
-  } catch (err) {
-
-    console.error('CATCH ERROR:', err);
-
+    this.authService.login(this.identifier, this.password).subscribe({
+      next: (response) => {
+        console.log('LOGIN SUCCESS', response);
+        // Guardar token JWT en localStorage
+        if (response.token) {
+          localStorage.setItem('token', response.token);
+        }
+        this.router.navigate(['/seleccionar-alumno']);
+      },
+      error: (err) => {
+        console.error('CATCH ERROR:', err);
+        alert(err.error?.message || err.error?.error?.message || 'Error al iniciar sesión');
+      }
+    });
   }
-
-}
 
 recuperarcontrasena() {
     this.router.navigate(['/recuperar-contrasena']);

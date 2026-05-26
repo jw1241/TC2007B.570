@@ -11,8 +11,20 @@ const app = express();
 app.use(helmet());
 
 // 2. CORS Restringido
+const allowedOrigins = [
+  "http://localhost:8100", 
+  "http://localhost:4200", 
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:8100", // Cambiar en producción
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy: No permitido por Access-Control-Allow-Origin'));
+    }
+  },
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204
@@ -32,13 +44,15 @@ const limiter = rateLimit({
 });
 app.use("/api/", limiter); // Aplica a todas las rutas API
 
-// Importar archivo de rutas
+// Importar rutas
 const itemRoutes = require("./routes/items");
-app.use("/api/items", itemRoutes);
-
-// Importar rutas de administración y middleware de auth
 const adminRoutes = require("./routes/adminRoutes");
+const authRoutes = require("./routes/authRoutes");
 const { authMiddleware, requireAdmin } = require("./middleware/authMiddleware");
+
+// Rutas Públicas (Auth, Items)
+app.use("/api/auth", authRoutes);
+app.use("/api/items", itemRoutes);
 
 // Rutas de administración protegidas
 app.use("/api/admin", authMiddleware, requireAdmin, adminRoutes);

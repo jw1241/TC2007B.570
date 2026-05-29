@@ -70,3 +70,4 @@ Front_end/android/app/src/main/assets/public/
 Front_end/coverage/
 Front_end/e2e/*.js
 Front_end/e2e/*.map
+.DS_Store

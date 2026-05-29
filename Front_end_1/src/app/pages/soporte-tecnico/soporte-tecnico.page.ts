@@ -4,6 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 
+import { ApiService } from '../../services/api';
+
+import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-soporte-tecnico',
   templateUrl: './soporte-tecnico.page.html',
@@ -12,6 +16,8 @@ import { Router } from '@angular/router';
   imports: [IonicModule, CommonModule, FormsModule]
 })
 export class SoporteTecnicoPage {
+
+  role: 'padre' | 'docente' = 'padre';
 
   studentId: string = '';
   studentName: string = '';
@@ -28,82 +34,139 @@ export class SoporteTecnicoPage {
   ticketSubmitted: boolean = false;
   generatedTicket: string = '';
 
-  constructor(private router: Router) {}
+  isSubmitting: boolean = false;
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private api: ApiService
+  ) {}
 
   volverLogin() {
     this.router.navigate(['/iniciar-sesion']);
   }
 
-  buscarAlumno() {
+  async buscarAlumno() {
+  try {
+    this.isSubmitting = true;
 
-    // Simulated database lookup
-    const mockStudents: any = {
-      '202400123': {
-        name: 'Juan Pérez García',
-        birthDate: '2012-05-14'
-      },
+    const res: any = await this.api.validateAlumno({
+      studentId: this.studentId,
+      registrationCode: this.registrationCode
+    });
 
-      '202400456': {
-        name: 'María González López',
-        birthDate: '2011-09-22'
-      }
-    };
-
-    const student = mockStudents[this.studentId];
-
-    if (student) {
-
-      this.studentName = student.name;
-      this.birthDate = student.birthDate;
-
-      this.studentFound = true;
-
-    } else {
-
+    if (!res?.success) {
       this.studentFound = false;
-
-      alert('No se encontró información para esta matrícula.');
-
+      alert(res?.error?.message || 'No encontrado');
+      return;
     }
-  }
 
-  onFileSelected(event: any) {
+    this.studentName = res.alumno.nombre_completo;
+    this.birthDate = res.alumno.fecha_nacimiento;
+    this.studentFound = true;
 
-    if (event.target.files) {
-      this.selectedFiles = Array.from(event.target.files);
-    }
+  } catch (err) {
+    console.error(err);
+    alert('Error validando alumno');
+  } finally {
+    this.isSubmitting = false;
   }
+}
+
+async validarDocente() {
+  return await this.api.validateDocente({
+    docenteId: this.studentId,
+    registrationCode: this.registrationCode
+  });
+}
+
+onFileSelected(event: any) {
+  if (event.target.files) {
+    this.selectedFiles = Array.from(event.target.files);
+  }
+}
 
   generarTicket(): string {
 
-    const random = Math.floor(100000 + Math.random() * 900000);
+    const random =
+      Math.floor(100000 + Math.random() * 900000);
 
     return `TKT-${random}`;
   }
 
-  enviarSoporte() {
+  async enviarSoporte() {
 
-    this.generatedTicket = this.generarTicket();
+  this.isSubmitting = true;
 
-    const soporteData = {
-      ticket: this.generatedTicket,
-      studentId: this.studentId,
-      studentName: this.studentName,
-      birthDate: this.birthDate,
-      registrationCode: this.registrationCode,
-      subject: this.subject,
-      issueDescription: this.issueDescription,
+  try {
+
+    const currentUser = await this.authService.getProfile();
+
+    if (!currentUser) {
+      alert('Usuario no autenticado');
+      return;
+    }
+
+    let validationResult: any;
+
+    // =====================
+    // ROLE-BASED VALIDATION
+    // =====================
+
+    if (currentUser.rol_id === 3) {
+
+      validationResult = await this.api.validateAlumno({
+        studentId: this.studentId,
+        registrationCode: this.registrationCode
+      });
+    }
+
+    if (currentUser.rol_id === 2) {
+
+      validationResult = await this.api.validateDocente({
+        docenteId: this.studentId,
+        registrationCode: this.registrationCode
+      });
+    }
+
+    if (currentUser.rol_id === 1) {
+      validationResult = { success: true };
+    }
+
+    if (!validationResult?.success) {
+      alert(validationResult?.error?.message || 'Validación fallida');
+      return;
+    }
+
+    // =====================
+    // CREATE TICKET VIA API
+    // =====================
+
+    const ticketPayload = {
+      usuarioId: currentUser.id,
+      alumnoMatricula: this.studentId,
+      codigoRegistro: this.registrationCode,
+      asunto: this.subject,
+      descripcion: this.issueDescription,
       files: this.selectedFiles
     };
 
-    console.log('Solicitud enviada:', soporteData);
+    const res: any = await this.api.createTicket(ticketPayload);
 
-    // Here you can later connect:
-    // Firebase
-    // Supabase
-    // Node.js API
-    // SQL Backend
+    if (!res?.success) {
+      alert('Error creando ticket');
+      return;
+    }
 
+    this.generatedTicket = res.ticket_codigo;
     this.ticketSubmitted = true;
+
+  } catch (err) {
+    console.error(err);
+    alert('Error enviando ticket');
+
+  } finally {
+    this.isSubmitting = false;
   }
+}
 }

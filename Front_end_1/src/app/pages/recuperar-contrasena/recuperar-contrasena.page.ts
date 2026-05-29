@@ -32,109 +32,97 @@ export class RecuperarContrasenaPage {
 
   async codigo() {
 
-    if (!this.email) {
+  if (!this.email) {
 
-      this.showAlert(
-        'Error',
-        'Ingresa un correo electrónico.'
+    await this.showAlert(
+      'Error',
+      'Ingresa un correo electrónico.'
+    );
+
+    return;
+
+  }
+
+  this.isLoading = true;
+
+  try {
+
+    // CHECK IF USER EXISTS
+    const {
+      data: existingUser
+    } =
+      await this.supabaseService.supabase
+        .from('usuarios')
+        .select('email')
+        .eq('email', this.email)
+        .maybeSingle();
+
+    // EMAIL NOT FOUND
+    if (!existingUser) {
+
+      await this.showAlert(
+        'Correo no encontrado',
+        'No existe una cuenta registrada con este correo electrónico.'
       );
 
       return;
 
     }
 
-    this.isLoading = true;
+    // SEND RECOVERY EMAIL
+    const { error } =
+      await this.supabaseService.supabase.auth
+        .resetPasswordForEmail(
+          this.email,
+          {
 
-    try {
+            redirectTo:
+              'http://localhost:8100/reset-password'
 
-      // CHECK IF USER EXISTS
-      const {
-        data: existingUser,
-        error: userError
-      } =
-        await this.supabaseService.supabase
-          .from('usuarios')
-          .select('email')
-          .eq('email', this.email)
-          .maybeSingle();
-
-      console.log('USER:', existingUser);
-      console.log('USER ERROR:', userError);
-
-      // EMAIL NOT FOUND
-      if (!existingUser) {
-
-        await this.showAlert(
-          'Correo no encontrado',
-          'No existe una cuenta registrada con este correo electrónico.'
-        );
-
-        this.isLoading = false;
-        return;
-
-      }
-
-      // SEND RESET EMAIL
-      const {
-        data,
-        error
-      } =
-        await this.supabaseService.supabase.auth
-          .resetPasswordForEmail(
-            this.email,
-            {
-
-              redirectTo:
-                'http://localhost:8100/reset-password'
-
-            }
-          );
-
-      console.log('RESET DATA:', data);
-      console.log('RESET ERROR:', error);
-
-      if (error) {
-
-        await this.showAlert(
-          'Error',
-          'No se pudo enviar el correo de recuperación.'
-        );
-
-        this.isLoading = false;
-        return;
-
-      }
-
-      await this.showAlert(
-        'Correo enviado',
-        'Te enviamos un enlace para restablecer tu contraseña.'
-      );
-
-      this.router.navigate(
-        ['/enviar-codigo'],
-        {
-          queryParams: {
-            email: this.email
           }
-        }
-      );
+        );
 
-    } catch (err) {
+    if (error) {
 
-      console.error(err);
+      console.error(error);
 
       await this.showAlert(
         'Error',
-        'Ocurrió un error inesperado.'
+        'No se pudo enviar el correo de recuperación.'
       );
 
-    } finally {
-
-      this.isLoading = false;
+      return;
 
     }
 
+    // SUCCESS
+    await this.showAlert(
+      'Correo enviado',
+      'Te enviamos un enlace para restablecer tu contraseña.'
+    );
+
+    // OPTIONAL:
+    // RETURN TO LOGIN PAGE
+    this.router.navigate([
+      '/iniciar-sesion'
+    ]);
+
+  } catch (err) {
+
+    console.error(err);
+
+    await this.showAlert(
+      'Error',
+      'Ocurrió un error inesperado.'
+    );
+
+  } finally {
+
+    this.isLoading = false;
+
   }
+
+}
 
   async showAlert(
     header: string,

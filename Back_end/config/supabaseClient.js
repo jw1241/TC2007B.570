@@ -1,27 +1,43 @@
-require("dotenv").config({ path: ".env.production" });
 const { createClient } = require("@supabase/supabase-js");
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl) {
-  console.warn("⚠️ Advertencia: Falta configurar SUPABASE_URL en el archivo .env");
-}
+console.log("SUPABASE URL:", supabaseUrl);
+console.log(
+  "SERVICE ROLE:",
+  serviceRoleKey?.slice(0, 20)
+);
 
-// Inicializa el cliente global estándar
-const supabase = createClient(supabaseUrl || "https://placeholder.supabase.co", supabaseAnonKey || "placeholder");
+const supabase = createClient(
+  supabaseUrl,
+  supabaseAnonKey
+);
 
-// Inicializa el cliente Administrador con Service Role (Bypass RLS y permite Auth Admin)
-let supabaseAdmin = null;
-if (supabaseServiceKey) {
-  supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
+const supabaseAdmin = createClient(
+  supabaseUrl,
+  serviceRoleKey
+);
+
+function createAuthClient(token) {
+  const { createClient } = require("@supabase/supabase-js");
+
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY,
+    {
+      global: {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
     }
-  });
-}
+  );
+};
 
-module.exports = supabase;
-module.exports.supabaseAdmin = supabaseAdmin;
+module.exports = {
+  supabase,
+  supabaseAdmin,
+  createAuthClient
+};

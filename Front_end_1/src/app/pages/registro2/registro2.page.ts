@@ -1,10 +1,147 @@
+// import { Component, OnInit } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import { FormsModule } from '@angular/forms';
+// import { IonicModule } from '@ionic/angular';
+// import { Router } from '@angular/router';
+// import { ApiService } from '../../services/api';
+
+// @Component({
+//   selector: 'app-registro2',
+//   templateUrl: './registro2.page.html',
+//   styleUrls: ['./registro2.page.scss'],
+//   standalone: true,
+//   imports: [
+//     IonicModule,
+//     CommonModule,
+//     FormsModule
+//   ]
+// })
+// export class Registro2Page implements OnInit {
+
+//   showPassword = false;
+//   showConfirmPassword = false;
+
+//   usuarioId: string = '';
+//   role: 'padre' | 'docente' = 'padre';
+//   nombreCompleto: string = '';
+
+//   email: string = '';
+//   password: string = '';
+//   confirmPassword: string = '';
+
+//   registrationCode: string = '';
+
+//   constructor(private router: Router, private api: ApiService) {}
+
+//   ngOnInit() {
+
+//   const nav = this.router.getCurrentNavigation();
+
+//   const state = nav?.extras?.state as any;
+
+//   if (state) {
+
+//     this.usuarioId = state.usuarioId;
+
+//     this.registrationCode = state.registrationCode;
+
+//     this.role = state.role;
+
+//     this.nombreCompleto = state.nombre;
+
+//   }
+
+// }
+
+// get hasMinLength(): boolean {
+//   return this.password.length >= 12;
+// }
+
+// get hasMaxLength(): boolean {
+//   return this.password.length <= 16;
+// }
+
+// get hasUppercase(): boolean {
+//   return /[A-Z]/.test(this.password);
+// }
+
+// get hasLowercase(): boolean {
+//   return /[a-z]/.test(this.password);
+// }
+
+// get hasNumber(): boolean {
+//   return /\d/.test(this.password);
+// }
+
+// get hasSpecialChar(): boolean {
+//   return /[^A-Za-z0-9]/.test(this.password);
+// }
+
+//   volver() {
+//     this.router.navigate(['/registro']);
+//   }
+
+//   async crearCuenta() {
+
+//   try {
+
+//     if (this.password !== this.confirmPassword) {
+
+//       alert('Las contraseñas no coinciden');
+
+//       return;
+
+//     }
+
+//     const payload = {
+
+//       usuarioId: this.usuarioId,
+
+//       registrationCode:this.registrationCode,
+
+//       role: this.role,
+
+//       email: this.email,
+
+//       password: this.password
+
+//     };
+
+//     const res: any = await this.api.post(
+//       '/auth/activate-account',
+//       payload
+//     );
+
+//     if (res?.success) {
+
+//       alert('Cuenta creada correctamente');
+
+//       this.router.navigate([
+//         '/iniciar-sesion'
+//       ]);
+
+//     }
+
+//   } catch (err: any) {
+
+//     console.error(err);
+
+//     alert(
+//       err?.error?.error?.message ||
+//       'No se pudo crear la cuenta'
+//     );
+
+//   }
+
+// }
+
+// }
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { SupabaseService } from '../../services/supabase';
-import { StudentService } from '../../services/student';
+import { ApiService } from '../../services/api';
 
 @Component({
   selector: 'app-registro2',
@@ -18,118 +155,175 @@ import { StudentService } from '../../services/student';
   ]
 })
 export class Registro2Page implements OnInit {
-  
+
+  showPassword = false;
+  showConfirmPassword = false;
+
+  usuarioId: string = '';
+
+  role: 'padre' | 'docente' = 'padre';
+
+  nombreCompleto: string = '';
+
+  registrationCode: string = '';
+
   email: string = '';
+
   password: string = '';
+
   confirmPassword: string = '';
-  parentName: string = '';
 
   constructor(
     private router: Router,
-    private supabaseService: SupabaseService,
-    private studentService: StudentService
+    private api: ApiService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+
+    const state = history.state;
+
+    console.log(
+      '📦 RAW HISTORY STATE:',
+      state
+    );
+
+    /**
+     * LOAD STATE
+     */
+    this.role =
+      state?.role || 'padre';
+
+    this.usuarioId =
+      state?.usuarioId || '';
+
+    this.registrationCode =
+      state?.registrationCode || '';
+
+    this.nombreCompleto =
+      state?.nombre || '';
+
+    console.log(
+      '✅ FINAL PAGE STATE:',
+      {
+        role: this.role,
+        usuarioId: this.usuarioId,
+        registrationCode: this.registrationCode,
+        nombreCompleto: this.nombreCompleto
+      }
+    );
+
+  }
+
+  get hasMinLength(): boolean {
+    return this.password.length >= 12;
+  }
+
+  get hasMaxLength(): boolean {
+    return this.password.length <= 16;
+  }
+
+  get hasUppercase(): boolean {
+    return /[A-Z]/.test(this.password);
+  }
+
+  get hasLowercase(): boolean {
+    return /[a-z]/.test(this.password);
+  }
+
+  get hasNumber(): boolean {
+    return /\d/.test(this.password);
+  }
+
+  get hasSpecialChar(): boolean {
+    return /[^A-Za-z0-9]/.test(this.password);
+  }
 
   volver() {
-    this.router.navigate(['/registro']);
+
+    this.router.navigate([
+      '/registro'
+    ]);
+
   }
 
   async crearCuenta() {
 
-  // Validate parent name
-  if (!this.parentName.trim()) {
+    try {
 
-    alert('Ingresa el nombre del padre o tutor');
-    return;
+      if (
+        this.password !==
+        this.confirmPassword
+      ) {
 
-  }
+        alert(
+          'Las contraseñas no coinciden'
+        );
 
-  // Password match
-  if (this.password !== this.confirmPassword) {
+        return;
 
-    alert('Las contraseñas no coinciden');
-    return;
+      }
 
-  }
+      const payload = {
 
-  // Password requirements
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{12,16}$/;
+        usuarioId:
+          this.usuarioId,
 
-  if (!passwordRegex.test(this.password)) {
+        registrationCode:
+          this.registrationCode,
 
-    alert(
-      'La contraseña debe tener entre 12 y 16 caracteres, incluir mayúsculas, minúsculas y un símbolo especial.'
-    );
+        role:
+          this.role,
 
-    return;
+        email:
+          this.email,
 
-  }
+        password:
+          this.password
 
-  // Get validated alumno
-  const alumno =
-    this.studentService.getAlumno();
+      };
 
-  console.log('ALUMNO:', alumno);
+      console.log(
+        '📤 ACTIVATION PAYLOAD:',
+        payload
+      );
 
-  if (!alumno) {
+      const res: any =
+        await this.api.post(
+          '/auth/activate-account',
+          payload
+        );
 
-    alert('No se encontró información del alumno');
-    return;
+      console.log(
+        '✅ ACTIVATION RESPONSE:',
+        res
+      );
 
-  }
+      if (res?.success) {
 
-  // Save temporary registration
-  const registrationData = {
+        alert(
+          'Cuenta creada correctamente'
+        );
 
-    alumno,
-    parentName: this.parentName
+        this.router.navigate([
+          '/iniciar-sesion'
+        ]);
 
-  };
+      }
 
-  console.log(
-    'SAVING REGISTRATION:',
-    registrationData
-  );
+    } catch (err: any) {
 
-  localStorage.setItem(
-    'pendingRegistration',
-    JSON.stringify(registrationData)
-  );
+      console.error(
+        '❌ ACTIVATION ERROR:',
+        err
+      );
 
-  // Create auth account
-  const { data, error } =
-    await this.supabaseService.supabase.auth.signUp({
+      alert(
+        err?.error?.error?.message ||
+        'No se pudo crear la cuenta'
+      );
 
-      email: this.email,
-      password: this.password
-
-    });
-
-  console.log('SIGNUP DATA:', data);
-  console.log('SIGNUP ERROR:', error);
-
-  if (error) {
-
-    alert(error.message);
-
-    // Cleanup failed registration
-    localStorage.removeItem(
-      'pendingRegistration'
-    );
-
-    return;
+    }
 
   }
-
-  alert(
-    'Cuenta creada correctamente. Revisa tu correo electrónico para verificar tu cuenta antes de iniciar sesión.'
-  );
-
-  this.router.navigate(['/iniciar-sesion']);
-
-}
 
 }

@@ -5,40 +5,61 @@ import { Injectable } from '@angular/core';
 })
 export class StudentService {
 
-  selectedAlumno: any = null;
+  private alumno: any = null;
+  private registrationCode: string | null = null;
 
-  constructor() {}
+  constructor() {
 
-  setAlumno(alumno: any) {
+    // restore from localStorage on refresh
+    const savedAlumno =
+      localStorage.getItem('alumno');
 
-    this.selectedAlumno = alumno;
+    const savedCode =
+      localStorage.getItem('registrationCode');
+
+    if (savedAlumno) {
+      this.alumno = JSON.parse(savedAlumno);
+    }
+
+    if (savedCode) {
+      this.registrationCode = savedCode;
+    }
+
+  }
+
+  setAlumno(alumno: any, registrationCode: string) {
+
+    this.alumno = alumno;
+    this.registrationCode = registrationCode;
 
     localStorage.setItem(
-      'selectedAlumno',
+      'alumno',
       JSON.stringify(alumno)
     );
+
+    localStorage.setItem(
+      'registrationCode',
+      registrationCode
+    );
+
   }
 
   getAlumno() {
-
-  if (!this.selectedAlumno) {
-
-    const stored =
-      localStorage.getItem('selectedAlumno');
-
-    if (stored) {
-      this.selectedAlumno = JSON.parse(stored);
-    }
+    return this.alumno;
   }
 
-  return this.selectedAlumno;
-}
+  getRegistrationCode() {
+    return this.registrationCode;
+  }
 
-  clearAlumno() {
+  clear() {
 
-    this.selectedAlumno = null;
+    this.alumno = null;
+    this.registrationCode = null;
 
-    localStorage.removeItem('selectedAlumno');
+    localStorage.removeItem('alumno');
+    localStorage.removeItem('registrationCode');
+
   }
 
 }

@@ -1,0 +1,214 @@
+<ion-content
+  class="ion-padding"
+  style="--background: #f8f9ff;"
+>
+
+  <div
+    class="min-h-full flex items-center justify-center py-10 px-4"
+  >
+
+    <!-- MAIN CARD -->
+    <div
+      class="w-full max-w-md bg-white rounded-2xl shadow-[0_16px_40px_-15px_rgba(0,32,70,0.08)] border border-[#c4c6cf]/30 overflow-hidden"
+    >
+
+      <!-- HEADER -->
+      <div
+        class="px-6 pt-6 pb-4 border-b border-[#c4c6cf]/20 bg-[#eff4ff]/60"
+      >
+
+        <!-- ICON -->
+        <div
+          class="flex flex-col items-center text-center"
+        >
+
+          <div
+            class="w-20 h-20 rounded-full bg-[#f8f9ff] flex items-center justify-center shadow-sm border border-[#c4c6cf]/20 mb-4"
+          >
+
+            <span
+              class="material-symbols-outlined text-[40px] text-[#002046]"
+            >
+              lock_reset
+            </span>
+
+          </div>
+
+          <h1
+            class="text-3xl font-bold text-[#002046]"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Crear contraseña
+          </h1>
+
+          <p
+            class="text-base text-[#44474e] mt-2 font-medium"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Configura tu nueva contraseña para activar tu cuenta
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- FORM -->
+      <div class="px-6 py-8">
+
+        <form
+          (ngSubmit)="updatePassword()"
+          class="space-y-5"
+        >
+
+          <!-- PASSWORD -->
+          <div>
+
+            <label
+              class="block text-sm font-semibold text-[#0b1c30] mb-2"
+              style="font-family: 'Manrope', sans-serif;"
+            >
+              Nueva contraseña
+            </label>
+
+            <!-- RULES -->
+            <div class="text-sm text-[#74777f] space-y-1 mb-3">
+
+  <p>La contraseña debe contener:</p>
+
+  <ul class="list-disc ml-5">
+
+    <li [style.color]="passwordRules.length ? 'green' : 'red'">
+      Mínimo 12 caracteres
+    </li>
+
+    <li [style.color]="passwordRules.upper ? 'green' : 'red'">
+      Una letra mayúscula
+    </li>
+
+    <li [style.color]="passwordRules.lower ? 'green' : 'red'">
+      Una letra minúscula
+    </li>
+
+    <li [style.color]="passwordRules.number ? 'green' : 'red'">
+      Un número
+    </li>
+
+    <li [style.color]="passwordRules.special ? 'green' : 'red'">
+      Un símbolo especial
+    </li>
+
+  </ul>
+
+</div>
+
+            <!-- INPUT -->
+            <div class="relative">
+
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                [(ngModel)]="password"
+                (ngModelChange)="checkPassword()"
+                name="password"
+                required
+                placeholder="••••••••"
+                class="w-full px-4 py-3 pr-12 border border-[#c4c6cf] rounded-lg bg-white text-[#0b1c30] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors"
+              />
+
+              <button
+                type="button"
+                (click)="showPassword = !showPassword"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#74777f]"
+              >
+
+                <span
+                  class="material-symbols-outlined"
+                >
+
+                  {{
+                    showPassword
+                      ? 'visibility_off'
+                      : 'visibility'
+                  }}
+
+                </span>
+
+              </button>
+
+            </div>
+
+          </div>
+
+          <!-- CONFIRM PASSWORD -->
+          <div>
+
+            <label
+              class="block text-sm font-semibold text-[#0b1c30] mb-2"
+              style="font-family: 'Manrope', sans-serif;"
+            >
+              Confirmar contraseña
+            </label>
+
+            <div class="relative">
+
+              <input
+                [type]="showConfirmPassword ? 'text' : 'password'"
+                [(ngModel)]="confirmPassword"
+                name="confirmPassword"
+                required
+                placeholder="••••••••"
+                class="w-full px-4 py-3 pr-12 border border-[#c4c6cf] rounded-lg bg-white text-[#0b1c30] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors"
+              />
+
+              <button
+                type="button"
+                (click)="showConfirmPassword = !showConfirmPassword"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#74777f]"
+              >
+
+                <span
+                  class="material-symbols-outlined"
+                >
+
+                  {{
+                    showConfirmPassword
+                      ? 'visibility_off'
+                      : 'visibility'
+                  }}
+
+                </span>
+
+              </button>
+
+            </div>
+
+          </div>
+
+          <!-- BUTTON -->
+          <div class="pt-4">
+
+            <button
+              type="submit"
+              [disabled]="loading"
+              class="w-full py-3 rounded-lg bg-[#002046] text-white font-semibold hover:bg-[#465f88] hover:-translate-y-[1px] transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              style="font-family: 'Manrope', sans-serif;"
+            >
+
+              {{
+                loading
+                  ? 'Guardando...'
+                  : 'Crear contraseña'
+              }}
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>

@@ -1,7 +1,9 @@
 {
-  "name": "Front_end",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular-standalone"
+  "name": "myApp",
+  "type": "angular",
+  "integrations": {},
+  "proxies": [],
+  "serve": {
+    "port": 8100
+  }
 }

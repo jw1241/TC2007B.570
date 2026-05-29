@@ -3,6 +3,13 @@ const router = express.Router();
 const Joi = require("joi");
 const { supabaseAdmin } = require("../config/supabaseClient");
 
+const { authMiddleware } = require("../middleware/authMiddleware");
+const { requireRole } = require("../middleware/roleMiddleware");
+const ROLES = require("../constants/roles");
+// const pool = require("../constants/db");
+
+const crypto = require('crypto');
+
 /**
  * @swagger
  * /api/admin/usuarios:
@@ -19,19 +26,42 @@ const { supabaseAdmin } = require("../config/supabaseClient");
  *       403:
  *         description: Requiere rol de administrador
  */
-router.get("/usuarios", async (req, res, next) => {
-  try {
-    const { data, error } = await req.supabase
-      .from('usuarios')
-      .select('*');
+router.get(
+  "/usuarios",
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  async (req, res, next) => {
+    try {
+      const page = parseInt(req.query.page || "1");
+      const limit = parseInt(req.query.limit || "20");
 
-    if (error) throw error;
-    
-    res.json(data);
-  } catch (err) {
-    next(err);
+      const from = (page - 1) * limit;
+      const to = from + limit - 1;
+
+      const { data, error } = await supabaseAdmin
+        .from("usuarios")
+        .select("id, email, nombre_completo, rol_id, activo")
+        .range(from, to);
+
+      if (error) {
+        return res.status(500).json({
+          error: {
+            message: "Error fetching users",
+            details: error.message
+          }
+        });
+      }
+
+      res.json({
+        message: "Usuarios obtenidos correctamente",
+        data
+      });
+
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 /**
  * @swagger
@@ -49,16 +79,12 @@ router.get("/usuarios", async (req, res, next) => {
  *             type: object
  *             required:
  *               - email
- *               - password
  *               - rol_id
  *               - nombre
  *             properties:
  *               email:
  *                 type: string
  *                 example: docente1@laluz.edu.mx
- *               password:
- *                 type: string
- *                 example: PasswordSeguro123
  *               rol_id:
  *                 type: integer
  *                 example: 2
@@ -73,61 +99,494 @@ router.get("/usuarios", async (req, res, next) => {
  *       500:
  *         description: Error interno o falta SERVICE_ROLE_KEY
  */
-router.post("/usuarios", async (req, res, next) => {
-  try {
-    if (!supabaseAdmin) {
-      return res.status(500).json({ error: { message: "El backend no tiene configurado el SUPABASE_SERVICE_ROLE_KEY." } });
-    }
 
-    // Validación de entrada con Joi (Previene NoSQL/SQL injection en logs/app y fuerza esquema)
-    const schema = Joi.object({
-      email: Joi.string().email().required(),
-      password: Joi.string().min(6).required(),
-      rol_id: Joi.number().integer().positive().required(),
-      nombre: Joi.string().trim().min(2).max(100).required()
-    });
+// router.post(
+//   "/usuarios",
+//   authMiddleware,
+//   requireRole([ROLES.ADMIN]),
+//   async (req, res, next) => {
 
-    const { error: validationError, value } = schema.validate(req.body);
-    if (validationError) {
-      return res.status(400).json({ 
-        error: { 
-          message: "Datos inválidos", 
-          details: validationError.details.map(d => d.message) 
-        } 
+//     try {
+
+//       const schema = Joi.object({
+
+//         email:
+//           Joi.string()
+//             .email()
+//             .trim()
+//             .lowercase()
+//             .required(),
+
+//         rol_id:
+//           Joi.number()
+//             .integer()
+//             .positive()
+//             .required(),
+
+//         nombre_completo:
+//           Joi.string()
+//             .trim()
+//             .min(2)
+//             .max(100)
+//             .required()
+
+
+//       });
+
+//       const { error, value } =
+//         schema.validate(req.body);
+
+//       if (error) {
+
+//         return res.status(400).json({
+//           error: {
+//             message: "Datos inválidos"
+//           }
+//         });
+
+//       }
+
+//       const {
+//         email,
+//         rol_id,
+//         nombre_completo
+//       } = value;
+
+//       // SEND INVITATION
+//       // THIS CREATES AUTH USER AUTOMATICALLY
+
+//       const {
+//         data,
+//         error: inviteError
+//       } =
+//         await supabaseAdmin.auth.admin.inviteUserByEmail(
+
+//           email,
+
+//           {
+
+//             redirectTo:
+//               `${process.env.FRONTEND_URL}/auth/callback`,
+
+//             data: {
+
+//               rol_id,
+//               nombre_completo
+
+//             }
+
+//           }
+
+//         );
+
+//       if (inviteError) {
+
+//         return res.status(400).json({
+
+//           error: {
+
+//             message:
+//               "Error enviando invitación",
+
+//             details:
+//               inviteError.message
+
+//           }
+
+//         });
+
+//       }
+
+//       return res.status(201).json({
+
+//         message:
+//           "Usuario invitado correctamente"
+
+//       });
+
+//     } catch (err) {
+
+//       next(err);
+
+//     }
+
+//   }
+// );
+
+router.post(
+  "/usuarios",
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  async (req, res, next) => {
+
+    try {
+
+      const schema = Joi.object({
+
+        email:
+          Joi.string()
+            .email()
+            .trim()
+            .lowercase()
+            .required(),
+
+        rol_id:
+          Joi.number()
+            .integer()
+            .positive()
+            .required(),
+
+        nombre_completo:
+          Joi.string()
+            .trim()
+            .min(2)
+            .max(100)
+            .required(),
+
+        grupo_id:
+          Joi.string()
+            .uuid()
+            .optional(),
+
+        matricula:
+          Joi.string()
+            .trim()
+            .optional(),
+
+        materia_id:
+        Joi.string()
+          .uuid()
+          .optional()
+
       });
+
+      const { error, value } =
+        schema.validate(req.body);
+
+      if (error) {
+
+        return res.status(400).json({
+          error: {
+            message: "Datos inválidos"
+          }
+        });
+
+      }
+
+      const {
+  email,
+  rol_id,
+  nombre_completo,
+  grupo_id,
+  matricula,
+  materia_id
+} = value;
+
+      // =====================================
+      // VALIDATIONS
+      // =====================================
+
+      if (
+  rol_id === ROLES.DOCENTE &&
+  (!grupo_id || !materia_id)
+) {
+
+        return res.status(400).json({
+          error: {
+            message:
+              "grupo_id y materia_id son requeridos para docentes"
+          }
+        });
+
+      }
+
+      if (
+        rol_id === ROLES.PADRE &&
+        !matricula
+      ) {
+
+        return res.status(400).json({
+          error: {
+            message:
+              "matricula es requerida para padres"
+          }
+        });
+
+      }
+
+      // =====================================
+      // INVITE USER
+      // =====================================
+
+      const temporaryPassword =
+  Math.random().toString(36).slice(-10) + "A1!";
+
+const {
+  data,
+  error: createError
+} =
+  await supabaseAdmin.auth.admin.createUser({
+
+    email,
+    password: temporaryPassword,
+
+    email_confirm: true,
+
+    user_metadata: {
+
+      rol_id,
+      nombre_completo
+
     }
 
-    const { email, password, rol_id, nombre } = value;
+  });
 
-    // 1. Crear el usuario en Supabase Auth
-    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email: email,
-      password: password,
-      email_confirm: true,
-      user_metadata: { nombre, rol_id }
-    });
+      if (createError) {
 
-    if (authError) throw authError;
+        return res.status(400).json({
 
-    // 2. Insertar el perfil en la tabla pública 'usuarios'
-    const { data: dbData, error: dbError } = await supabaseAdmin
-      .from('usuarios')
-      .insert([
-        { id: authData.user.id, email, nombre, rol_id }
-      ])
-      .select()
+          Error: {
+
+            message:
+              "Error creando usarios",
+
+            details:
+              createError.message
+
+          }
+
+        });
+
+      }
+
+      const authUserId =
+        data.user.id;
+
+
+      await supabaseAdmin
+  .from('usuarios')
+  .update({
+
+    password_temporal:
+      temporaryPassword,
+
+    requiere_cambio_password:
+      true,
+
+    activo:
+      false
+
+  })
+  .eq('id', authUserId);
+
+      const {
+  data: usuario,
+  error: usuarioFetchError
+} =
+  await supabaseAdmin
+    .from('usuarios')
+    .select('id')
+    .eq('id', authUserId)
+    .single();
+
+if (usuarioFetchError || !usuario) {
+
+  return res.status(400).json({
+
+    error: {
+
+      message:
+        "Usuario no encontrado después de invitación",
+
+      details:
+        usuarioFetchError?.message
+
+    }
+
+  });
+
+}
+
+      // =====================================
+// PROFESOR
+// =====================================
+
+if (rol_id === ROLES.DOCENTE) {
+
+  // VERIFY GROUP EXISTS
+
+  const {
+    data: grupo,
+    error: grupoError
+  } =
+    await supabaseAdmin
+      .from('grupos')
+      .select('id')
+      .eq('id', grupo_id)
       .single();
 
-    if (dbError) {
-      await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
-      throw dbError;
+  if (!grupo || grupoError) {
+
+    return res.status(404).json({
+      error: {
+        message: "Grupo no encontrado"
+      }
+    });
+
+  }
+
+  const {
+  data: materia,
+  error: materiaError
+} =
+  await supabaseAdmin
+    .from('materias')
+    .select('id')
+    .eq('id', materia_id)
+    .single();
+
+if (!materia || materiaError) {
+
+  return res.status(404).json({
+    error: {
+      message: "Materia no encontrada"
+    }
+  });
+
+}
+
+  // CREATE ASSIGNMENT
+
+  const {
+    error: asignacionError
+  } =
+    await supabaseAdmin
+      .from('asignaciones_docentes')
+      .insert({
+
+        docente_id:
+          usuario.id,
+
+        grupo_id,
+
+        materia_id
+
+      });
+
+  if (asignacionError) {
+
+    console.error(asignacionError);
+
+    return res.status(400).json({
+
+      error: {
+
+        message:
+          "Error asignando profesor",
+
+        details:
+          asignacionError.message
+
+      }
+
+    });
+
+  }
+
+}
+
+      // =====================================
+      // PADRE
+      // =====================================
+
+      if (rol_id === ROLES.PADRE) {
+
+        const {
+          data: alumno,
+          error: alumnoError
+        } =
+          await supabaseAdmin
+            .from('alumnos')
+            .select('id')
+            .eq('matricula', matricula)
+            .single();
+
+        if (
+          alumnoError ||
+          !alumno
+        ) {
+
+          return res.status(404).json({
+
+            error: {
+              message:
+                "Alumno no encontrado"
+            }
+
+          });
+
+        }
+
+        const {
+          error: parentescoError
+        } =
+          await supabaseAdmin
+            .from('parentescos')
+            .insert({
+
+              padre_id:
+                usuario.id,
+
+              alumno_id:
+                alumno.id
+
+            });
+
+        if (parentescoError) {
+
+          return res.status(400).json({
+
+            error: {
+
+              message:
+                "Error creando parentesco",
+
+              details:
+                parentescoError.message
+
+            }
+
+          });
+
+        }
+
+      }
+
+      return res.status(201).json({
+
+  message:
+    "Usuario creado correctamente",
+
+  credenciales: {
+
+    email,
+
+    password_temporal:
+      temporaryPassword
+
+  }
+
+});
+    } catch (err) {
+
+      next(err);
+
     }
 
-    res.status(201).json({ message: "Usuario creado exitosamente", usuario: dbData });
-  } catch (err) {
-    next(err);
   }
-});
+);
+
+
 
 /**
  * @swagger
@@ -141,45 +600,5 @@ router.post("/usuarios", async (req, res, next) => {
  *       200:
  *         description: Lista de todos los alumnos
  */
-router.get("/alumnos", async (req, res, next) => {
-  try {
-    const { data, error } = await req.supabase
-      .from('alumnos')
-      .select('*');
-
-    if (error) throw error;
-    
-    res.json(data);
-  } catch (err) {
-    next(err);
-  }
-});
-
-/**
- * @swagger
- * /api/admin/reportes:
- *   get:
- *     summary: Obtener métricas y estatus general
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Métricas del sistema
- */
-router.get("/reportes", async (req, res, next) => {
-  try {
-    res.json({
-      status: "ok",
-      metricas: {
-        total_boletas: 150,
-        boletas_firmadas: 120,
-        boletas_pendientes: 30
-      }
-    });
-  } catch (err) {
-    next(err);
-  }
-});
 
 module.exports = router;

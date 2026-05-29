@@ -9,12 +9,16 @@
           <img alt="Escuela Metropolitana La Luz Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcTWCjl-iswn9qGwnguEnmCjn29P95J5eJcgVmSm-NintYMIKF7lpE0P_1gvyd1BCZFtKAtfHruKCz7klA9sXpOfpzIQRkSutztO_sgTxMl9UyK9D_8iFjX0_bTPR4LEiuqJxro6cJ_FQ7Xnk17eMfhjeTMRRjF93F_k_0tWPTsyMC4oDzq6z96jN6uCQs4Zl_f6BJ6HbyNXFj_KYMvEEJnJO1AnKrD0vb2-b_cr_62foul5WzCTEFA89lFl3dFUVL1UYdDOKA9zs"/>
         </div>
         <h1 class="text-2xl font-bold text-[#002046] text-center" style="font-family: 'Manrope', sans-serif;">Escuela Metropolitana "La Luz"</h1>
-        <p class="text-base text-[#44474e] text-center mt-2" style="font-family: 'Manrope', sans-serif;">Portal para Padres</p>
+        <!-- <p class="text-base text-[#44474e] text-center mt-2" style="font-family: 'Manrope', sans-serif;">Portal para Padres</p> -->
       </div>
+
+      <div class="flex gap-2 mb-6">
+
+</div>
 
       <!-- Form Section -->
       <div class="px-8 py-8">
-        <form (ngSubmit)="onLogin()" class="space-y-6">
+        <form (ngSubmit)="iniciarSesion()" class="space-y-6">
           <!-- Email / Registration Number Field -->
           <div>
             <label class="block text-sm font-semibold text-[#0b1c30] mb-2" for="identifier" style="font-family: 'Manrope', sans-serif;">Correo Institucional o Matrícula</label>
@@ -67,8 +71,7 @@
 
 </div>
             </div>
-          </div>
-
+</div>
           <!-- Actions -->
           <div class="flex items-center justify-between mt-4">
             <div class="flex items-center">
@@ -115,21 +118,28 @@
       </div>
 
       <!-- Register Link -->
-      <div class="px-8 py-5 text-center border-t border-[#c4c6cf]/20 bg-[#ffffff]">
-        <p
-          class="text-sm text-[#44474e]"
-          style="font-family: 'Manrope', sans-serif;"
-        >
-          ¿No tienes cuenta?
-          <a
-            href="javascript:void(0)"
-            (click)="Registro()"
-            class="font-semibold text-[#002046] hover:text-[#465f88] transition-colors"
-          >
-            Regístrate aquí
-          </a>
-        </p>
-      </div>
+<div class="px-8 py-5 text-center border-t border-[#c4c6cf]/20 bg-[#ffffff]">
+
+  <p
+    class="text-sm text-[#44474e]"
+    style="font-family: 'Manrope', sans-serif;"
+  >
+
+    ¿No tienes cuenta?
+
+    <a
+      href="javascript:void(0)"
+      (click)="Registro()"
+      class="font-semibold text-[#002046] hover:text-[#465f88] transition-colors"
+    >
+
+      Regístrate aquí
+
+    </a>
+
+  </p>
+
+</div>
 
       <!-- Footer / Help Link -->
       <div class="px-8 py-4 bg-[#eff4ff] border-t border-[#c4c6cf]/20 text-center">

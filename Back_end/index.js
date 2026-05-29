@@ -1,75 +1,266 @@
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
-const errorHandler = require("./middleware/errorHandler");
-require("dotenv").config({ path: ".env.production" });
+require("dotenv").config({
+  path: ".env.production"
+});
 
+const express = require("express");
+const helmet = require("helmet");
+const cors = require("cors");
+const rateLimit = require("express-rate-limit");
+const swaggerUi = require("swagger-ui-express");
+
+const swaggerSpec = require("./swagger");
+
+const errorHandler =
+  require("./middleware/errorHandler");
+
+const {
+  authMiddleware
+} = require("./middleware/authMiddleware");
+
+const {
+  requireRole
+} = require("./middleware/roleMiddleware");
+
+const ROLES =
+  require("./constants/roles");
+
+/**
+ * ROUTES
+ */
+const itemRoutes =
+  require("./routes/items");
+
+const adminRoutes =
+  require("./routes/adminRoutes");
+
+const authRoutes =
+  require("./routes/authRoutes");
+
+const regRoutes =
+  require("./routes/registration.routes")
+
+/**
+ * PROCESS ERROR HANDLERS
+ */
+process.on(
+  "uncaughtException",
+  (err) => {
+
+    console.error(
+      "UNCAUGHT EXCEPTION:",
+      err
+    );
+
+  }
+);
+
+process.on(
+  "unhandledRejection",
+  (err) => {
+
+    console.error(
+      "UNHANDLED REJECTION:",
+      err
+    );
+
+  }
+);
+
+/**
+ * EXPRESS APP
+ */
 const app = express();
 
-// 1. Cabeceras de Seguridad (Helmet)
+/**
+ * TRUST PROXY
+ * Needed for rate limiting
+ * behind reverse proxies
+ */
+app.set("trust proxy", 1);
+
+/**
+ * SECURITY HEADERS
+ */
 app.use(helmet());
 
-// 2. CORS Restringido
+/**
+ * CORS
+ */
 const allowedOrigins = [
-  "http://localhost:8100", 
-  "http://localhost:4200", 
+  "http://localhost:8100",
+  "http://localhost:4200",
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS policy: No permitido por Access-Control-Allow-Origin'));
+
+  origin: (origin, callback) => {
+
+    /**
+     * Allow mobile apps,
+     * Postman, curl
+     */
+    if (!origin) {
+      return callback(null, true);
     }
+
+    if (
+      allowedOrigins.includes(origin)
+    ) {
+
+      return callback(null, true);
+
+    }
+
+    if (
+      process.env.NODE_ENV !== "production"
+    ) {
+
+      console.warn(
+        "Blocked by CORS:",
+        origin
+      );
+
+    }
+
+    return callback(
+      new Error("Not allowed by CORS")
+    );
+
   },
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  optionsSuccessStatus: 204
+
+  methods: [
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE",
+    "OPTIONS"
+  ],
+
+  credentials: true
+
 };
+
 app.use(cors(corsOptions));
 
-// 3. Protección contra DoS / Payload Size Limit
-app.use(express.json({ limit: "10kb" }));
+/**
+ * BODY PARSER
+ */
+app.use(
+  express.json({
+    limit: "10kb"
+  })
+);
 
-// 4. Rate Limiting (Protección contra Fuerza Bruta)
+/**
+ * GLOBAL RATE LIMITER
+ */
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // Límite de 100 peticiones por IP por ventana
-  message: { error: { message: "Demasiadas peticiones desde esta IP, por favor intenta de nuevo después de 15 minutos." } },
+
+  windowMs:
+    15 * 60 * 1000,
+
+  max: 100,
+
   standardHeaders: true,
+
   legacyHeaders: false,
+
+  message: {
+    error: {
+      message:
+        "Too many requests. Please try again later."
+    }
+  }
+
 });
-app.use("/api/", limiter); // Aplica a todas las rutas API
 
-// Importar rutas
-const itemRoutes = require("./routes/items");
-const adminRoutes = require("./routes/adminRoutes");
-const authRoutes = require("./routes/authRoutes");
-const { authMiddleware, requireAdmin } = require("./middleware/authMiddleware");
+app.use("/api", limiter);
 
-// Rutas Públicas (Auth, Items)
-app.use("/api/auth", authRoutes);
-app.use("/api/items", itemRoutes);
+/**
+ * DEV REQUEST LOGGER
+ */
+if (
+  process.env.NODE_ENV !== "production"
+) {
 
-// Rutas de administración protegidas
-app.use("/api/admin", authMiddleware, requireAdmin, adminRoutes);
+  app.use((req, res, next) => {
 
-// Carga la UI de Swagger y API config
-const swaggerUi = require("swagger-ui-express");
-const swaggerSpec = require("./swagger");
-// TODO: Considerar restringir acceso a /api-docs en entornos de producción.
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    console.log(
+      `${req.method} ${req.originalUrl}`
+    );
 
-// Middleware Global de Manejo de Errores (Debe ir al final)
+    next();
+
+  });
+
+}
+
+/**
+ * PUBLIC ROUTES
+ */
+app.use(
+  "/api/auth",
+  authRoutes,
+  regRoutes
+);
+
+app.use(
+  "/api/items",
+  itemRoutes
+);
+
+/**
+ * PROTECTED ADMIN ROUTES
+ */
+app.use(
+  "/api/admin",
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  adminRoutes
+);
+
+/**
+ * SWAGGER DOCS
+ */
+if (
+  process.env.NODE_ENV !== "production"
+) {
+
+  app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec)
+  );
+
+}
+
+/**
+ * GLOBAL ERROR HANDLER
+ * MUST BE LAST
+ */
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
+/**
+ * START SERVER
+ */
+const PORT =
+  process.env.PORT || 3000;
 
-// Inicia back-end
 app.listen(PORT, () => {
-  console.log(`🚀 Server running securely on port ${PORT}`);
-  console.log(`📖 Swagger docs: http://localhost:${PORT}/api-docs`);
+
+  console.log(
+    `🚀 Server running on port ${PORT}`
+  );
+
+  if (
+    process.env.NODE_ENV !== "production"
+  ) {
+
+    console.log(
+      `📖 Swagger docs: http://localhost:${PORT}/api-docs`
+    );
+
+  }
+
 });

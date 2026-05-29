@@ -1,133 +1,186 @@
 <ion-content class="ion-padding" style="--background: #f8f9ff;">
   <div class="min-h-full flex items-center justify-center py-10 px-4">
-    
-    <!-- Main Card -->
+
+    <!-- CARD -->
     <div class="w-full max-w-md bg-white rounded-2xl shadow-[0_16px_40px_-15px_rgba(0,32,70,0.08)] border border-[#c4c6cf]/30 overflow-hidden">
 
-      <!-- Top Section -->
-      <div class="px-6 pt-6 pb-4 border-b border-[#c4c6cf]/20 bg-[#eff4ff]/60">
+      <!-- HEADER -->
+      <div class="px-6 pt-6 pb-3 border-b border-[#c4c6cf]/20 bg-[#eff4ff]/60">
 
-        <!-- Back Button -->
+        <!-- BACK -->
         <button
           (click)="volver()"
-          class="flex items-center gap-1 text-[#002046] font-medium mb-6 hover:text-[#465f88] transition-colors"
+          class="flex items-center gap-1 text-[#002046] font-medium mb-4 hover:text-[#465f88] transition-colors"
           style="font-family: 'Manrope', sans-serif;"
         >
-          <span class="material-symbols-outlined text-[20px]">
-            arrow_back_ios
-          </span>
+          <span class="material-symbols-outlined text-[20px]">arrow_back_ios</span>
           Volver
         </button>
 
-        <!-- Step Indicator -->
-        <div class="flex items-center justify-center mb-6">
-
-          <!-- Step 1 -->
-          <div class="flex items-center">
-            <div class="w-9 h-9 rounded-full bg-[#002046] text-white flex items-center justify-center font-bold">
-              1
-            </div>
-          </div>
-
-          <!-- Line -->
+        <!-- STEP -->
+        <div class="flex items-center justify-center mb-5">
+          <div class="w-9 h-9 rounded-full bg-[#002046] text-white flex items-center justify-center font-bold">1</div>
           <div class="w-16 h-[2px] bg-[#002046] mx-2"></div>
-
-          <!-- Step 2 -->
-          <div class="w-9 h-9 rounded-full bg-[#d7dbe5] text-[#74777f] flex items-center justify-center font-bold">
-            2
-          </div>
+          <div class="w-9 h-9 rounded-full bg-[#d7dbe5] text-[#74777f] flex items-center justify-center font-bold">2</div>
         </div>
 
-        <!-- Header -->
-        <div class="flex flex-col items-center text-center">
-          <div class="w-20 h-20 rounded-full bg-[#f8f9ff] flex items-center justify-center shadow-sm border border-[#c4c6cf]/20 mb-4">
-            <span class="material-symbols-outlined text-[42px] text-[#002046]">
-              account_circle
-            </span>
+        <!-- ROLE TOGGLE -->
+        <div class="flex gap-2 mb-4">
+
+          <button
+            type="button"
+            (click)="role='padre'"
+            class="flex-1 py-2 rounded-lg border text-sm font-semibold transition"
+            [ngClass]="role === 'padre'
+              ? 'bg-[#002046] text-white border-[#002046]'
+              : 'bg-white text-[#002046] border-[#c4c6cf]'"
+          >
+            Padre
+          </button>
+
+          <button
+            type="button"
+            (click)="role='docente'"
+            class="flex-1 py-2 rounded-lg border text-sm font-semibold transition"
+            [ngClass]="role === 'docente'
+              ? 'bg-[#002046] text-white border-[#002046]'
+              : 'bg-white text-[#002046] border-[#c4c6cf]'"
+          >
+            Docente
+          </button>
+
+        </div>
+
+        <!-- TITLE -->
+        <div class="text-center">
+          <div class="w-20 h-20 mx-auto rounded-full bg-[#f8f9ff] flex items-center justify-center border border-[#c4c6cf]/20 mb-3">
+            <span class="material-symbols-outlined text-[42px] text-[#002046]">account_circle</span>
           </div>
 
-          <h1
-            class="text-3xl font-bold text-[#002046]"
-            style="font-family: 'Manrope', sans-serif;"
-          >
+          <h1 class="text-3xl font-bold text-[#002046]" style="font-family: 'Manrope', sans-serif;">
             Registro
           </h1>
 
-          <p
-            class="text-base text-[#44474e] mt-2 font-medium"
-            style="font-family: 'Manrope', sans-serif;"
-          >
-            Información del estudiante
+          <p class="text-base text-[#44474e] mt-1">
+            Información de usuario
           </p>
         </div>
       </div>
 
-      <!-- Form -->
-      <div class="px-6 py-8">
-        <form (ngSubmit)="continuar()" class="space-y-5">
+      <!-- ROLE BADGE -->
+      <div class="mb-2 text-center pt-4">
+        <span class="text-sm font-semibold text-[#002046]">Tipo de registro:</span>
 
-          <!-- Student ID -->
-          <div>
-            <label
-              class="block text-sm font-semibold text-[#0b1c30] mb-2"
-              style="font-family: 'Manrope', sans-serif;"
-            >
-              Número de identificación del estudiante
-            </label>
+        <span
+          class="ml-2 px-3 py-1 rounded-full text-xs font-bold"
+          [ngClass]="role === 'padre'
+            ? 'bg-[#002046] text-white'
+            : 'bg-[#465f88] text-white'"
+        >
+          {{ role | uppercase }}
+        </span>
+      </div>
 
-            <input
-              type="text"
-              [(ngModel)]="studentId"
-              name="studentId"
-              required
-              placeholder="Ingrese el número"
-              class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg bg-white text-[#0b1c30] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors"
-            />
+      <!-- FORM -->
+      <div class="px-6 py-6">
+
+        <form (ngSubmit)="continuar()" class="space-y-6">
+
+          <!-- ===================== -->
+          <!-- PADRE -->
+          <!-- ===================== -->
+          <div *ngIf="role === 'padre'" class="space-y-5">
+
+            <div class="text-sm font-semibold text-[#002046]">
+              Información del estudiante
+            </div>
+
+            <div class="space-y-4">
+
+              <!-- MATRÍCULA -->
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-[#0b1c30]">
+                  Matrícula
+                </label>
+
+                <input
+                  [(ngModel)]="Id"
+                  name="studentId"
+                  placeholder="Ej: 202400123"
+                  class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg text-[#0b1c30] bg-white focus:ring-1 focus:ring-[#002046] focus:border-[#002046] outline-none"
+                />
+              </div>
+
+              <!-- CÓDIGO -->
+              <div class="space-y-1">
+                <label class="text-sm font-medium text-[#0b1c30]">
+                  Código de registro
+                </label>
+
+                <input
+                  [(ngModel)]="registrationCode"
+                  name="registrationCode"
+                  placeholder="ABC123"
+                  class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg text-[#0b1c30] bg-white focus:ring-1 focus:ring-[#002046] focus:border-[#002046] outline-none"
+                />
+              </div>
+
+            </div>
           </div>
 
-          <!-- Birth Date -->
-          <div>
-            <label
-              class="block text-sm font-semibold text-[#0b1c30] mb-2"
-              style="font-family: 'Manrope', sans-serif;"
-            >
-              Fecha de nacimiento
-            </label>
+          <!-- DOCENTE -->
+<div *ngIf="role === 'docente'" class="space-y-5">
 
-            <input
-              type="date"
-              [(ngModel)]="birthDate"
-              name="birthDate"
-              required
-              class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg bg-white text-[#0b1c30] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors"
-            />
-          </div>
+  <div class="text-sm font-semibold text-[#002046]">
+    Información del docente
+  </div>
 
-          <!-- Registration Code -->
-          <div>
-            <label
-              class="block text-sm font-semibold text-[#0b1c30] mb-2"
-              style="font-family: 'Manrope', sans-serif;"
-            >
-              Código de registro
-            </label>
+  <div class="space-y-4">
 
-            <input
-              type="text"
-              [(ngModel)]="registrationCode"
-              name="registrationCode"
-              required
-              placeholder="Ingrese el código"
-              class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg bg-white text-[#0b1c30] focus:ring-1 focus:ring-[#002046] focus:border-[#002046] transition-colors"
-            />
-          </div>
+    <!-- IDENTIFICACIÓN DOCENTE -->
+    <div class="space-y-1">
+      <label class="text-sm font-medium text-[#0b1c30]">
+        Identificación del docente
+      </label>
 
-          <!-- Continue Button -->
+      <input
+        [(ngModel)]="Id"
+        name="docenteId"
+        placeholder="Ej: 20240045"
+        class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg
+               focus:ring-1 focus:ring-[#002046] focus:border-[#002046]
+               outline-none"
+      />
+    </div>
+
+    <!-- CÓDIGO DE REGISTRO -->
+    <div class="space-y-1">
+      <label class="text-sm font-medium text-[#0b1c30]">
+        Código de registro
+      </label>
+
+      <input
+        [(ngModel)]="registrationCode"
+        name="registrationCode"
+        placeholder="ABC123"
+        class="w-full px-4 py-3 border border-[#c4c6cf] rounded-lg
+               focus:ring-1 focus:ring-[#002046] focus:border-[#002046]
+               outline-none"
+      />
+    </div>
+
+  </div>
+</div>
+
+          <!-- BUTTON -->
           <div class="pt-4">
             <button
               type="submit"
-              class="w-full py-3 rounded-lg bg-[#002046] text-white font-semibold hover:bg-[#465f88] hover:-translate-y-[1px] transition-all duration-200 shadow-sm"
-              style="font-family: 'Manrope', sans-serif;"
+              class="w-full py-3 rounded-lg bg-[#002046] text-white font-semibold hover:bg-[#465f88] transition"
+              [disabled]="
+                (role === 'padre' && (!Id || !registrationCode)) ||
+                (role === 'docente' && (!Id || !registrationCode))
+              "
             >
               Continuar
             </button>
@@ -135,6 +188,7 @@
 
         </form>
       </div>
+
     </div>
   </div>
 </ion-content>

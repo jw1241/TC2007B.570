@@ -1,222 +1,173 @@
 const express = require("express");
 const router = express.Router();
+const Joi = require("joi");
 
-// "Base de datos" en memoria
-let items = [
-  { id: 1, name: "Item 1", description: "Descripción del item 1" },
-  { id: 2, name: "Item 2", description: "Descripción del item 2" },
-  { id: 3, name: "Item 3", description: "Descripción del item 3" },
-];
+let items = [];
+let nextId = 1;
 
-let nextId = 4;
-
-// ==================== RUTAS CRUD ====================
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Item:
- *       type: object
- *       required:
- *         - name
- *         - description
- *       properties:
- *         id:
- *           type: integer
- *           description: ID auto-generado del item
- *         name:
- *           type: string
- *           description: Nombre del item
- *         description:
- *           type: string
- *           description: Descripción del item
- *       example:
- *         id: 1
- *         name: Item 1
- *         description: Descripción del item 1
- */
-
-/**
- * @swagger
- * /api/items:
- *   get:
- *     summary: Obtener todos los items
- *     tags: [Items]
- *     responses:
- *       200:
- *         description: Lista de todos los items
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Item'
- */
-router.get("/", (req, res) => {
-  res.json(items);
+const itemSchema = Joi.object({
+  name: Joi.string().trim().min(2).max(100).required(),
+  description: Joi.string().trim().min(2).max(500).required()
 });
 
-/**
- * @swagger
- * /api/items/{id}:
- *   get:
- *     summary: Obtener un item por ID
- *     tags: [Items]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID del item
- *     responses:
- *       200:
- *         description: Item encontrado
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Item'
- *       404:
- *         description: Item no encontrado
- */
-router.get("/:id", (req, res) => {
-  const item = items.find((i) => i.id === parseInt(req.params.id));
-  if (!item) {
-    return res.status(404).json({ message: "Item no encontrado" });
+const updateSchema = Joi.object({
+  name: Joi.string().trim().min(2).max(100),
+  description: Joi.string().trim().min(2).max(500)
+}).min(1);
+
+function validateId(id) {
+  return Number.isInteger(id) && id > 0;
+}
+
+router.get("/", async (req, res, next) => {
+  try {
+
+    res.json({
+      success: true,
+      data: items
+    });
+
+  } catch (err) {
+    next(err);
   }
-  res.json(item);
 });
 
-/**
- * @swagger
- * /api/items:
- *   post:
- *     summary: Crear un nuevo item
- *     tags: [Items]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *               - description
- *             properties:
- *               name:
- *                 type: string
- *               description:
- *                 type: string
- *             example:
- *               name: Nuevo Item
- *               description: Descripción del nuevo item
- *     responses:
- *       201:
- *         description: Item creado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Item'
- *       400:
- *         description: Datos inválidos
- */
-router.post("/", (req, res) => {
-  const { name, description } = req.body;
+router.get("/:id", async (req, res, next) => {
+  try {
 
-  if (!name || !description) {
-    return res
-      .status(400)
-      .json({ message: "Los campos 'name' y 'description' son requeridos" });
+    const id = Number(req.params.id);
+
+    if (!validateId(id)) {
+      return res.status(400).json({
+        error: { message: "ID inválido" }
+      });
+    }
+
+    const item = items.find(i => i.id === id);
+
+    if (!item) {
+      return res.status(404).json({
+        error: { message: "Item no encontrado" }
+      });
+    }
+
+    res.json({
+      success: true,
+      data: item
+    });
+
+  } catch (err) {
+    next(err);
   }
-
-  const newItem = {
-    id: nextId++,
-    name,
-    description,
-  };
-
-  items.push(newItem);
-  res.status(201).json(newItem);
 });
 
-/**
- * @swagger
- * /api/items/{id}:
- *   put:
- *     summary: Actualizar un item por ID
- *     tags: [Items]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID del item
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               description:
- *                 type: string
- *             example:
- *               name: Item actualizado
- *               description: Descripción actualizada
- *     responses:
- *       200:
- *         description: Item actualizado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Item'
- *       404:
- *         description: Item no encontrado
- */
-router.put("/:id", (req, res) => {
-  const item = items.find((i) => i.id === parseInt(req.params.id));
-  if (!item) {
-    return res.status(404).json({ message: "Item no encontrado" });
+router.post("/", async (req, res, next) => {
+  try {
+
+    const { error, value } =
+      itemSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({
+        error: {
+          message: "Datos inválidos",
+          details: error.details.map(d => d.message)
+        }
+      });
+    }
+
+    const newItem = {
+      id: nextId++,
+      ...value
+    };
+
+    items.push(newItem);
+
+    res.status(201).json({
+      success: true,
+      data: newItem
+    });
+
+  } catch (err) {
+    next(err);
   }
-
-  const { name, description } = req.body;
-  if (name) item.name = name;
-  if (description) item.description = description;
-
-  res.json(item);
 });
 
-/**
- * @swagger
- * /api/items/{id}:
- *   delete:
- *     summary: Eliminar un item por ID
- *     tags: [Items]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID del item
- *     responses:
- *       200:
- *         description: Item eliminado exitosamente
- *       404:
- *         description: Item no encontrado
- */
-router.delete("/:id", (req, res) => {
-  const index = items.findIndex((i) => i.id === parseInt(req.params.id));
-  if (index === -1) {
-    return res.status(404).json({ message: "Item no encontrado" });
-  }
+router.put("/:id", async (req, res, next) => {
+  try {
 
-  const deleted = items.splice(index, 1);
-  res.json({ message: "Item eliminado", item: deleted[0] });
+    const id = Number(req.params.id);
+
+    if (!validateId(id)) {
+      return res.status(400).json({
+        error: { message: "ID inválido" }
+      });
+    }
+
+    const item = items.find(i => i.id === id);
+
+    if (!item) {
+      return res.status(404).json({
+        error: { message: "Item no encontrado" }
+      });
+    }
+
+    const { error, value } =
+      updateSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({
+        error: {
+          message: "Datos inválidos",
+          details: error.details.map(d => d.message)
+        }
+      });
+    }
+
+    Object.assign(item, value);
+
+    res.json({
+      success: true,
+      data: item
+    });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+
+    const id = Number(req.params.id);
+
+    if (!validateId(id)) {
+      return res.status(400).json({
+        error: { message: "ID inválido" }
+      });
+    }
+
+    const index =
+      items.findIndex(i => i.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({
+        error: { message: "Item no encontrado" }
+      });
+    }
+
+    const deleted =
+      items.splice(index, 1);
+
+    res.json({
+      success: true,
+      message: "Item eliminado",
+      data: deleted[0]
+    });
+
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

@@ -1,75 +1,156 @@
 import { Routes } from '@angular/router';
 
+import { authGuard } from './services/auth.guard';
+import { roleGuard } from './services/role.guard';
+
 export const routes: Routes = [
+
+  // =========================
+  // AUTH PAGES
+  // =========================
   {
     path: 'iniciar-sesion',
-    loadComponent: () => import('./pages/iniciar-sesion/iniciar-sesion.page').then((m) => m.IniciarSesionPage),
+    loadComponent: () =>
+      import('./pages/iniciar-sesion/iniciar-sesion.page')
+        .then(m => m.IniciarSesionPage)
   },
+
   {
-    path: 'seleccionar-alumno',
-    loadComponent: () => import('./pages/seleccionar-alumno/seleccionar-alumno.page').then((m) => m.SeleccionarAlumnoPage),
+  path: 'soporte-tecnico',
+  loadComponent: () =>
+    import('./pages/soporte-tecnico/soporte-tecnico.page')
+      .then(m => m.SoporteTecnicoPage)
+},
+
+  { 
+    path: 'registro', loadComponent: () => 
+      import('./pages/registro/registro.page') 
+    .then(m => m.RegistroPage) 
   },
+
+  { 
+    path: 'registro2', loadComponent: () => 
+      import('./pages/registro2/registro2.page') 
+    .then(m => m.Registro2Page) 
+  },
+
   {
-    path: 'inicio-resumen',
-    loadComponent: () => import('./pages/inicio-resumen/inicio-resumen.page').then((m) => m.InicioResumenPage),
+    path: 'recuperar-contrasena',
+    loadComponent: () =>
+      import('./pages/recuperar-contrasena/recuperar-contrasena.page')
+        .then(m => m.RecuperarContrasenaPage)
   },
+
   {
-    path: 'boleta',
-    loadComponent: () => import('./pages/boleta/boleta.page').then((m) => m.BoletaPage),
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./pages/reset-password/reset-password.page')
+        .then(m => m.ResetPasswordPage)
   },
+
   {
-    path: 'mensajes',
-    loadComponent: () => import('./pages/mensajes/mensajes.page').then((m) => m.MensajesPage),
+    path: 'auth/callback',
+    loadComponent: () =>
+      import('./pages/auth-callback/auth-callback.page')
+        .then(m => m.AuthCallbackPage)
   },
+
+  // =========================
+  // ADMIN (ROLE 1)
+  // =========================
   {
-    path: 'mensajes-chat',
-    loadComponent: () => import('./pages/mensajes-chat/mensajes-chat.page').then((m) => m.MensajesChatPage),
+    path: 'inicio-resumen-administrador',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [1] },
+    loadComponent: () =>
+      import('./pages/inicio-resumen-administrador/inicio-resumen-administrador.page')
+        .then(m => m.InicioResumenAdministradorPage)
   },
-  {
-    path: 'inicio-resumen-alumno',
-    loadComponent: () => import('./pages/inicio-resumen-alumno/inicio-resumen-alumno.page').then((m) => m.InicioResumenAlumnoPage),
-  },
-  {
-    path: 'perfil',
-    loadComponent: () => import('./pages/perfil/perfil.page').then((m) => m.PerfilPage),
-  },
-  {
-    path: 'captura-calificaciones',
-    loadComponent: () => import('./pages/captura-calificaciones/captura-calificaciones.page').then((m) => m.CapturaCalificacionesPage),
-  },
+
   {
     path: 'panel-administracion',
-    loadComponent: () => import('./pages/panel-administracion/panel-administracion.page').then((m) => m.PanelAdministracionPage),
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [1] },
+    loadComponent: () =>
+      import('./pages/panel-administracion/panel-administracion.page')
+        .then(m => m.PanelAdministracionPage)
   },
+
+  // =========================
+  // TEACHER (ROLE 2)
+  // =========================
+  {
+    path: 'inicio-resumen-profesor',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [2] },
+    loadComponent: () =>
+      import('./pages/inicio-resumen-profesor/inicio-resumen-profesor.page')
+        .then(m => m.InicioResumenProfesorPage)
+  },
+
+  {
+    path: 'captura-calificaciones',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [2] },
+    loadComponent: () =>
+      import('./pages/captura-calificaciones/captura-calificaciones.page')
+        .then(m => m.CapturaCalificacionesPage)
+  },
+
+  // =========================
+  // PARENT (ROLE 3)
+  // =========================
+  {
+    path: 'inicio-resumen-alumno',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [3] },
+    loadComponent: () =>
+      import('./pages/inicio-resumen-alumno/inicio-resumen-alumno.page')
+        .then(m => m.InicioResumenAlumnoPage)
+  },
+
+  {
+    path: 'seleccionar-alumno',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [3] },
+    loadComponent: () =>
+      import('./pages/seleccionar-alumno/seleccionar-alumno.page')
+        .then(m => m.SeleccionarAlumnoPage)
+  },
+
+  // =========================
+  // SHARED (ANY LOGGED USER)
+  // =========================
+  {
+    path: 'mensajes',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/mensajes/mensajes.page')
+        .then(m => m.MensajesPage)
+  },
+
+  {
+    path: 'mensajes-chat',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/mensajes-chat/mensajes-chat.page')
+        .then(m => m.MensajesChatPage)
+  },
+
+  {
+    path: 'perfil',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/perfil/perfil.page')
+        .then(m => m.PerfilPage)
+  },
+
+  // =========================
+  // DEFAULT
+  // =========================
   {
     path: '',
     redirectTo: 'iniciar-sesion',
-    pathMatch: 'full',
-  },
-  {
-    path: 'recuperar-contrasena',
-    loadComponent: () => import('./pages/recuperar-contrasena/recuperar-contrasena.page')
-      .then( m => m.RecuperarContrasenaPage)
-  },
-  {
-    path: 'enviar-codigo',
-    loadComponent: () =>
-      import('./pages/enviar-codigo/enviar-codigo.page')
-        .then(m => m.EnviarCodigoPage)
-  },
-  {
-  path: 'registro',
-  loadComponent: () =>
-    import('./pages/registro/registro.page').then(m => m.RegistroPage)
-  }, 
-  {
-    path: 'registro2',
-    loadComponent: () =>
-      import('./pages/registro2/registro2.page').then(m => m.Registro2Page)
-  },
-  {
-      path: 'soporte-tecnico',
-      loadComponent: () =>
-        import('./pages/soporte-tecnico/soporte-tecnico.page').then(m => m.SoporteTecnicoPage)
-    }
+    pathMatch: 'full'
+  }
 ];

@@ -52,7 +52,7 @@ export class SeleccionarAlumnoPage implements OnInit {
             nombre_rol
           )
         `)
-        .eq('id', user.id);
+        .eq('auth_user_id', user.id);
 
     console.log('FULL RESPONSE:', response);
 
@@ -67,17 +67,20 @@ export class SeleccionarAlumnoPage implements OnInit {
             nombre_rol
           )
         `)
-        .eq('id', user.id)
+        .eq('auth_user_id', user.id)
         .maybeSingle();
 
-    if (usuarioError) {
+    if (usuarioError || !usuarioData) {
 
-      console.error(usuarioError);
-      return;
+  console.error(usuarioError);
+  return;
 
-    }
+}
 
-    this.usuario = usuarioData;
+this.usuario = usuarioData;
+
+console.log('USUARIO:', usuarioData);
+console.log('PADRE ID:', usuarioData.id);
 
     // Fetch linked students
     const { data: alumnosData, error: alumnosError } =
@@ -97,7 +100,7 @@ export class SeleccionarAlumnoPage implements OnInit {
         )
       )
     `)
-    .eq('padre_id', user.id);
+   .eq('padre_id', usuarioData.id);
 
 console.log('ALUMNOS DATA:', alumnosData);
 console.log('ALUMNOS ERROR:', alumnosError);
@@ -121,23 +124,32 @@ console.log('FIRST ALUMNO:', this.alumnos[0]);
   onSelectStudent(alumno: any) {
 
     // Store globally
-    this.studentService.setAlumno(alumno);
+    this.studentService.setAlumno(
+  alumno,
+  this.studentService.getRegistrationCode()!
+);
 
     // Navigate
-    this.router.navigate(['/inicio-resumen']);
+    this.router.navigate([
+  '/inicio-resumen-alumno'
+]);
   }
 
   async logout() {
 
-    // Close Supabase session
-    await this.supabaseService.supabase.auth.signOut();
+  await this.supabaseService
+    .supabase
+    .auth
+    .signOut();
 
-    // Clear selected student
-    this.studentService.clearAlumno();
+  localStorage.clear();
 
-    // Redirect to login
-    this.router.navigate(['/iniciar-sesion']);
-    
-  }
+  this.studentService.clear();
+
+  this.router.navigate([
+    '/iniciar-sesion'
+  ]);
+
+}
 
 }

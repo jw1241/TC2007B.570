@@ -1,0 +1,83 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { StudentService } from '../../services/student';
+
+@Component({
+  selector: 'app-iniciar-sesion',
+  templateUrl: './iniciar-sesion.page.html',
+  styleUrls: ['./iniciar-sesion.page.scss'],
+  standalone: true,
+  imports: [IonicModule, CommonModule, FormsModule]
+})
+export class IniciarSesionPage implements OnInit {
+
+  identifier = '';
+  password = '';
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private studentService: StudentService
+  ) {}
+
+  ngOnInit() {}
+
+  // async onLogin() {
+
+  //   const { data, error } =
+  //     await this.supabaseService.supabase.auth.signInWithPassword({
+
+  //       email: this.identifier,
+  //       password: this.password
+
+  //     });
+
+  //   if (error) {
+
+  //     alert(error.message);
+  //     return;
+
+  //   }
+
+  //   this.router.navigate(['/seleccionar-alumno']);
+  // }
+
+  
+
+  onLogin() {
+    console.log('Identifier:', this.identifier);
+    console.log('Password:', this.password);
+
+    this.authService.login(this.identifier, this.password).subscribe({
+      next: (response) => {
+        console.log('LOGIN SUCCESS', response);
+        // Guardar token JWT en localStorage
+        if (response.token) {
+          localStorage.setItem('token', response.token);
+        }
+        this.router.navigate(['/seleccionar-alumno']);
+      },
+      error: (err) => {
+        console.error('CATCH ERROR:', err);
+        alert(err.error?.message || err.error?.error?.message || 'Error al iniciar sesión');
+      }
+    });
+  }
+
+recuperarcontrasena() {
+    this.router.navigate(['/recuperar-contrasena']);
+  }
+
+  Registro() {
+    this.router.navigate(['/registro']);
+  }
+
+  soporteTecnico() {
+    this.router.navigate(['/soporte-tecnico']);
+  }
+
+}

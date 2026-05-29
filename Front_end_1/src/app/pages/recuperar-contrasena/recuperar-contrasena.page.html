@@ -1,0 +1,93 @@
+<ion-content class="ion-padding" style="--background: #f8f9ff;">
+  <div class="min-h-full flex items-center justify-center px-4 py-10">
+    
+    <div class="w-full max-w-md bg-white rounded-xl shadow-[0_16px_40px_-15px_rgba(0,32,70,0.08)] border border-[#c4c6cf]/30 p-8">
+
+      <!-- Volver -->
+      <div class="mb-6">
+        <button
+          type="button"
+          (click)="volver()"
+          class="flex items-center gap-1 text-[#002046] font-semibold hover:text-[#465f88] transition-colors"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+          Volver
+        </button>
+      </div>
+
+      <!-- Email Icon -->
+      <div class="flex justify-center mb-6">
+        <div class="w-24 h-24 rounded-full bg-[#eff4ff] flex items-center justify-center">
+          <span class="material-symbols-outlined text-[50px] text-[#002046]">
+            mail
+          </span>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div class="text-center mb-8">
+        <h1
+          class="text-3xl font-bold text-[#002046] mb-3"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          ¿Olvidaste tu contraseña?
+        </h1>
+
+        <p
+          class="text-[#44474e] text-base leading-relaxed"
+          style="font-family: 'Manrope', sans-serif;"
+        >
+          Ingresa tu correo electrónico y te enviaremos un código de verificación
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form class="space-y-6">
+
+        <!-- Email -->
+        <div>
+          <label
+            for="email"
+            class="block text-sm font-bold text-[#0b1c30] mb-2"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Correo electrónico
+          </label>
+
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="material-symbols-outlined text-[#74777f]">
+                mail
+              </span>
+            </div>
+
+            <input
+              id="email"
+              type="email"
+              [(ngModel)]="email"
+              [ngModelOptions]="{ standalone: true }"
+              placeholder="ej. usuario@laluz.edu"
+              class="block w-full pl-10 pr-3 py-3 border border-[#c4c6cf] rounded-lg text-[#0b1c30] bg-white"
+            />
+          </div>
+        </div>
+
+        <!-- Button -->
+        <div class="pt-2 flex justify-end">
+          <button
+            type="button"
+            (click)="codigo()"
+            class="w-full py-3 rounded-lg bg-[#002046] text-white font-semibold text-sm hover:bg-[#465f88] hover:shadow-[0_4px_12px_rgba(0,32,70,0.15)] transition-all duration-200"
+            style="font-family: 'Manrope', sans-serif;"
+          >
+            Enviar código
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+</ion-content>

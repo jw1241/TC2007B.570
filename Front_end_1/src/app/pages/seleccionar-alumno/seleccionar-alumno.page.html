@@ -1,0 +1,93 @@
+<ion-content [fullscreen]="true" class="bg-background">
+  <div class="bg-background text-on-background min-h-screen flex flex-col antialiased">
+    <!-- TopAppBar -->
+    <header
+      class="sticky top-0 w-full z-40 flex justify-between items-center px-[16px] md:px-[40px] bg-surface shadow-sm h-14 border-b border-outline-variant/20">
+      <div
+        class="active:scale-95 cursor-pointer flex items-center justify-center min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-colors duration-200 rounded-full">
+        <img alt="Profile picture of the parent"
+          class="w-8 h-8 rounded-full border border-outline-variant/50 object-cover"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZ_3v5Il6BGq-o1m6EslKHxsUvOxKWa6tMV2Q9vAWEQZk19AH3BV6I7aEkEs5i5qU8UXiA0HAPLuxteVV0scz-6_ViQlIrIZO6FYJPhv1NGmExwm8BkUaXwi2Du6KDhnJAGE96EJlPHvDXOJzp9lLjm8XvE_84DqoyGc5KMk4-ruLLmQJT2Mq6hJu7UQpAbfQZ2imoZrYMlgzYuzriPqe20CRkSa-qt4deJ7b-xFTKcv5Y6eQdm8g9AmPX1O7HrAhnobBnEns-rLc" />
+      </div>
+      <div class="font-headline-md text-headline-md font-bold text-primary">Escuela Metropolitana "La Luz"</div>
+      <div
+        class="active:scale-95 cursor-pointer flex items-center justify-center min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-colors duration-200 text-on-surface-variant rounded-full">
+        <span class="material-symbols-outlined">notifications</span>
+      </div>
+    </header>
+
+    <!-- Main Content Canvas -->
+    <main
+      class="flex-grow flex flex-col items-center justify-center px-4 md:px-10 py-12 md:py-20 w-full max-w-container-max mx-auto">
+      <!-- Header Section -->
+      <div class="text-center mb-12 max-w-2xl">
+        <div
+          class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-surface-container-high text-primary mb-6 shadow-sm">
+          <span class="material-symbols-outlined text-[32px]">school</span>
+        </div>
+        <h1 class="font-display-lg text-display-lg text-primary mb-4">Bienvenido, {{ usuario?.nombre_completo }}</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">¿De quién te gustaría revisar la información hoy?
+          Selecciona un perfil para continuar.</p>
+      </div>
+
+      <!-- Student Selection Bento Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
+        <!-- Student Card 1: Juan -->
+        <button
+  *ngFor="let alumno of alumnos"
+  (click)="onSelectStudent(alumno)"
+  class="group relative flex flex-col bg-surface-container-lowest rounded-[24px] shadow-sm hover:shadow-md border border-outline-variant/30 hover:border-primary/40 transition-all duration-300 overflow-hidden text-left active:scale-[0.98]"
+>
+
+  <div class="h-24 w-full bg-gradient-to-r from-primary-container to-surface-tint opacity-90"></div>
+
+  <div class="px-6 pb-6 pt-0 relative flex flex-col flex-grow w-full">
+
+    <div
+      class="w-20 h-20 rounded-full border-4 border-surface-container-lowest bg-surface-container-low shadow-sm -mt-10 mb-4 flex items-center justify-center"
+    >
+
+      <span class="material-symbols-outlined text-[42px] text-primary">
+        school
+      </span>
+
+    </div>
+
+    <h2 class="font-headline-md text-headline-md text-on-surface mb-1">
+      {{ alumno.nombre_completo }}
+    </h2>
+
+    <p class="font-body-md text-body-md text-on-surface-variant mb-4">
+
+      {{ alumno.grupos.grado }}º -
+      Grupo {{ alumno.grupos.seccion }}
+
+    </p>
+
+    <div class="flex flex-wrap gap-2 mt-auto pt-4 border-t border-outline-variant/20 w-full">
+
+      <span
+        class="inline-flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-lg"
+      >
+
+        Activo
+
+      </span>
+
+      <span
+        class="inline-flex items-center gap-1 bg-surface-container px-3 py-1.5 rounded-lg"
+      >
+
+        {{ alumno.matricula }}
+
+      </span>
+
+    </div>
+
+  </div>
+
+</button>
+      </div>
+    </main>
+  </div>
+</ion-content>

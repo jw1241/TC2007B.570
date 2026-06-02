@@ -31,6 +31,8 @@
     "@supabase/supabase-js": "^2.106.2",
     "cors": "^2.8.6",
     "ionicons": "^7.0.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

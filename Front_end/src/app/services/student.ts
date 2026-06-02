@@ -5,17 +5,19 @@ import { Injectable } from '@angular/core';
 })
 export class StudentService {
 
+  private readonly ALUMNO_STORAGE_KEY = 'alumno:v1';
+  private readonly REGISTRATION_CODE_KEY = 'registrationCode:v1';
+
   private alumno: any = null;
   private registrationCode: string | null = null;
 
   constructor() {
 
-    // restore from localStorage on refresh
     const savedAlumno =
-      localStorage.getItem('alumno');
+      localStorage.getItem(this.ALUMNO_STORAGE_KEY);
 
     const savedCode =
-      localStorage.getItem('registrationCode');
+      localStorage.getItem(this.REGISTRATION_CODE_KEY);
 
     if (savedAlumno) {
       this.alumno = JSON.parse(savedAlumno);
@@ -24,7 +26,6 @@ export class StudentService {
     if (savedCode) {
       this.registrationCode = savedCode;
     }
-
   }
 
   setAlumno(alumno: any, registrationCode: string) {
@@ -33,15 +34,14 @@ export class StudentService {
     this.registrationCode = registrationCode;
 
     localStorage.setItem(
-      'alumno',
+      this.ALUMNO_STORAGE_KEY,
       JSON.stringify(alumno)
     );
 
     localStorage.setItem(
-      'registrationCode',
+      this.REGISTRATION_CODE_KEY,
       registrationCode
     );
-
   }
 
   getAlumno() {
@@ -57,9 +57,7 @@ export class StudentService {
     this.alumno = null;
     this.registrationCode = null;
 
-    localStorage.removeItem('alumno');
-    localStorage.removeItem('registrationCode');
-
+    localStorage.removeItem(this.ALUMNO_STORAGE_KEY);
+    localStorage.removeItem(this.REGISTRATION_CODE_KEY);
   }
-
 }

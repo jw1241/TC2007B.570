@@ -1,5 +1,5 @@
 require("dotenv").config({
-  path: ".env.production"
+  path: ".env"
 });
 
 const express = require("express");
@@ -50,6 +50,9 @@ const boletasRoutes =
 
 const mensajesRoutes =
   require("./routes/mensajesRoutes");
+
+const supportRoutes =
+  require("./routes/sorporteRoutes");
 
 /**
  * PROCESS ERROR HANDLERS
@@ -263,6 +266,10 @@ app.use(
   "/api/mensajes",
   mensajesRoutes
 );
+
+app.use("/api/soporte", supportRoutes);
+
+app.use(express.urlencoded({ extended: true }));
 
 /**
  * SWAGGER DOCS

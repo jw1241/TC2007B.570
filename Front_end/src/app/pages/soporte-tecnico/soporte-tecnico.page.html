@@ -51,7 +51,11 @@
       <!-- FORM -->
       <div class="px-6 py-6">
 
-        <form (ngSubmit)="enviarSoporte()" class="space-y-6">
+        <form
+  #supportForm="ngForm"
+  (ngSubmit)="enviarSoporte()"
+  class="space-y-6"
+>
 
           <!-- ===================== -->
           <!-- ROLE INPUT -->
@@ -63,67 +67,45 @@
             </label>
 
             <input
-              [(ngModel)]="studentId"
-              name="studentId"
-              required
-              placeholder="Ingrese el ID"
-              class="w-full px-4 py-3 border rounded-lg"
-            />
+  [(ngModel)]="studentId"
+  name="studentId"
+  required
+  placeholder="Ingrese el ID"
+  class="w-full px-4 py-3 border rounded-lg text-black"
+/>
 
           </div>
 
-          <!-- CODE -->
-          <div>
+          <!-- DATE OF BIRTH (PADRE ONLY) -->
+<div *ngIf="role === 'padre'">
 
-            <label class="block text-sm font-semibold mb-2 text-[#0b1c30]">
-              Código de Registro
-            </label>
+  <label class="block text-sm font-semibold mb-2 text-[#0b1c30]">
+    Fecha de Nacimiento
+  </label>
 
-            <input
-              [(ngModel)]="registrationCode"
-              name="registrationCode"
-              required
-              placeholder="ABC123"
-              class="w-full px-4 py-3 border rounded-lg"
-            />
+  <input
+  type="date"
+  [(ngModel)]="birthDate"
+  name="birthDate"
+  required
+  class="w-full px-4 py-3 border rounded-lg text-black"
+/>
 
-          </div>
-
-          <!-- VALIDATION BUTTON -->
-          <button
-            type="button"
-            (click)="role === 'padre' ? buscarAlumno() : validarDocente()"
-            class="w-full py-2 rounded-lg bg-[#465f88] text-white"
-          >
-            Validar {{ role }}
-          </button>
-
-          <!-- INFO (PADRE) -->
-          <div *ngIf="role === 'padre' && studentFound"
-               class="bg-[#eff4ff] p-4 rounded-lg">
-
-            <p class="font-semibold">Alumno:</p>
-            <p>{{ studentName }}</p>
-
-            <p class="text-sm text-gray-600">
-              {{ birthDate }}
-            </p>
-
-          </div>
+</div>
 
           <!-- SUBJECT -->
           <div>
 
-            <label class="block text-sm font-semibold mb-2">
+            <label class="block text-sm font-semibold mb-2 text-black">
               Asunto
             </label>
 
             <select
-              [(ngModel)]="subject"
-              name="subject"
-              required
-              class="w-full px-4 py-3 border rounded-lg"
-            >
+  [(ngModel)]="subject"
+  name="subject"
+  required
+  class="w-full px-4 py-3 border rounded-lg text-black"
+>
               <option value="">Seleccione</option>
               <option value="Acceso a cuenta">Acceso a cuenta</option>
               <option value="Problema técnico">Problema técnico</option>
@@ -139,42 +121,122 @@
               Descripción
             </label>
 
-            <textarea
-              [(ngModel)]="issueDescription"
-              name="issueDescription"
-              rows="5"
-              class="w-full px-4 py-3 border rounded-lg"
-            ></textarea>
+<textarea
+  [(ngModel)]="issueDescription"
+  name="issueDescription"
+  required
+  rows="5"
+  class="w-full px-4 py-3 border rounded-lg text-black"
+></textarea>
 
           </div>
 
           <!-- FILES -->
           <input
-            type="file"
-            multiple
-            accept="image/*"
-            (change)="onFileSelected($event)"
-          />
+  #fileInput
+  type="file"
+  multiple
+  accept="image/*"
+  (change)="onFileSelected($event)"
+  hidden
+/>
+
+<button
+  type="button"
+  (click)="fileInput.click()"
+  class="px-4 py-2 bg-[#002046] text-white rounded-lg"
+>
+  Seleccionar archivos
+</button>
+
+<div class="mt-2 text-sm text-gray-600">
+
+  <span *ngIf="selectedFiles.length === 0">
+    Ningún archivo seleccionado
+  </span>
+
+  <span *ngIf="selectedFiles.length > 0">
+    {{ selectedFiles.length }} archivo(s) seleccionado(s)
+  </span>
+
+</div>
 
           <!-- FILE LIST -->
-          <div *ngIf="selectedFiles.length">
+          <div
+  *ngIf="selectedFiles.length"
+  class="border rounded-lg p-3 max-h-48 overflow-y-auto bg-gray-50"
+>
 
-            <div *ngFor="let file of selectedFiles">
-              📎 {{ file.name }}
-            </div>
+  <div class="font-semibold mb-2 text-sm">
+    Archivos seleccionados ({{ selectedFiles.length }})
+  </div>
 
-          </div>
+<div
+  *ngFor="let file of selectedFiles; let i = index"
+  class="flex items-center justify-between py-2 border-b last:border-b-0"
+>
+  <div class="flex flex-col flex-1">
+
+    <span class="truncate">
+      📎 {{ file.name }}
+    </span>
+
+    <span class="text-xs text-gray-500">
+      {{ (file.size / 1024).toFixed(1) }} KB
+    </span>
+
+  </div>
+
+  <button
+    type="button"
+    (click)="removeFile(i)"
+    class="text-red-600 ml-3"
+  >
+    ✕
+  </button>
+
+</div>
+
+<div
+  *ngIf="uploadedFiles.length"
+  class="max-h-64 overflow-y-auto border rounded-lg"
+>
+
+  <a
+  *ngFor="let file of uploadedFiles"
+  [href]="file.archivo_url"
+  target="_blank"
+  class="block p-3 border-b hover:bg-gray-50"
+>
+  📄 {{ file.nombre }}
+</a>
+
+</div>
+
+</div> 
 
           <!-- SUBMIT -->
           <button
             type="submit"
-            [disabled]="isSubmitting"
+            [disabled]="isSubmitting || !supportForm.valid"
             class="w-full py-3 rounded-lg bg-[#002046] text-white"
           >
             {{ isSubmitting ? 'Enviando...' : 'Enviar Ticket' }}
           </button>
 
         </form>
+
+        <div *ngIf="ticketSubmitted" class="p-6 text-center">
+
+  <h2 class="text-xl font-bold text-green-600">
+    Ticket enviado exitosamente
+  </h2>
+
+  <p class="mt-2">
+    Código: {{ generatedTicket }}
+  </p>
+
+</div>
 
       </div>
 

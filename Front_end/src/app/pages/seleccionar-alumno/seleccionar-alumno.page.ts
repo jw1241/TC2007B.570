@@ -41,34 +41,24 @@ export class SeleccionarAlumnoPage implements OnInit {
     console.log('AUTH USER:', user);
     console.log('AUTH USER ID:', user.id);
 
-    const response =
-      await this.supabaseService.supabase
-        .from('usuarios')
-        .select(`
-          id,
-          nombre_completo,
-          email,
-          roles (
-            nombre_rol
-          )
-        `)
-        .eq('auth_user_id', user.id);
-
-    console.log('FULL RESPONSE:', response);
-
     const { data: usuarioData, error: usuarioError } =
-      await this.supabaseService.supabase
-        .from('usuarios')
-        .select(`
-          id,
-          nombre_completo,
-          email,
-          roles (
-            nombre_rol
-          )
-        `)
-        .eq('auth_user_id', user.id)
-        .maybeSingle();
+  await this.supabaseService.supabase
+    .from('usuarios')
+    .select(`
+      id,
+      nombre_completo,
+      email,
+      roles (
+        nombre_rol
+      )
+    `)
+    .eq('auth_user_id', user.id)
+    .maybeSingle();
+
+console.log('USUARIO RESPONSE:', {
+  data: usuarioData,
+  error: usuarioError
+});
 
     if (usuarioError || !usuarioData) {
 
@@ -113,9 +103,9 @@ console.log('ALUMNOS ERROR:', alumnosError);
     }
 
     this.alumnos =
-  (alumnosData || [])
-    .map((item: any) => item.alumnos)
-    .filter((alumno: any) => alumno);
+  (alumnosData || []).flatMap((item: any) =>
+    item.alumnos ? [item.alumnos] : []
+  );
   console.log('FINAL ALUMNOS:', this.alumnos);
 console.log('FIRST ALUMNO:', this.alumnos[0]);
   }

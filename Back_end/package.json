@@ -20,8 +20,11 @@
     "express-rate-limit": "^8.5.2",
     "helmet": "^8.2.0",
     "joi": "^18.2.1",
+    "multer": "^2.1.1",
     "pdfkit": "^0.18.0",
     "pg": "^8.21.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "resend": "^6.12.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"

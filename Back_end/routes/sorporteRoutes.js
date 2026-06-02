@@ -1,227 +1,176 @@
 const express = require("express");
 const router = express.Router();
-const Joi = require("joi");
 
-const { supabaseAdmin } = require("../config/supabaseClient");
+const multer = require("multer");
 
-const validateStudentSchema = Joi.object({
-
-  studentId: Joi.string()
-    .trim()
-    .max(30)
-    .required(),
-
+const upload = multer({
+  storage: multer.memoryStorage()
 });
 
+const { supabaseAdmin } =
+  require("../config/supabaseClient");
+
 router.post(
-  "/sorporte-alumno",
-  async (req, res, next) => {
+  "/soporte-ticket",
+  upload.array("files", 10),
+  async (req, res) => {
 
     try {
 
       const {
-        error,
-        value
-      } = validateStudentSchema.validate(req.body);
+        role,
+        studentId,
+        birthDate,
+        subject,
+        description
+      } = req.body;
 
-      if (error) {
+      let validatedUser;
 
-        console.error(
-          "VALIDATION ERROR:",
-          error
-        );
+      if (role === "padre") {
 
-        return res.status(400).json({
-          error: {
-            message: "Datos inválidos"
-          }
-        });
+        const { data: alumno } =
+          await supabaseAdmin
+            .from("alumnos")
+            .select("*")
+            .eq("matricula", studentId)
+            .eq("fecha_nacimiento", birthDate)
+            .maybeSingle();
 
-      }
-
-      const {
-        studentId
-      } = value;
-
-      console.log(
-        "INPUT RECEIVED:",
-        value
-      );
-
-      /**
-       * FIND ALUMNO
-       */
-      const {
-        data: alumno,
-        error: alumnoError
-      } = await supabaseAdmin
-        .from("alumnos")
-        .select(`
-          id,
-          matricula,
-          nombre_completo
-        `)
-        .eq("matricula", studentId)
-        .maybeSingle();
-
-      console.log(
-        "ALUMNO RESULT:",
-        alumno
-      );
-
-      if (alumnoError || !alumno) {
-
-        return res.status(404).json({
-          error: {
-            message:
-              "Alumno no encontrado"
-          }
-        });
-
-      }
-
-
-      return res.json({
-
-        success: true,
-
-        alumno: {
-
-  matricula:
-    alumno.matricula,
-
-  nombre_completo:
-    alumno.nombre_completo
-
-},
-
-      });
-
-    } catch (err) {
-
-      console.error(
-        "VALIDATE STUDENT ERROR:",
-        err
-      );
-
-      next(err);
-
-    }
-
-  }
-);
-
-const validateDocenteSchema = Joi.object({
-
-  docenteId: Joi.string()
-    .trim()
-    .required(),
-});
-
-router.post(
-  "/sorporte-docente",
-  async (req, res, next) => {
-
-    try {
-
-      const {
-        error,
-        value
-      } = validateDocenteSchema.validate(req.body);
-
-      if (error) {
-
-        return res.status(400).json({
-          error: {
-            message: "Datos inválidos",
-            details: error.details.map(d => d.message)
-          }
-        });
-
-      }
-
-      const {
-        docenteId,
-        registrationCode
-      } = value;
-
-      console.log("DOCENTE INPUT:", {
-        docenteId,
-      });
-
-      /**
-       * VALIDATE DOCENTE
-       * REQUIREMENTS:
-       * - rol_id = 2
-       * - registration code matches
-       * - activo = false
-       */
-      const {
-        data: docente,
-        error: docenteError
-      } = await supabaseAdmin
-        .from("usuarios")
-        .select(`
-          id,
-          nombre_completo,
-          email,
-          rol_id,
-          identificacion_docente,
-          activo
-        `)
-        .eq("rol_id", 2)
-        .eq("identificacion_docente", docenteId)
-        .eq("activo", false)
-        .maybeSingle();
-
-        console.log("DOCENTE RESULT:", docente);
-        console.log("DOCENTE ERROR:", docenteError);
-
-      if (docenteError || !docente) {
-
-        return res.status(400).json({
-          error: {
-            message:
-              "Información incorrecta o cuenta ya activada"
-          }
-        });
-
-      }
-
-      /**
-       * SAFE RESPONSE
-       */
-      return res.json({
-
-        success: true,
-
-        docente: {
-
-          usuario_id: docente.id,
-
-          nombre_completo:
-            docente.nombre_completo,
-
-          email:
-            docente.email,
-
-          identificacion_docente:
-            docente.identificacion_docente
-
+        if (!alumno) {
+          return res.status(400).json({
+            error: {
+              message: "Alumno no encontrado"
+            }
+          });
         }
 
+        validatedUser = alumno;
+      }
+
+      if (role === "docente") {
+
+        const { data: docente } =
+          await supabaseAdmin
+            .from("usuarios")
+            .select("*")
+            .eq("rol_id", 2)
+            .eq("identificacion_docente", studentId)
+            .maybeSingle();
+
+        if (!docente) {
+          return res.status(400).json({
+            error: {
+              message: "Docente no encontrado"
+            }
+          });
+        }
+
+        validatedUser = docente;
+      }
+
+      const ticketCode =
+        `TKT-${Date.now()}`;
+
+      const {
+        data: ticket,
+        error: ticketError
+      } = await supabaseAdmin
+        .from("soporte_tickets")
+        .insert({
+          ticket_codigo: ticketCode,
+          matricula: studentId,
+          estudiante_nombre:
+            validatedUser.nombre_completo,
+          fecha_nacimiento: birthDate,
+          asunto: subject,
+          descripcion: description,
+          estado: "Pendiente",
+          role: role === "docente" ? 2 : 3
+        })
+        .select()
+        .single();
+
+      if (ticketError) {
+        console.error(ticketError);
+
+        return res.status(500).json({
+          error: {
+            message: "Error creando ticket"
+          }
+        });
+      }
+
+      // Upload files
+      const uploadedFiles = [];
+      if (req.files?.length) {
+
+        for (const file of req.files) {
+
+          const safeName =
+  file.originalname
+    .replace(/[^a-zA-Z0-9._-]/g, "_");
+
+const fileName =
+  `${ticket.id}/${Date.now()}-${safeName}`;
+
+  uploadedFiles.push({
+  nombre: safeName,
+  archivo_url: publicUrlData.publicUrl
+});
+
+          const {
+            error: uploadError
+          } = await supabaseAdmin
+            .storage
+            .from("soporte-archivos")
+            .upload(
+              fileName,
+              file.buffer,
+              {
+                contentType: file.mimetype
+              }
+            );
+
+          if (uploadError) {
+            console.error(uploadError);
+            continue;
+          }
+
+          const {
+            data: publicUrlData
+          } = supabaseAdmin
+            .storage
+            .from("soporte-archivos")
+            .getPublicUrl(fileName);
+
+          await supabaseAdmin
+            .from("soporte_archivos")
+            .insert({
+              ticket_id: ticket.id,
+              archivo_url:
+                publicUrlData.publicUrl
+            });
+        }
+      }
+
+      return res.json({
+        success: true,
+        ticketCode,
+        uploadedFiles
       });
 
     } catch (err) {
 
-      console.error(
-        "VALIDATE DOCENTE ERROR:",
-        err
-      );
+      console.error(err);
 
-      next(err);
-
+      return res.status(500).json({
+        error: {
+          message: "Error interno"
+        }
+      });
     }
-
   }
 );
+
+module.exports = router;

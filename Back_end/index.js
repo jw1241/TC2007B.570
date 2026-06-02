@@ -48,6 +48,9 @@ const padreRoutes =
 const boletasRoutes =
   require("./routes/boletasRoutes");
 
+const mensajesRoutes =
+  require("./routes/mensajesRoutes");
+
 /**
  * PROCESS ERROR HANDLERS
  */
@@ -251,6 +254,14 @@ app.use(
 app.use(
   "/api/boletas",
   boletasRoutes
+);
+
+/**
+ * PROTECTED MENSAJES ROUTES
+ */
+app.use(
+  "/api/mensajes",
+  mensajesRoutes
 );
 
 /**

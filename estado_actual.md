@@ -37,7 +37,7 @@ El servidor de backend en Node.js (Express) ya cuenta con la base estructural y 
 ## 3. Estado de Desarrollo del Frontend (`/Front_end`)
 El frontend ya tiene una estructura sólida de proyecto en **Angular + Ionic**. Se han andamiado la mayoría de las páginas/vistas requeridas, preparadas para conectar con el backend.
 
-*(Nota: Se analizó únicamente el directorio `/Front_end` omitiendo el duplicado `/Front_end_1`)*
+*(Nota: La carpeta duplicada `/Front_end_1` fue eliminada y consolidada en `/Front_end`.)*
 
 **✅ Completado:**
 *   **Estructura Base:** Configuración completa de Ionic/Angular, TypeScript, y variables de entorno (`capacitor.config.ts`, `ionic.config.json`).

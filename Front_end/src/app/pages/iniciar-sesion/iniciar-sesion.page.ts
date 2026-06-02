@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { StudentService } from '../../services/student';
 
 @Component({
   selector: 'app-iniciar-sesion',
@@ -18,66 +17,88 @@ export class IniciarSesionPage implements OnInit {
   identifier = '';
   password = '';
 
+  rememberMe = false;
+  showPassword = false;
+
+  isLoading = false;
+
+  role: 'padre' | 'docente' = 'padre';
+
   constructor(
     private router: Router,
-    private authService: AuthService,
-    private studentService: StudentService
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
 
-  // async onLogin() {
+    const rememberedEmail =
+      localStorage.getItem('rememberedEmail');
 
-  //   const { data, error } =
-  //     await this.supabaseService.supabase.auth.signInWithPassword({
-
-  //       email: this.identifier,
-  //       password: this.password
-
-  //     });
-
-  //   if (error) {
-
-  //     alert(error.message);
-  //     return;
-
-  //   }
-
-  //   this.router.navigate(['/seleccionar-alumno']);
-  // }
-
-  
-
-  onLogin() {
-    console.log('Identifier:', this.identifier);
-    console.log('Password:', this.password);
-
-    this.authService.login(this.identifier, this.password).subscribe({
-      next: (response) => {
-        console.log('LOGIN SUCCESS', response);
-        // Guardar token JWT en localStorage
-        if (response.token) {
-          localStorage.setItem('token', response.token);
-        }
-        this.router.navigate(['/seleccionar-alumno']);
-      },
-      error: (err) => {
-        console.error('CATCH ERROR:', err);
-        alert(err.error?.message || err.error?.error?.message || 'Error al iniciar sesión');
-      }
-    });
+    if (rememberedEmail) {
+      this.identifier = rememberedEmail;
+      this.rememberMe = true;
+    }
   }
 
-recuperarcontrasena() {
-    this.router.navigate(['/recuperar-contrasena']);
+  async iniciarSesion() {
+
+    if (this.isLoading) return;
+
+    this.isLoading = true;
+
+    try {
+
+      const result =
+        await this.authService.login(
+          this.identifier,
+          this.password
+        );
+
+      if (!result.success) {
+        alert(result.error || 'No se pudo iniciar sesión.');
+        return;
+      }
+
+      // REMEMBER EMAIL (OK TO KEEP)
+      if (this.rememberMe) {
+        localStorage.setItem('rememberedEmail', this.identifier);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+
+      // ROLE REDIRECT (FROM SUPABASE USER)
+      const user = result.user;
+
+      if (user) {
+
+        // IMPORTANT:
+        // role should come from DB, NOT frontend user object
+        const profile = await this.authService.getProfile();
+
+        console.log("PROFILE:", profile);
+
+        await this.authService.redirectByRole(profile?.rol_id);
+      }
+
+    } catch (err) {
+
+      console.error(err);
+      alert('Ocurrió un error inesperado.');
+
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   Registro() {
-    this.router.navigate(['/registro']);
+     this.router.navigate(['/registro']); 
+  }
+
+  recuperarcontrasena() {
+    this.router.navigate(['/recuperar-contrasena']);
   }
 
   soporteTecnico() {
     this.router.navigate(['/soporte-tecnico']);
   }
-
 }

@@ -1,9 +1,0 @@
-{
-  "name": "myApp",
-  "type": "angular",
-  "integrations": {},
-  "proxies": [],
-  "serve": {
-    "port": 8100
-  }
-}

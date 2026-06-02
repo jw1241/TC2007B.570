@@ -1,5 +1,9 @@
 {
-  "name": "New Ionic App",
+  "name": "myApp",
+  "type": "angular",
   "integrations": {},
-  "type": "angular"
+  "proxies": [],
+  "serve": {
+    "port": 8100
+  }
 }

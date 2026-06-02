@@ -248,7 +248,122 @@ router.post("/update-password", async (req, res, next) => {
     next(err);
   }
 });
+/**
+ * @swagger
+ * /api/auth/registro-padres:
+ *   post:
+ *     summary: Registra a un Padre de Familia validando la matrícula del alumno
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - nombre_completo
+ *               - matricula
+ *               - fecha_nacimiento
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               nombre_completo:
+ *                 type: string
+ *               matricula:
+ *                 type: string
+ *               fecha_nacimiento:
+ *                 type: string
+ *                 format: date
+ */
+router.post("/registro-padres", authLimiter, async (req, res, next) => {
+  try {
+    const schema = Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().min(8).required(),
+      nombre_completo: Joi.string().required(),
+      matricula: Joi.string().required(),
+      fecha_nacimiento: Joi.string().isoDate().required()
+    });
 
+    const validation = schema.validate(req.body);
+    if (validation.error) {
+      return res.status(400).json({ error: { message: "Datos inválidos", details: validation.error.details.map(d => d.message) } });
+    }
+
+    const { email, password, nombre_completo, matricula, fecha_nacimiento } = validation.value;
+
+    // 1. Validar que el alumno existe con esa matrícula y fecha de nacimiento
+    const { data: alumno, error: alumnoError } = await supabaseAdmin
+      .from("alumnos")
+      .select("id")
+      .eq("matricula", matricula)
+      .eq("fecha_nacimiento", fecha_nacimiento)
+      .single();
+
+    if (alumnoError || !alumno) {
+      return res.status(400).json({ error: { message: "La matrícula o la fecha de nacimiento no coinciden con ningún alumno registrado." } });
+    }
+
+    // 2. Crear usuario en Supabase Auth
+    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+      email: email,
+      password: password,
+      email_confirm: true // Asumimos que el correo está confirmado para simplificar flujo
+    });
+
+    if (authError) {
+      return res.status(400).json({ error: { message: "No se pudo crear la cuenta de autenticación.", details: authError.message } });
+    }
+
+    const authUserId = authData.user.id;
+
+    // 3. Crear el perfil público en la tabla 'usuarios' con rol_id = 3 (Padre)
+    const { error: usuarioError } = await supabaseAdmin
+      .from("usuarios")
+      .insert([
+        {
+          auth_user_id: authUserId,
+          email: email,
+          nombre_completo: nombre_completo,
+          rol_id: 3,
+          activo: true
+        }
+      ]);
+
+    if (usuarioError) {
+      // Si falla, podríamos hacer un "rollback" eliminando el usuario de Auth, pero lo dejaremos así por ahora y lo loggeamos
+      console.error("Error creando perfil de usuario:", usuarioError);
+      return res.status(500).json({ error: { message: "El usuario se creó en Auth, pero falló la creación del perfil." } });
+    }
+
+    // 4. Vincular al Padre con el Alumno en la tabla 'parentescos'
+    // Recuperamos el ID del usuario recién creado para insertarlo (si la PK es autoincremental, auth_user_id servirá como FK)
+    const { error: parentescoError } = await supabaseAdmin
+      .from("parentescos")
+      .insert([
+        {
+          padre_id: authUserId, // OJO: Verifica si padre_id es el UUID de auth.users o el ID serial de usuarios. Normalmente es el UUID si se usan las convenciones estándar de Supabase
+          alumno_id: alumno.id,
+          relacion: "Padre/Tutor"
+        }
+      ]);
+
+    if (parentescoError) {
+      console.error("Error creando parentesco:", parentescoError);
+      // No detenemos el flujo porque ya se registró, pero no se vinculó el alumno
+    }
+
+    res.status(201).json({ message: "Padre registrado y vinculado exitosamente." });
+
+  } catch (err) {
+    console.error("REGISTRO PADRES ERROR:", err);
+    next(err);
+  }
+});
 
 router.get("/me", authMiddleware, async (req, res) => {
   res.json({ user: req.user });

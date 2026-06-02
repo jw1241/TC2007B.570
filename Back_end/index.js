@@ -37,7 +37,16 @@ const authRoutes =
   require("./routes/authRoutes");
 
 const regRoutes =
-  require("./routes/registration.routes")
+  require("./routes/registration.routes");
+
+const docenteRoutes =
+  require("./routes/docenteRoutes");
+
+const padreRoutes =
+  require("./routes/padreRoutes");
+
+const boletasRoutes =
+  require("./routes/boletasRoutes");
 
 /**
  * PROCESS ERROR HANDLERS
@@ -218,6 +227,30 @@ app.use(
   authMiddleware,
   requireRole([ROLES.ADMIN]),
   adminRoutes
+);
+
+/**
+ * PROTECTED DOCENTE ROUTES
+ */
+app.use(
+  "/api/docente",
+  docenteRoutes
+);
+
+/**
+ * PROTECTED PADRE ROUTES
+ */
+app.use(
+  "/api/padre",
+  padreRoutes
+);
+
+/**
+ * PROTECTED BOLETAS ROUTES
+ */
+app.use(
+  "/api/boletas",
+  boletasRoutes
 );
 
 /**

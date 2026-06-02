@@ -96,7 +96,7 @@ async getProfile() {
         user.id
       )
       .eq('activo', true)
-      .single();
+      .maybeSingle();
 
   if (error) {
 

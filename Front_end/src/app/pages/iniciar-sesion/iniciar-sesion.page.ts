@@ -77,6 +77,12 @@ export class IniciarSesionPage implements OnInit {
 
         console.log("PROFILE:", profile);
 
+        if (!profile) {
+          alert('Tu usuario fue creado manualmente y no tiene un perfil asociado. Por favor contacta al administrador.');
+          await this.authService.logout();
+          return;
+        }
+
         await this.authService.redirectByRole(profile?.rol_id);
       }
 

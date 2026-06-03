@@ -6,26 +6,9 @@ const { supabaseAdmin } = require("../config/supabaseClient");
 const { authMiddleware } = require("../middleware/authMiddleware");
 const { requireRole } = require("../middleware/roleMiddleware");
 const ROLES = require("../constants/roles");
-// const pool = require("../constants/db");
 
 const crypto = require('crypto');
 
-/**
- * @swagger
- * /api/admin/usuarios:
- *   get:
- *     summary: Obtener todos los usuarios del sistema
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Lista de usuarios (Padres, Docentes, Administradores)
- *       401:
- *         description: No autenticado
- *       403:
- *         description: Requiere rol de administrador
- */
 router.get(
   "/usuarios",
   authMiddleware,
@@ -62,156 +45,6 @@ router.get(
     }
   }
 );
-
-/**
- * @swagger
- * /api/admin/usuarios:
- *   post:
- *     summary: Crear un nuevo usuario (Docente, Padre, etc.) en Auth y base de datos
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - rol_id
- *               - nombre
- *             properties:
- *               email:
- *                 type: string
- *                 example: docente1@laluz.edu.mx
- *               rol_id:
- *                 type: integer
- *                 example: 2
- *               nombre:
- *                 type: string
- *                 example: Ana Martínez
- *     responses:
- *       201:
- *         description: Usuario creado exitosamente
- *       400:
- *         description: Faltan campos requeridos
- *       500:
- *         description: Error interno o falta SERVICE_ROLE_KEY
- */
-
-// router.post(
-//   "/usuarios",
-//   authMiddleware,
-//   requireRole([ROLES.ADMIN]),
-//   async (req, res, next) => {
-
-//     try {
-
-//       const schema = Joi.object({
-
-//         email:
-//           Joi.string()
-//             .email()
-//             .trim()
-//             .lowercase()
-//             .required(),
-
-//         rol_id:
-//           Joi.number()
-//             .integer()
-//             .positive()
-//             .required(),
-
-//         nombre_completo:
-//           Joi.string()
-//             .trim()
-//             .min(2)
-//             .max(100)
-//             .required()
-
-
-//       });
-
-//       const { error, value } =
-//         schema.validate(req.body);
-
-//       if (error) {
-
-//         return res.status(400).json({
-//           error: {
-//             message: "Datos inválidos"
-//           }
-//         });
-
-//       }
-
-//       const {
-//         email,
-//         rol_id,
-//         nombre_completo
-//       } = value;
-
-//       // SEND INVITATION
-//       // THIS CREATES AUTH USER AUTOMATICALLY
-
-//       const {
-//         data,
-//         error: inviteError
-//       } =
-//         await supabaseAdmin.auth.admin.inviteUserByEmail(
-
-//           email,
-
-//           {
-
-//             redirectTo:
-//               `${process.env.FRONTEND_URL}/auth/callback`,
-
-//             data: {
-
-//               rol_id,
-//               nombre_completo
-
-//             }
-
-//           }
-
-//         );
-
-//       if (inviteError) {
-
-//         return res.status(400).json({
-
-//           error: {
-
-//             message:
-//               "Error enviando invitación",
-
-//             details:
-//               inviteError.message
-
-//           }
-
-//         });
-
-//       }
-
-//       return res.status(201).json({
-
-//         message:
-//           "Usuario invitado correctamente"
-
-//       });
-
-//     } catch (err) {
-
-//       next(err);
-
-//     }
-
-//   }
-// );
 
 router.post(
   "/usuarios",
@@ -586,7 +419,25 @@ if (!materia || materiaError) {
   }
 );
 
+router.get("/tickets/recent", authMiddleware, requireRole([ROLES.ADMIN]), async (req, res) => {
+  const { data, error } = await supabaseAdmin
+    .from("soporte_tickets")
+    .select(`
+      id,
+      ticket_codigo,
+      asunto,
+      estado,
+      creado_en,
+      usuarios(nombre_completo),
+      soporte_archivos(archivo_url)
+    `)
+    .order("creado_en", { ascending: false })
+    .limit(20);
 
+  if (error) return res.status(500).json(error);
+
+  res.json(data);
+});
 
 /**
  * @swagger
@@ -630,4 +481,41 @@ router.get(
   }
 );
 
+router.get("/tickets/stats", authMiddleware, requireRole([ROLES.ADMIN]), async (req, res) => {
+
+  const { count: newTickets } = await supabaseAdmin
+    .from("soporte_tickets")
+    .select("*", { count: "exact", head: true })
+    .eq("estado", "Pendiente");
+
+  res.json({
+    newTickets: newTickets || 0
+  });
+});
+
+router.get(
+  "/tickets/recent-with-files",
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  async (req, res) => {
+
+    const { data: tickets, error } = await supabaseAdmin
+      .from("soporte_tickets")
+      .select(`
+        *,
+        soporte_archivos (
+          id,
+          archivo_url
+        )
+      `)
+      .order("creado_en", { ascending: false })
+      .limit(20);
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    return res.json(tickets);
+  }
+);
 module.exports = router;

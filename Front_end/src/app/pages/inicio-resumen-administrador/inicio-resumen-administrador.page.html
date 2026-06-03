@@ -1,13 +1,158 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>inicio-resumen-administrador</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <div class="p-4 max-w-5xl mx-auto">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">inicio-resumen-administrador</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <!-- HEADER -->
+    <div class="mb-6">
+      <h1 class="text-xl font-bold text-primary">
+        Soporte Técnico
+      </h1>
+      <p class="text-sm text-on-surface-variant">
+        Administración de tickets y archivos adjuntos
+      </p>
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="isLoading" class="text-center py-10">
+      <ion-spinner></ion-spinner>
+    </div>
+
+    <!-- EMPTY -->
+    <div *ngIf="!isLoading && tickets.length === 0"
+         class="text-center text-on-surface-variant">
+      No hay tickets disponibles
+    </div>
+
+    <!-- TICKETS -->
+    <div class="space-y-4">
+
+      <div *ngFor="let t of tickets"
+           class="border rounded-xl p-4 bg-surface-container-lowest shadow-sm">
+
+        <!-- HEADER -->
+        <div class="flex justify-between items-start cursor-pointer"
+             (click)="toggleTicket(t.id)">
+
+          <div>
+            <p class="font-bold text-primary">
+              {{ t.ticket_codigo }}
+            </p>
+
+            <p class="text-sm text-on-surface-variant">
+              {{ t.asunto }}
+            </p>
+
+            <div class="mt-2 text-xs text-on-surface-variant space-y-1">
+
+  <p>
+  <span class="font-semibold">Nombre:</span>
+  {{ t.estudiante_nombre ?? 'N/A' }}
+</p>
+
+<p *ngIf="t.fecha_nacimiento">
+  <span class="font-semibold">Fecha Nacimiento:</span>
+  {{ t.fecha_nacimiento | date:'longDate' }}
+</p>
+
+<p *ngIf="t.matricula">
+  <span class="font-semibold">Matrícula:</span>
+  {{ t.matricula }}
+</p>
+
+</div>
+
+            <p class="text-xs text-on-surface-variant mt-1">
+              {{ t.estado }} · {{ t.creado_en | date:'short' }}
+            </p>
+          </div>
+
+          <ion-icon name="chevron-down-outline"
+                    [class.rotate-180]="isOpen(t.id)">
+          </ion-icon>
+
+        </div>
+
+        <!-- EXPANDED -->
+        <div *ngIf="isOpen(t.id)" class="mt-4 border-t pt-4">
+
+          <p class="text-sm mb-3">
+            {{ t.descripcion }}
+          </p>
+
+          <!-- FILES -->
+<div>
+  <p class="font-semibold text-sm mb-2">
+    Archivos adjuntos
+  </p>
+
+  <ng-container *ngIf="(t.soporte_archivos ?? []).length > 0; else noFiles">
+
+    <div *ngFor="let file of (t.soporte_archivos ?? [])"
+         class="flex justify-between items-center bg-surface-container p-2 rounded-lg">
+
+      <span class="text-sm text-primary truncate">
+        {{ file.archivo_url }}
+      </span>
+
+      <button
+        (click)="openFile(file.archivo_url)"
+        class="text-sm text-secondary font-semibold">
+        Abrir
+      </button>
+
+    </div>
+
+  </ng-container>
+
+  <ng-template #noFiles>
+    <p class="text-xs text-on-surface-variant">
+      No hay archivos adjuntos
+    </p>
+  </ng-template>
+</div> 
+
+<ion-modal [isOpen]="previewOpen" (didDismiss)="closePreview()">
+  <ng-template>
+
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Vista previa</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closePreview()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+
+      <!-- IMAGE PREVIEW -->
+      <img
+        *ngIf="previewFileUrl?.match('\\.(jpg|jpeg|png|webp|gif)$')"
+        [src]="previewFileUrl"
+        class="w-full rounded-lg"
+      />
+
+      <!-- PDF PREVIEW -->
+      <iframe
+        *ngIf="previewFileUrl?.includes('.pdf')"
+        [src]="previewFileUrl"
+        class="w-full h-full min-h-[80vh]"
+      ></iframe>
+
+      <!-- GENERIC FALLBACK -->
+      <div *ngIf="!previewFileUrl">
+        No se puede previsualizar este archivo.
+      </div>
+
+    </ion-content>
+
+  </ng-template>
+</ion-modal>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 </ion-content>

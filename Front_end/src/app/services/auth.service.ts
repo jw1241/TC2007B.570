@@ -12,32 +12,43 @@ export class AuthService {
 
   async login(email: string, password: string) {
 
-    console.log('LOGIN ATTEMPT');
-    console.log('EMAIL:', email);
-    console.log('PASSWORD:', password);
+  const { data, error } =
+    await this.supabase.supabase.auth.signInWithPassword({
+      email,
+      password
+    });
 
-    const { data, error } =
-      await this.supabase.supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-    console.log('LOGIN DATA:', data);
-    console.log('LOGIN ERROR:', error);
-
-    if (error) {
-      return { success: false, error: error.message };
-    }
-
-    return {
-      success: true,
-      user: data.user
-    };
+  if (error) {
+    return { success: false, error: error.message };
   }
+
+  if (!data.user) return { success: false };
+
+  // 🔥 GET PROFILE (IMPORTANT)
+  const { data: profile } = await this.supabase.supabase
+    .from('usuarios')
+    .select('id')
+    .eq('auth_user_id', data.user.id)
+    .maybeSingle();
+
+  if (profile) {
+    localStorage.setItem('user_id', profile.id); // ✅ THIS is correct ID
+  }
+
+  return {
+    success: true,
+    user: data.user,
+    profile
+  };
+}
 
   async getUsuario() {
     const { data } =
       await this.supabase.supabase.auth.getUser();
+
+      if (data.user) {
+  localStorage.setItem('user_id', data.user.id);
+}
 
     return data.user;
   }

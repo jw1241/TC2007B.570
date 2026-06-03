@@ -31,9 +31,7 @@ export class IniciarSesionPage implements OnInit {
   ) {}
 
   ngOnInit() {
-
-    const rememberedEmail =
-      localStorage.getItem('rememberedEmail');
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
 
     if (rememberedEmail) {
       this.identifier = rememberedEmail;
@@ -61,32 +59,31 @@ export class IniciarSesionPage implements OnInit {
         return;
       }
 
-      // REMEMBER EMAIL (OK TO KEEP)
+      // remember email
       if (this.rememberMe) {
         localStorage.setItem('rememberedEmail', this.identifier);
       } else {
         localStorage.removeItem('rememberedEmail');
       }
 
-      // ROLE REDIRECT (FROM SUPABASE USER)
-      const user = result.user;
+      // GET PROFILE FROM DB
+      const profile = await this.authService.getProfile();
 
-      if (user) {
-
-        // IMPORTANT:
-        // role should come from DB, NOT frontend user object
-        const profile = await this.authService.getProfile();
-
-        console.log("PROFILE:", profile);
-
-        if (!profile) {
-          alert('Tu usuario fue creado manualmente y no tiene un perfil asociado. Por favor contacta al administrador.');
-          await this.authService.logout();
-          return;
-        }
-
-        await this.authService.redirectByRole(profile?.rol_id);
+      if (!profile) {
+        alert(
+          'Tu usuario no tiene un perfil asociado. Contacta al administrador.'
+        );
+        await this.authService.logout();
+        return;
       }
+
+      // store correct user id (DB id, NOT auth id)
+      localStorage.setItem('user_id', profile.id);
+
+      console.log('PROFILE:', profile);
+
+      // ROLE REDIRECT
+      await this.authService.redirectByRole(profile.rol_id);
 
     } catch (err) {
 
@@ -99,7 +96,7 @@ export class IniciarSesionPage implements OnInit {
   }
 
   Registro() {
-     this.router.navigate(['/registro']); 
+    this.router.navigate(['/registro']);
   }
 
   recuperarcontrasena() {

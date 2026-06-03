@@ -1,13 +1,165 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>inicio-resumen-profesor</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">inicio-resumen-profesor</ion-title>
-    </ion-toolbar>
-  </ion-header>
+      <div class="bg-surface text-on-surface font-body-md min-h-screen pb-24">
+
+    <!-- HEADER -->
+    <header class="bg-surface sticky top-0 z-40 shadow-sm">
+      <div class="flex items-center justify-between px-4 h-16 max-w-container-max mx-auto">
+
+        <!-- Logo + Name -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full overflow-hidden bg-white shadow-sm">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcTWCjl-iswn9qGwnguEnmCjn29P95J5eJcgVmSm-NintYMIKF7lpE0P_1gvyd1BCZFtKAtfHruKCz7klA9sXpOfpzIQRkSutztO_sgTxMl9UyK9D_8iFjX0_bTPR4LEiuqJxro6cJ_FQ7Xnk17eMfhjeTMRRjF93F_k_0tWPTsyMC4oDzq6z96jN6uCQs4Zl_f6BJ6HbyNXFj_KYMvEEJnJO1AnKrD0vb2-b_cr_62foul5WzCTEFA89lFl3dFUVL1UYdDOKA9zs" alt="La Luz Logo" class="w-full h-full object-cover" />
+          </div>
+
+          <div class="flex flex-col leading-tight">
+            <span class="font-bold text-primary">
+              Escuela Metropolitana
+            </span>
+            <span class="text-sm text-on-surface-variant">
+              "La Luz"
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="max-w-container-max mx-auto px-4 py-8 flex flex-col gap-8">
+
+      <!-- WELCOME -->
+      <section class="flex flex-col gap-2">
+        <h1 class="text-primary text-xl font-bold">
+  Bienvenido, {{ docente?.nombre_completo || 'Docente' }}
+        </h1>
+        <p class="text-on-surface-variant">
+          Vista general de tu actividad académica
+        </p>
+      </section>
+
+      <!-- METRICS GRID -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        <div class="bg-surface-container-lowest rounded-xl p-5">
+          <p class="text-xs uppercase text-on-surface-variant">Grupos</p>
+          <p class="text-2xl font-bold text-primary">
+            {{ resumen.grupos }}
+          </p>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-xl p-5">
+          <p class="text-xs uppercase text-on-surface-variant">Materias</p>
+          <p class="text-2xl font-bold text-primary">
+            {{ resumen.materias }}
+          </p>
+        </div>
+
+      </section>
+      
+
+      <!-- MATERIAS -->
+      <section class="flex flex-col gap-3">
+  <h2 class="font-bold text-primary text-lg">Materias asignadas</h2>
+
+  <div class="space-y-3">
+
+    <div
+      *ngFor="let m of materias"
+      class="bg-surface-container-lowest p-4 rounded-xl flex justify-between items-center"
+    >
+
+      <div>
+        <p class="font-semibold text-primary">
+          {{ m.nombre_materia }}
+        </p>
+
+        <p class="text-sm text-on-surface-variant">
+          Grado {{ m.grado }} - {{ m.seccion }}
+        </p>
+      </div>
+
+      <span class="material-symbols-outlined text-on-surface-variant">
+        school
+      </span>
+
+    </div>
+
+  </div>
+</section>
+
+      <!-- CALIFICACIONES -->
+      <section class="flex flex-col gap-3">
+        <h2 class="font-bold text-primary text-lg">Actividad reciente</h2>
+
+        <div class="space-y-3">
+          <div
+            *ngFor="let c of calificaciones"
+            class="bg-surface-container-lowest p-4 rounded-xl flex justify-between items-center"
+          >
+
+            <div>
+              <p class="font-semibold text-primary">
+                {{ c.alumno }}
+              </p>
+              <p class="text-sm text-on-surface-variant">
+                {{ c.materia }} - {{ c.nota }}/10
+              </p>
+            </div>
+
+            <span class="text-lg font-bold text-primary">
+              {{ c.nota }}
+            </span>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- MENSAJES -->
+      <section class="flex flex-col gap-3">
+        <h2 class="font-bold text-primary text-lg">Mensajes</h2>
+
+        <div class="space-y-3">
+          <div
+            *ngFor="let msg of mensajes"
+            class="bg-surface-container-lowest p-4 rounded-xl"
+          >
+            <p class="font-semibold text-primary">
+              {{ msg.remitente }}
+            </p>
+            <p class="text-sm text-on-surface-variant">
+              {{ msg.contenido }}
+            </p>
+
+            <span
+              *ngIf="msg.estado !== 'leido'"
+              class="inline-block mt-2 text-xs bg-red-100 text-red-600 px-2 py-1 rounded"
+            >
+              Nuevo
+            </span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FLOATING ACTION -->
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button>
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-list side="top">
+        <ion-fab-button (click)="crearCalificacion()">
+          <ion-icon name="create"></ion-icon>
+        </ion-fab-button>
+
+        <ion-fab-button (click)="abrirMensajes()">
+          <ion-icon name="chatbubbles"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+
+  </div>
 </ion-content>

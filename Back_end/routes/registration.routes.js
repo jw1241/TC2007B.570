@@ -77,6 +77,8 @@ router.post(
         value
       );
 
+      console.log("REGISTRATION CODE:", registrationCode);
+
       /**
        * FIND ALUMNO
        */
@@ -399,6 +401,8 @@ router.post("/activate-account", async (req, res, next) => {
       mappedRole
     });
 
+    console.log("USUARIO ID:", usuarioId);
+
     const { data: usuario, error: usuarioError } = await supabaseAdmin
       .from("usuarios")
       .select("*")
@@ -505,6 +509,47 @@ router.post("/activate-account", async (req, res, next) => {
         }
       }
     }
+
+            /**
+ * INVALIDATE REGISTRATION CODE
+ */
+const { error: clearCodeError } =
+  await supabaseAdmin
+    .from("alumnos")
+    .update({
+      codigo_registro: null
+    })
+    .eq(
+    "codigo_registro",
+    registrationCode
+  );
+
+console.log("ALUMNO UPDATE ERROR:", clearCodeError);
+
+  await supabaseAdmin
+  .from("usuarios")
+  .update({
+    codigo_registro: null
+  })
+  .eq(
+    "codigo_registro",
+    registrationCode
+  );
+
+
+
+if (clearCodeError) {
+  console.error(
+    "❌ CLEAR CODE ERROR:",
+    clearCodeError
+  );
+
+  return res.status(400).json({
+    error: {
+      message: clearCodeError.message
+    }
+  });
+}
 
     /**
      * SUCCESS RESPONSE

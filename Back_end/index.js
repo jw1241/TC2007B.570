@@ -54,6 +54,9 @@ const mensajesRoutes =
 const supportRoutes =
   require("./routes/sorporteRoutes");
 
+const gradesRoutes =
+  require("./routes/calificacionesRoutes");
+
 /**
  * PROCESS ERROR HANDLERS
  */
@@ -167,6 +170,8 @@ app.use(
   })
 );
 
+app.use(express.urlencoded({ extended: true }));
+
 /**
  * GLOBAL RATE LIMITER
  */
@@ -236,18 +241,15 @@ app.use(
 );
 
 /**
- * PROTECTED DOCENTE ROUTES
- */
-app.use(
-  "/api/docente",
-  docenteRoutes
-);
-
-/**
  * PROTECTED PADRE ROUTES
  */
 app.use(
   "/api/padre",
+  authMiddleware,
+  requireRole([
+    ROLES.PADRE,
+    ROLES.ADMIN
+  ]),
   padreRoutes
 );
 
@@ -256,6 +258,7 @@ app.use(
  */
 app.use(
   "/api/boletas",
+  authMiddleware,
   boletasRoutes
 );
 
@@ -264,12 +267,25 @@ app.use(
  */
 app.use(
   "/api/mensajes",
+  authMiddleware,
   mensajesRoutes
 );
 
-app.use("/api/soporte", supportRoutes);
+app.use(
+  "/api/docente",
+  authMiddleware,
+  requireRole([
+    ROLES.ADMIN,
+    ROLES.DOCENTE
+  ]),
+  docenteRoutes
+);
 
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  "/api/grades",
+  authMiddleware,
+  gradesRoutes
+);
 
 /**
  * SWAGGER DOCS

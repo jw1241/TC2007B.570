@@ -60,20 +60,21 @@ const authMiddleware = async (
      * GET USER PROFILE
      */
     const {
-      data: profile,
-      error: profileError
-    } =
-      await supabaseAdmin
-        .from("usuarios")
-        .select(`
-          id,
-          email,
-          nombre_completo,
-          rol_id,
-          activo
-        `)
-        .eq("id", user.id)
-        .single();
+  data: profile,
+  error: profileError
+} =
+  await supabaseAdmin
+    .from("usuarios")
+    .select(`
+      id,
+      email,
+      nombre_completo,
+      rol_id,
+      activo,
+      auth_user_id
+    `)
+    .eq("auth_user_id", user.id)
+    .single();
 
     if (profileError || !profile) {
 
@@ -100,11 +101,16 @@ const authMiddleware = async (
     /**
      * SAFE USER OBJECT
      */
+
+    console.log("REQ.USER =", req.user);
     req.user = {
-      id: user.id,
-      email: user.email,
-      profile
-    };
+  id: profile.id,
+  auth_user_id: user.id,
+  email: user.email,
+  rol_id: profile.rol_id,
+  activo: profile.activo,
+  nombre_completo: profile.nombre_completo
+};
 
     /**
      * AUTHENTICATED SUPABASE CLIENT

@@ -2,84 +2,230 @@ import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase';
 import { environment } from 'src/environments/environment';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ApiService {
 
   private baseUrl = environment.apiUrl;
 
-  constructor(private supabase: SupabaseService) {}
+  constructor(
+    private supabase: SupabaseService
+  ) {}
 
-  private async getToken() {
-    const { data } = await this.supabase.supabase.auth.getSession();
+  private async getToken(): Promise<string | undefined> {
+
+    const { data } =
+      await this.supabase.supabase.auth.getSession();
+
     return data.session?.access_token;
+
   }
 
-  async get(endpoint: string) {
-    const token = await this.getToken();
+  private async request(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<any> {
 
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` })
+    const token =
+  await this.getToken();
+
+console.log(
+  'ACCESS TOKEN:',
+  token
+);
+
+    const controller =
+      new AbortController();
+
+    const timeout =
+      setTimeout(
+        () => controller.abort(),
+        15000
+      );
+
+    try {
+
+      const response =
+        await fetch(
+          `${this.baseUrl}${endpoint}`,
+          {
+            ...options,
+            signal: controller.signal,
+            headers: {
+              ...(options.headers || {}),
+              ...(token && {
+                Authorization:
+                  `Bearer ${token}`
+              })
+            }
+          }
+        );
+
+      let data: any = null;
+
+      try {
+
+        data =
+          await response.json();
+
+      } catch {
+
+        data = null;
+
       }
-    });
 
-    const data = await response.json();
+      if (!response.ok) {
 
-    if (!response.ok) {
-      throw new Error(data?.error?.message || 'GET failed');
+        throw new Error(
+          data?.error?.message ||
+          `Request failed (${response.status})`
+        );
+
+      }
+
+      return data;
+
+    } finally {
+
+      clearTimeout(timeout);
+
     }
 
-    return data;
   }
 
-  async post(endpoint: string, body: any) {
-    const token = await this.getToken();
+  async get<T>(
+    endpoint: string
+  ): Promise<T> {
 
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` })
-      },
-      body: JSON.stringify(body)
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data?.error?.message || 'POST failed');
+    return this.request(
+  endpoint,
+  {
+    method: 'GET',
+    headers: {
+      'Content-Type':
+        'application/json'
     }
+  }
+) as Promise<T>;
 
-    return data;
   }
 
+  async post<T>(
+    endpoint: string,
+    body: any
+  ): Promise<T> {
 
-async createTicket(formData: FormData) {
-
-  const token = await this.getToken();
-
-  const response = await fetch(
-    `${this.baseUrl}/soporte/soporte-ticket`,
-    {
-      method: 'POST',
-      headers: {
-        ...(token && {
-          Authorization: `Bearer ${token}`
-        })
-      },
-      body: formData
-    }
-  );
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      data?.error?.message || 'Ticket creation failed'
+    return this.request(
+      endpoint,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type':
+            'application/json'
+        },
+        body: JSON.stringify(body)
+      }
     );
+
   }
 
-  return data;
-}
+  async put<T>(
+    endpoint: string,
+    body: any
+  ): Promise<T> {
+
+    return this.request(
+      endpoint,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type':
+            'application/json'
+        },
+        body: JSON.stringify(body)
+      }
+    );
+
+  }
+
+  async delete<T>(
+    endpoint: string
+  ): Promise<T> {
+
+    return this.request(
+      endpoint,
+      {
+        method: 'DELETE'
+      }
+    );
+
+  }
+
+  async createTicket(
+    formData: FormData
+  ): Promise<any> {
+
+    const token =
+      await this.getToken();
+
+    const controller =
+      new AbortController();
+
+    const timeout =
+      setTimeout(
+        () => controller.abort(),
+        15000
+      );
+
+    try {
+
+      const response =
+        await fetch(
+          `${this.baseUrl}/soporte/soporte-ticket`,
+          {
+            method: 'POST',
+            signal: controller.signal,
+            headers: {
+              ...(token && {
+                Authorization:
+                  `Bearer ${token}`
+              })
+            },
+            body: formData
+          }
+        );
+
+      let data: any = null;
+
+      try {
+
+        data =
+          await response.json();
+
+      } catch {
+
+        data = null;
+
+      }
+
+      if (!response.ok) {
+
+        throw new Error(
+          data?.error?.message ||
+          `Ticket creation failed (${response.status})`
+        );
+
+      }
+
+      return data;
+
+    } finally {
+
+      clearTimeout(timeout);
+
+    }
+
+  }
+
 }

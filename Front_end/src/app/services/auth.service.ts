@@ -98,6 +98,8 @@ async getProfile() {
       .eq('activo', true)
       .maybeSingle();
 
+  
+
   if (error) {
 
     console.error(

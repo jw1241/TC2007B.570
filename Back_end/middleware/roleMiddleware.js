@@ -2,8 +2,18 @@ const requireRole = (rolesAllowed) => {
 
   return (req, res, next) => {
 
+    if (!req.user) {
+
+      return res.status(401).json({
+        error: {
+          message: "No autenticado"
+        }
+      });
+
+    }
+
     const userRole =
-      req.user.profile.rol_id;
+      req.user.rol_id;
 
     if (
       !rolesAllowed.includes(userRole)
@@ -11,7 +21,7 @@ const requireRole = (rolesAllowed) => {
 
       return res.status(403).json({
         error: {
-          message: "Forbidden"
+          message: "No autorizado"
         }
       });
 

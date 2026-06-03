@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api';
+import { sanitizeInput } from '../../utils/sanitizer';
 
 
 @Component({
@@ -76,24 +77,24 @@ async enviarSoporte() {
 
     const formData = new FormData();
 
-    formData.append('role', this.role);
-    formData.append('studentId', this.studentId);
+    formData.append('role', sanitizeInput(this.role));
+    formData.append('studentId', sanitizeInput(this.studentId));
 
     if (this.role === 'padre') {
       formData.append(
         'birthDate',
-        this.birthDate
+        sanitizeInput(this.birthDate)
       );
     }
 
     formData.append(
       'subject',
-      this.subject
+      sanitizeInput(this.subject)
     );
 
     formData.append(
       'description',
-      this.issueDescription
+      sanitizeInput(this.issueDescription)
     );
 
     // MULTIPLE FILES

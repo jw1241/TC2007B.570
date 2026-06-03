@@ -23,15 +23,15 @@ const getInternalUserId = async (authUserId) => {
  */
 router.get("/mis-clases", authMiddleware, requireRole([ROLES.DOCENTE]), async (req, res, next) => {
   try {
-    const docenteId = await getInternalUserId(req.user.id);
+    const docenteId = await getInternalUserId(req.user.auth_user_id);
     if (!docenteId) return res.status(404).json({ error: { message: "Perfil de docente no encontrado" } });
 
     const { data, error } = await supabaseAdmin
       .from("asignaciones_docentes")
       .select(`
         id,
-        grupos ( id, nombre, grado ),
-        materias ( id, nombre )
+        grupos ( id, seccion, grado ),
+        materias ( id, nombre_materia )
       `)
       .eq("docente_id", docenteId);
 
@@ -54,7 +54,7 @@ router.get("/mis-clases", authMiddleware, requireRole([ROLES.DOCENTE]), async (r
 router.get("/clase/:grupo_id/materia/:materia_id/alumnos", authMiddleware, requireRole([ROLES.DOCENTE]), async (req, res, next) => {
   try {
     const { grupo_id, materia_id } = req.params;
-    const docenteId = await getInternalUserId(req.user.id);
+    const docenteId = await getInternalUserId(req.user.auth_user_id);
 
     // Verificar asignación
     const { data: asignacion, error: asigError } = await supabaseAdmin
@@ -119,7 +119,7 @@ router.get("/clase/:grupo_id/materia/:materia_id/alumnos", authMiddleware, requi
 router.put("/calificaciones", authMiddleware, requireRole([ROLES.DOCENTE]), async (req, res, next) => {
   try {
     const schema = Joi.object({
-      alumno_id: Joi.number().required(), // Asumiendo que alumno_id es entero o uuid. Cambiar si es uuid.
+      alumno_id: Joi.string().uuid().required(),
       materia_id: Joi.string().uuid().required(),
       trimestre: Joi.number().valid(1, 2, 3).required(),
       calificacion: Joi.number().min(0).max(10).required(),
@@ -130,21 +130,25 @@ router.put("/calificaciones", authMiddleware, requireRole([ROLES.DOCENTE]), asyn
     if (error) return res.status(400).json({ error: { message: "Datos inválidos", details: error.details.map(d=>d.message) } });
 
     const { alumno_id, materia_id, trimestre, calificacion, observaciones } = value;
-    const docenteId = await getInternalUserId(req.user.id);
+    const docenteId = await getInternalUserId(req.user.auth_user_id);
 
     // Upsert (Insert o Update si existe)
     // Asumiendo que la tabla tiene una llave única (alumno_id, materia_id, trimestre)
+    const periodosMap = {
+      1: "7d39a9cf-aff3-4a31-b2fa-0edc48f58b2e",
+      2: "492ddf12-127b-46ad-ac9c-162f9d4e6660",
+      3: "97ec536b-a9e2-433a-af16-23c75dc26b71"
+    };
+
     const { data, error: upsertError } = await supabaseAdmin
       .from("calificaciones")
-      .upsert({
+      .insert({
         alumno_id,
         materia_id,
-        docente_id: docenteId,
-        trimestre,
-        calificacion,
-        observaciones,
-        fecha_captura: new Date()
-      }, { onConflict: "alumno_id, materia_id, trimestre" });
+        periodo_id: periodosMap[trimestre],
+        nota: calificacion,
+        comentario: observaciones || null
+      });
 
     if (upsertError) throw upsertError;
 

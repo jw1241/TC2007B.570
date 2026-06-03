@@ -25,6 +25,21 @@ router.post(
         description
       } = req.body;
 
+      const Joi = require("joi");
+      
+      const schema = Joi.object({
+        role: Joi.string().valid("padre", "docente").required(),
+        studentId: Joi.string().required(),
+        birthDate: Joi.string().isoDate().required(),
+        subject: Joi.string().max(255).required(),
+        description: Joi.string().max(1000).required()
+      });
+
+      const { error: validationError } = schema.validate(req.body);
+      if (validationError) {
+        return res.status(400).json({ error: { message: validationError.details[0].message } });
+      }
+
       let validatedUser;
 
       if (role === "padre") {

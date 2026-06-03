@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { sanitizeInput } from '../../utils/sanitizer';
 
 @Component({
   selector: 'app-iniciar-sesion',
@@ -47,10 +48,11 @@ export class IniciarSesionPage implements OnInit {
     this.isLoading = true;
 
     try {
+      const sanitizedIdentifier = sanitizeInput(this.identifier);
 
       const result =
         await this.authService.login(
-          this.identifier,
+          sanitizedIdentifier,
           this.password
         );
 

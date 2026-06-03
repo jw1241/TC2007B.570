@@ -85,7 +85,7 @@ if (!authData?.session?.access_token) {
 const { data: usuario, error: usuarioError } = await supabaseAdmin
   .from("usuarios")
   .select("*")
-  .eq("id", authData.user.id)
+  .eq("auth_user_id", authData.user.id)
   .single();
 
 if (usuarioError || !usuario) {

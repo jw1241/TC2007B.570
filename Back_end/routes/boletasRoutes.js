@@ -16,6 +16,12 @@ const { authMiddleware } = require("../middleware/authMiddleware");
 router.get("/:alumno_id/descargar-pdf", authMiddleware, async (req, res, next) => {
   try {
     const { alumno_id } = req.params;
+    const Joi = require("joi");
+    const schema = Joi.object({
+      alumno_id: Joi.string().required()
+    });
+    const { error: validationError } = schema.validate({ alumno_id });
+    if (validationError) return res.status(400).json({ error: { message: validationError.details[0].message } });
 
     // Obtener datos del alumno y grupo
     const { data: alumno, error: alumError } = await supabaseAdmin

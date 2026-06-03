@@ -71,10 +71,11 @@ router.get("/hijo/:alumno_id/calificaciones", authMiddleware, requireRole([ROLES
       .from("calificaciones")
       .select(`
         id,
-        trimestre,
-        calificacion,
-        observaciones,
-        materias ( id, nombre )
+        periodo_id,
+        nota,
+        comentario,
+        tarea,
+        materias ( id, nombre_materia )
       `)
       .eq("alumno_id", alumno_id);
 
@@ -85,9 +86,9 @@ router.get("/hijo/:alumno_id/calificaciones", authMiddleware, requireRole([ROLES
     calificaciones.forEach(c => {
       const matId = c.materias.id;
       if (!boleta[matId]) {
-        boleta[matId] = { materia: c.materias.nombre, trimestres: { 1: null, 2: null, 3: null } };
+        boleta[matId] = { materia: c.materias.nombre_materia, trimestres: { 1: null, 2: null, 3: null } };
       }
-      boleta[matId].trimestres[c.trimestre] = { calificacion: c.calificacion, observaciones: c.observaciones };
+      boleta[matId].trimestres[c.periodo_id] = { calificacion: c.nota, observaciones: c.comentario, tarea: c.tarea };
     });
 
     res.json({ message: "Calificaciones obtenidas", data: Object.values(boleta) });
@@ -108,6 +109,13 @@ router.get("/hijo/:alumno_id/calificaciones", authMiddleware, requireRole([ROLES
 router.post("/hijo/:alumno_id/firmar-acuse", authMiddleware, requireRole([ROLES.PADRE]), async (req, res, next) => {
   try {
     const { alumno_id } = req.params;
+    const Joi = require("joi");
+    const schema = Joi.object({
+      alumno_id: Joi.string().required()
+    });
+    const { error: validationError } = schema.validate({ alumno_id });
+    if (validationError) return res.status(400).json({ error: { message: validationError.details[0].message } });
+    
     const padreId = await getInternalUserId(req.user.id);
 
     // Verificar parentesco

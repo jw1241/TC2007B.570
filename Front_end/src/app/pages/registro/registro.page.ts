@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api';
+import { sanitizeInput } from '../../utils/sanitizer';
 
 @Component({
   selector: 'app-registro',
@@ -44,12 +45,8 @@ async continuar() {
     if (this.role === 'padre') {
 
       const payload = {
-
-        studentId: this.Id,
-
-        registrationCode:
-          this.registrationCode
-
+        studentId: sanitizeInput(this.Id),
+        registrationCode: sanitizeInput(this.registrationCode)
       };
 
       const res: any = await this.api.post(
@@ -78,12 +75,8 @@ async continuar() {
     if (this.role === 'docente') {
 
       const payload = {
-
-        docenteId: this.Id,
-
-        registrationCode:
-          this.registrationCode
-
+        docenteId: sanitizeInput(this.Id),
+        registrationCode: sanitizeInput(this.registrationCode)
       };
 
       const res: any = await this.api.post(

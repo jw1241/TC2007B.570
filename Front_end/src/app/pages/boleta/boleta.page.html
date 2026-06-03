@@ -2,33 +2,38 @@
   <div class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased">
     <!-- TopAppBar -->
     <header class="sticky top-0 w-full z-40 flex justify-between items-center px-4 bg-surface shadow-sm h-14">
-      <div class="flex items-center gap-4 cursor-pointer active:scale-95 transition-transform">
-        <img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe0opXwJCVFmUnEJMR_FQGId0x9HuzEjRmap438vrJjxOhkvzNyaYykfWHhUySLzrntx7o8k8QlD2LFv1as8w8i3unQMUj1_fVojllyzm0SpSoaksZlqKnk0RysPe1-PybYCThedB2blyyaF4Cx6QWnBD-JjO7XBnyNMj3iIR8FrdwEevgRAWNw7qlUpEqshikQPVVAydRHEa-djXl_Ci-tNMUwUsYJE2x3nD-oAr94u-cztHCRCKI3zS7TUO2aw0nieYXlZJV4Ao" />
-        <h1
-          class="font-headline-sm text-headline-sm md:font-headline-lg-mobile md:text-headline-lg-mobile font-bold text-primary">
-          Escuela Metropolitana "La Luz"</h1>
+      <div class="flex items-center gap-4 cursor-pointer active:scale-95 transition-transform" (click)="navigateTo('/inicio-resumen-alumno')">
+        <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold">
+            {{ alumno?.nombre?.charAt(0) || 'L' }}
+        </div>
+        <h1 class="font-headline-sm text-headline-sm md:font-headline-lg-mobile md:text-headline-lg-mobile font-bold text-primary">
+          Escuela Metropolitana "La Luz"
+        </h1>
       </div>
-      <div
-        class="cursor-pointer active:scale-95 flex items-center justify-center min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-colors duration-200 rounded-full">
-        <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+      <div class="cursor-pointer active:scale-95 flex items-center justify-center min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-colors duration-200 rounded-full" (click)="navigateTo('/perfil')">
+        <span class="material-symbols-outlined text-on-surface-variant">person</span>
       </div>
     </header>
 
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex-grow flex justify-center items-center py-20">
+      <ion-spinner color="primary"></ion-spinner>
+    </div>
+
     <!-- Main Content -->
-    <main class="flex-grow w-full max-w-5xl mx-auto px-4 py-8 pb-24 flex flex-col gap-8">
+    <main *ngIf="!isLoading" class="flex-grow w-full max-w-5xl mx-auto px-4 py-8 pb-24 flex flex-col gap-8">
       <!-- Header Section -->
       <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h2
-            class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-2">
-            Boleta de Calificaciones</h2>
-          <p class="font-body-md text-body-md text-on-surface-variant">Periodo Académico: Primer Semestre 2024 •
-            Estudiante: Ana García</p>
+          <h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary mb-2">
+            Boleta de Calificaciones
+          </h2>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Ciclo Académico Actual • Estudiante: {{ alumno?.nombre || alumno?.nombre_completo }}
+          </p>
         </div>
         <div class="flex gap-4 w-full md:w-auto">
-          <button
-            class="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-surface border border-primary text-primary rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-all shadow-sm active:scale-95">
+          <button (click)="descargarBoleta()" class="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-surface border border-primary text-primary rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-all shadow-sm active:scale-95">
             <span class="material-symbols-outlined">download</span>
             Descargar PDF
           </button>
@@ -37,150 +42,88 @@
 
       <!-- Academic Summary Cards (Bento style) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div
-          class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_16px_rgba(0,32,70,0.04)] border border-outline-variant flex flex-col justify-between">
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_16px_rgba(0,32,70,0.04)] border border-outline-variant flex flex-col justify-between">
           <div>
             <p class="font-label-md text-label-md text-on-surface-variant mb-1">Promedio General</p>
-            <p class="font-display-lg text-display-lg text-primary">9.2</p>
+            <p class="font-display-lg text-display-lg text-primary">{{ promedioGeneral | number:'1.1-1' }}</p>
           </div>
-          <div
-            class="mt-4 inline-flex items-center gap-1 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-caption text-caption w-fit">
-            <span class="material-symbols-outlined text-[16px]"
-              style="font-variation-settings: 'FILL' 1;">trending_up</span>
-            Excelente desempeño
+          <div class="mt-4 inline-flex items-center gap-1 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-caption text-caption w-fit" *ngIf="promedioGeneral >= 8">
+            <span class="material-symbols-outlined text-[16px]">trending_up</span>
+            Buen desempeño
           </div>
         </div>
 
-        <div
-          class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_16px_rgba(0,32,70,0.04)] border border-outline-variant flex flex-col justify-between">
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_16px_rgba(0,32,70,0.04)] border border-outline-variant flex flex-col justify-between">
           <div>
-            <p class="font-label-md text-label-md text-on-surface-variant mb-1">Asistencia</p>
-            <p class="font-display-lg text-display-lg text-primary">98%</p>
+            <p class="font-label-md text-label-md text-on-surface-variant mb-1">Matrícula</p>
+            <p class="font-display-sm text-display-sm text-primary">{{ alumno?.matricula }}</p>
           </div>
           <div class="mt-4 text-on-surface-variant font-caption text-caption">
-            2 faltas justificadas en el periodo
+            Grupo: {{ alumno?.grupos?.grado }}º "{{ alumno?.grupos?.nombre || alumno?.grupos?.seccion }}"
           </div>
         </div>
 
-        <div
-          class="bg-primary text-on-primary p-6 rounded-xl shadow-[0_4px_16px_rgba(0,32,70,0.04)] flex flex-col justify-between relative overflow-hidden">
+        <div class="p-6 rounded-xl shadow-[0_4px_16px_rgba(0,32,70,0.04)] flex flex-col justify-between relative overflow-hidden transition-colors"
+             [ngClass]="firmado ? 'bg-surface-container-lowest border border-outline text-on-surface' : 'bg-primary text-on-primary'">
+          
           <div class="absolute -right-4 -top-4 opacity-10">
-            <span class="material-symbols-outlined"
-              style="font-variation-settings: 'FILL' 1; font-size: 120px;">verified</span>
+            <span class="material-symbols-outlined" style="font-size: 120px;">verified</span>
           </div>
+          
           <div class="z-10">
-            <p class="font-label-md text-label-md text-primary-fixed-dim mb-1">Estado de Firma</p>
-            <p class="font-headline-md text-headline-md mb-2">Pendiente de Firma</p>
-            <p class="font-body-md text-body-md text-primary-fixed-dim">Requiere revisión y confirmación del tutor
-              legal.</p>
+            <p class="font-label-md text-label-md mb-1" [ngClass]="firmado ? 'text-on-surface-variant' : 'text-primary-fixed-dim'">Estado de Firma</p>
+            <h3 class="font-headline-md text-headline-md mb-2">{{ firmado ? 'Boleta Firmada' : 'Pendiente de Firma' }}</h3>
+            <p class="font-body-md text-body-md" [ngClass]="firmado ? 'text-on-surface-variant' : 'text-primary-fixed-dim'">
+              {{ firmado ? 'Acuse de conformidad recibido exitosamente.' : 'Requiere revisión y confirmación del tutor legal.' }}
+            </p>
           </div>
-          <button
-            class="z-10 mt-6 w-full flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-on-secondary rounded-lg font-label-md text-label-md hover:bg-[#588200] transition-all shadow-md active:scale-95">
-            <span class="material-symbols-outlined">edit_document</span>
-            Firmar Boleta Digitalmente
+          
+          <button (click)="firmarBoleta()" [disabled]="firmado"
+            class="z-10 mt-6 w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-label-md text-label-md transition-all shadow-md"
+            [ngClass]="firmado ? 'bg-surface-variant text-on-surface-variant opacity-75' : 'bg-secondary text-on-secondary hover:bg-secondary/90 active:scale-95'">
+            <span class="material-symbols-outlined">{{ firmado ? 'check_circle' : 'edit_document' }}</span>
+            {{ firmado ? 'Firmado Electrónicamente' : 'Firmar Boleta Digitalmente' }}
           </button>
         </div>
       </div>
 
       <!-- Detailed Grades List -->
-      <div
-        class="bg-surface-container-lowest rounded-xl shadow-[0_4px_16px_rgba(0,32,70,0.04)] border border-outline-variant overflow-hidden">
+      <div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_16px_rgba(0,32,70,0.04)] border border-outline-variant overflow-hidden mt-4">
         <div class="p-6 border-b border-outline-variant bg-surface">
           <h3 class="font-headline-md text-headline-md text-primary">Detalle por Materia</h3>
         </div>
+        
         <div class="flex flex-col">
-          <!-- Row 1 -->
-          <div
-            class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 border-b border-outline-variant hover:bg-surface-container-low transition-colors">
-            <div class="flex items-center gap-4 mb-4 md:mb-0">
-              <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calculate</span>
-              </div>
-              <div>
-                <h4 class="font-label-md text-label-md text-on-surface">Matemáticas Avanzadas</h4>
-                <p class="font-body-md text-body-md text-on-surface-variant">Prof. Carlos Mendoza</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end">
-              <div class="text-right">
-                <p class="font-caption text-caption text-on-surface-variant">Calificación</p>
-                <p class="font-headline-md text-headline-md text-primary">9.5</p>
-              </div>
-              <div class="text-right hidden md:block">
-                <p class="font-caption text-caption text-on-surface-variant">Faltas</p>
-                <p class="font-body-md text-body-md text-on-surface">0</p>
-              </div>
-            </div>
+          <div *ngIf="materias.length === 0" class="p-8 text-center text-on-surface-variant">
+              No hay calificaciones registradas aún.
           </div>
 
-          <!-- Row 2 -->
-          <div
-            class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 border-b border-outline-variant hover:bg-surface-container-low transition-colors">
+          <div *ngFor="let m of materias" class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 border-b border-outline-variant hover:bg-surface-container-low transition-colors">
             <div class="flex items-center gap-4 mb-4 md:mb-0">
               <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">science</span>
+                <span class="material-symbols-outlined">menu_book</span>
               </div>
               <div>
-                <h4 class="font-label-md text-label-md text-on-surface">Física</h4>
-                <p class="font-body-md text-body-md text-on-surface-variant">Profa. Elena Robles</p>
+                <h4 class="font-label-md text-label-md text-on-surface">{{ m.materia }}</h4>
+                <p class="font-caption text-caption text-on-surface-variant">
+                    Última actualización: {{ m.trimestres[3]?.calificacion ? 'Tri. 3' : m.trimestres[2]?.calificacion ? 'Tri. 2' : m.trimestres[1]?.calificacion ? 'Tri. 1' : 'Sin iniciar' }}
+                </p>
               </div>
             </div>
-            <div class="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end">
-              <div class="text-right">
-                <p class="font-caption text-caption text-on-surface-variant">Calificación</p>
-                <p class="font-headline-md text-headline-md text-primary">8.8</p>
+            
+            <!-- Trimesters -->
+            <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+              <div class="text-center w-16">
+                <p class="font-caption text-caption text-on-surface-variant">Tri 1</p>
+                <p class="font-headline-md text-headline-md text-primary">{{ m.trimestres[1]?.calificacion || '-' }}</p>
               </div>
-              <div class="text-right hidden md:block">
-                <p class="font-caption text-caption text-on-surface-variant">Faltas</p>
-                <p class="font-body-md text-body-md text-on-surface">1</p>
+              <div class="text-center w-16">
+                <p class="font-caption text-caption text-on-surface-variant">Tri 2</p>
+                <p class="font-headline-md text-headline-md text-primary">{{ m.trimestres[2]?.calificacion || '-' }}</p>
               </div>
-            </div>
-          </div>
-
-          <!-- Row 3 -->
-          <div
-            class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 border-b border-outline-variant hover:bg-surface-container-low transition-colors">
-            <div class="flex items-center gap-4 mb-4 md:mb-0">
-              <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span>
-              </div>
-              <div>
-                <h4 class="font-label-md text-label-md text-on-surface">Literatura Universal</h4>
-                <p class="font-body-md text-body-md text-on-surface-variant">Prof. Roberto Ruiz</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end">
-              <div class="text-right">
-                <p class="font-caption text-caption text-on-surface-variant">Calificación</p>
-                <p class="font-headline-md text-headline-md text-primary">10.0</p>
-              </div>
-              <div class="text-right hidden md:block">
-                <p class="font-caption text-caption text-on-surface-variant">Faltas</p>
-                <p class="font-body-md text-body-md text-on-surface">0</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Row 4 -->
-          <div
-            class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 hover:bg-surface-container-low transition-colors">
-            <div class="flex items-center gap-4 mb-4 md:mb-0">
-              <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">history_edu</span>
-              </div>
-              <div>
-                <h4 class="font-label-md text-label-md text-on-surface">Historia Nacional</h4>
-                <p class="font-body-md text-body-md text-on-surface-variant">Profa. Carmen Silva</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end">
-              <div class="text-right">
-                <p class="font-caption text-caption text-on-surface-variant">Calificación</p>
-                <p class="font-headline-md text-headline-md text-primary">9.0</p>
-              </div>
-              <div class="text-right hidden md:block">
-                <p class="font-caption text-caption text-on-surface-variant">Faltas</p>
-                <p class="font-body-md text-body-md text-on-surface">1</p>
+              <div class="text-center w-16">
+                <p class="font-caption text-caption text-on-surface-variant">Tri 3</p>
+                <p class="font-headline-md text-headline-md text-primary">{{ m.trimestres[3]?.calificacion || '-' }}</p>
               </div>
             </div>
           </div>
@@ -189,27 +132,22 @@
     </main>
 
     <!-- BottomNavBar -->
-    <nav
-      class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface h-16 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] border-t border-outline-variant">
-      <button (click)="navigateTo('/inicio-resumen')"
-        class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
+    <nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface h-16 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] border-t border-outline-variant">
+      <button (click)="navigateTo('/inicio-resumen-alumno')" class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
         <span class="material-symbols-outlined">home</span>
-        <span class="font-label-md text-label-md mt-1">Inicio</span>
+        <span class="font-label-md text-label-md mt-1 text-[10px]">Inicio</span>
       </button>
-      <button
-        class="flex flex-col items-center justify-center text-primary font-bold bg-surface-container rounded-xl px-2 min-h-[44px] min-w-[44px] transition-transform active:scale-90">
+      <button class="flex flex-col items-center justify-center text-primary font-bold bg-surface-container rounded-xl px-2 min-h-[44px] min-w-[44px] transition-transform active:scale-90">
         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
-        <span class="font-label-md text-label-md mt-1">Boletas</span>
+        <span class="font-label-md text-label-md mt-1 text-[10px]">Boletas</span>
       </button>
-      <button (click)="navigateTo('/mensajes')"
-        class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
+      <button (click)="navigateTo('/mensajes')" class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
         <span class="material-symbols-outlined">mail</span>
-        <span class="font-label-md text-label-md mt-1">Mensajes</span>
+        <span class="font-label-md text-label-md mt-1 text-[10px]">Mensajes</span>
       </button>
-      <button (click)="navigateTo('/perfil')"
-        class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
+      <button (click)="navigateTo('/perfil')" class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
         <span class="material-symbols-outlined">person</span>
-        <span class="font-label-md text-label-md mt-1">Perfil</span>
+        <span class="font-label-md text-label-md mt-1 text-[10px]">Perfil</span>
       </button>
     </nav>
   </div>

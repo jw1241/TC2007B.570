@@ -600,5 +600,34 @@ if (!materia || materiaError) {
  *       200:
  *         description: Lista de todos los alumnos
  */
+router.get(
+  "/alumnos",
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  async (req, res, next) => {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from("alumnos")
+        .select(`
+          id,
+          matricula,
+          nombre,
+          apellidos,
+          fecha_nacimiento,
+          codigo_registro,
+          grupos ( id, nombre, grado, seccion )
+        `)
+        .order('apellidos', { ascending: true });
+
+      if (error) {
+        return res.status(500).json({ error: { message: "Error fetching alumnos", details: error.message }});
+      }
+
+      res.json({ data });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 module.exports = router;

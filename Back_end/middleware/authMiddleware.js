@@ -102,7 +102,7 @@ const authMiddleware = async (
      * SAFE USER OBJECT
      */
 
-    console.log("REQ.USER =", req.user);
+    console.log("REQ.USER =", profile);
     req.user = {
   id: profile.id,
   auth_user_id: user.id,

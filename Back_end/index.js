@@ -57,6 +57,10 @@ const supportRoutes =
 const gradesRoutes =
   require("./routes/calificacionesRoutes");
 
+const profeRoutes =
+  require("./routes/profeRoutes");
+
+
 /**
  * PROCESS ERROR HANDLERS
  */
@@ -285,6 +289,14 @@ app.use(
   "/api/grades",
   authMiddleware,
   gradesRoutes
+);
+
+
+app.use(
+  '/api/teacher',
+  authMiddleware,
+  requireRole([ROLES.ADMIN, ROLES.DOCENTE]),
+  profeRoutes
 );
 
 /**

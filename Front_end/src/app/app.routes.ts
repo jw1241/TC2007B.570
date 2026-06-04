@@ -152,7 +152,14 @@ export const routes: Routes = [
     path: '',
     redirectTo: 'iniciar-sesion',
     pathMatch: 'full'
-  }
+  },   
+
+  {
+  path: 'calificaciones-padre',
+  loadComponent: () =>
+    import('./pages/calificaciones-padre/calificaciones-padre.component')
+      .then(m => m.CalificacionesPadrePage)
+}
 
   
 ];

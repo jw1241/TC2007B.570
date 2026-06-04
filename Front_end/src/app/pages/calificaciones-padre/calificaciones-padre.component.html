@@ -1,3 +1,250 @@
-<p>
-  calificaciones-padre works!
-</p>
+<ion-content>
+
+  <div class="bg-surface text-on-surface font-body-md min-h-screen pb-24">
+
+    <!-- HEADER -->
+    <header class="bg-surface sticky top-0 z-40 shadow-sm">
+      <div class="flex items-center justify-between px-4 h-16 max-w-container-max mx-auto">
+
+        <div class="flex items-center gap-3">
+
+          <div class="w-10 h-10 rounded-full overflow-hidden bg-white shadow-sm">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcTWCjl-iswn9qGwnguEnmCjn29P95J5eJcgVmSm-NintYMIKF7lpE0P_1gvyd1BCZFtKAtfHruKCz7klA9sXpOfpzIQRkSutztO_sgTxMl9UyK9D_8iFjX0_bTPR4LEiuqJxro6cJ_FQ7Xnk17eMfhjeTMRRjF93F_k_0tWPTsyMC4oDzq6z96jN6uCQs4Zl_f6BJ6HbyNXFj_KYMvEEJnJO1AnKrD0vb2-b_cr_62foul5WzCTEFA89lFl3dFUVL1UYdDOKA9zs"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div>
+            <div class="font-bold text-primary">
+              Escuela Metropolitana
+            </div>
+
+            <div class="text-sm text-on-surface-variant">
+              "La Luz"
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </header>
+
+    <main
+      class="max-w-container-max mx-auto px-4 py-8 flex flex-col gap-6">
+
+      <!-- TITLE -->
+
+      <div>
+        <h1 class="text-xl font-bold text-primary">
+          Calificaciones
+        </h1>
+
+        <p class="text-on-surface-variant">
+          {{ alumno?.nombre_completo }}
+        </p>
+      </div>
+
+      <!-- PERIOD -->
+
+      <div
+        class="bg-surface-container-lowest rounded-xl p-6">
+
+        <div class="flex justify-between">
+
+          <div>
+
+            <p class="text-sm text-on-surface-variant">
+              Periodo
+            </p>
+
+            <p class="font-bold text-primary">
+              {{ periodo?.nombre }}
+            </p>
+
+          </div>
+
+          <div>
+
+            <p class="text-sm text-on-surface-variant">
+              Promedio General
+            </p>
+
+            <p class="text-2xl font-bold text-primary">
+              {{ promedio }}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SUBJECTS -->
+
+      <div
+        class="bg-surface-container-lowest rounded-xl p-6">
+
+        <h2 class="font-bold mb-4">
+          Calificaciones por Materia
+        </h2>
+
+        <div
+          *ngFor="let materia of materias"
+          class="flex justify-between py-3 border-b">
+
+          <div>
+            {{ materia.nombre_materia }}
+          </div>
+
+          <div class="font-bold text-primary">
+            {{ materia.promedio }}
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- BOLETA -->
+
+      <div
+        class="bg-surface-container-lowest rounded-xl p-6">
+
+        <h2 class="font-bold mb-4">
+          Boleta
+        </h2>
+
+        <div
+          *ngIf="!boletaDisponible"
+          class="text-on-surface-variant">
+
+          La boleta aún no ha sido liberada por la escuela.
+        </div>
+
+        <div *ngIf="boletaDisponible">
+
+          <button
+            (click)="viewBoleta()"
+            class="w-full bg-primary text-white rounded-lg py-3 mb-3">
+
+            Ver Boleta
+          </button>
+
+          <button
+            (click)="downloadBoleta()"
+            class="w-full border rounded-lg py-3">
+
+            Descargar PDF
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- DIGITAL SIGNATURE -->
+
+      <div
+        *ngIf="boletaDisponible"
+        class="bg-surface-container-lowest rounded-xl p-6">
+
+        <h2 class="font-bold mb-4">
+          Firma Digital
+        </h2>
+
+        <div *ngIf="firmada">
+
+          <div class="text-green-600 font-semibold">
+            ✓ Boleta firmada
+          </div>
+
+          <div class="text-sm text-on-surface-variant">
+            {{ fechaFirma | date:'medium' }}
+          </div>
+
+        </div>
+
+        <div *ngIf="!firmada">
+
+          <p class="mb-4">
+            Confirmo haber revisado esta boleta.
+          </p>
+
+          <button
+            (click)="firmarBoleta()"
+            class="w-full bg-primary text-white rounded-lg py-3">
+
+            Firmar Boleta
+          </button>
+
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- SAME BOTTOM NAV -->
+
+    <nav
+      class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 bg-surface-container">
+
+      <button
+        (click)="navigateTo('/inicio-resumen-alumno')"
+        class="flex flex-col items-center">
+
+        <span class="material-symbols-outlined">
+          home
+        </span>
+
+        <span class="text-[10px]">
+          Inicio
+        </span>
+
+      </button>
+
+      <button
+        (click)="navigateTo('/calificaciones-padre')"
+        class="flex flex-col items-center">
+
+        <span class="material-symbols-outlined">
+          grade
+        </span>
+
+        <span class="text-[10px]">
+          Calificaciones
+        </span>
+
+      </button>
+
+      <button
+        (click)="navigateTo('/mensajes')"
+        class="flex flex-col items-center">
+
+        <span class="material-symbols-outlined">
+          chat
+        </span>
+
+        <span class="text-[10px]">
+          Mensajes
+        </span>
+
+      </button>
+
+      <button
+        (click)="navigateTo('/perfil')"
+        class="flex flex-col items-center">
+
+        <span class="material-symbols-outlined">
+          person
+        </span>
+
+        <span class="text-[10px]">
+          Perfil
+        </span>
+
+      </button>
+
+    </nav>
+
+  </div>
+
+</ion-content>

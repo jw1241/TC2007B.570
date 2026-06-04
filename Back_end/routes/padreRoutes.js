@@ -148,4 +148,195 @@ router.post("/hijo/:alumno_id/firmar-acuse", authMiddleware, requireRole([ROLES.
   }
 });
 
+router.post(
+  "/periodos/:periodoId/publicar",
+  authMiddleware,
+  requireRole([ROLES.ADMIN, ROLES.DOCENTE]),
+  async (req, res) => {
+
+    const { periodoId } = req.params;
+
+    const { error } =
+      await supabaseAdmin
+        .from("periodos_publicados")
+        .insert({
+          periodo_id: periodoId,
+          publicado_por: req.user.id
+        });
+
+    if (error) {
+      return res.status(400).json({
+        error: error.message
+      });
+    }
+
+    res.json({
+      message: "Periodo publicado correctamente"
+    });
+
+  }
+);
+
+router.get(
+  "/:alumnoId/boleta/:periodoId",
+  authMiddleware,
+  async (req, res) => {
+
+    const { alumnoId, periodoId } =
+      req.params;
+
+    const { data: grades } =
+      await supabaseAdmin
+        .from("calificaciones")
+        .select(`
+          nota,
+          comentario,
+          materias(
+            nombre_materia
+          )
+        `)
+        .eq("alumno_id", alumnoId)
+        .eq("periodo_id", periodoId);
+
+    const { data: firma } =
+      await supabaseAdmin
+        .from("firmas_boletas")
+        .select("id")
+        .eq("alumno_id", alumnoId)
+        .eq("periodo_id", periodoId)
+        .maybeSingle();
+
+    res.json({
+      calificaciones: grades,
+      firmado: !!firma
+    });
+
+  }
+);
+
+router.post(
+  "/:alumnoId/firmar",
+  authMiddleware,
+  requireRole([ROLES.PADRE]),
+  async (req, res) => {
+
+    const { alumnoId } =
+      req.params;
+
+    const { periodo_id } =
+      req.body;
+
+    const { error } =
+      await supabaseAdmin
+        .from("firmas_boletas")
+        .insert({
+
+          alumno_id: alumnoId,
+
+          padre_id:
+            req.user.id,
+
+          periodo_id
+
+        });
+
+    if (error) {
+      return res.status(400).json(error);
+    }
+
+    res.json({
+      message:
+        "Boleta firmada correctamente"
+    });
+
+  }
+);
+
+router.post(
+  '/admin/periods/:periodId/release',
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  async (req, res) => {
+
+    await db
+      .from('boletas_publicadas')
+      .upsert({
+        periodo_id: req.params.periodId,
+        publicada: true,
+        publicada_por: req.user.id,
+        publicada_en: new Date()
+      });
+
+    res.json({
+      success: true
+    });
+
+  }
+);
+
+router.get(
+  "/grades/:alumnoId/boleta",
+  authMiddleware,
+  async (req, res) => {
+
+    const { alumnoId } = req.params;
+
+    const { data: periodo } =
+      await supabaseAdmin
+        .from("periodos_evaluacion")
+        .select("*")
+        .order("mes_fin", { ascending: false })
+        .limit(1)
+        .single();
+
+    const { data: grades } =
+      await supabaseAdmin
+        .from("calificaciones")
+        .select(`
+          nota,
+          comentario,
+          materias(
+            id,
+            nombre_materia
+          )
+        `)
+        .eq("alumno_id", alumnoId)
+        .eq("periodo_id", periodo.id);
+
+    const materias = grades.map(g => ({
+      nombre_materia:
+        g.materias.nombre_materia,
+      promedio:
+        Number(g.nota)
+    }));
+
+    const promedio =
+      materias.length
+        ? materias.reduce(
+            (sum, m) => sum + m.promedio,
+            0
+          ) / materias.length
+        : 0;
+
+    const { data: firma } =
+      await supabaseAdmin
+        .from("firmas_boletas")
+        .select("*")
+        .eq("alumno_id", alumnoId)
+        .eq("periodo_id", periodo.id)
+        .maybeSingle();
+
+    res.json({
+      periodo,
+      materias,
+      promedio,
+      boletaDisponible: true,
+      firmada: !!firma,
+      fechaFirma:
+        firma?.firmado_en || null
+    });
+
+  }
+);
+
 module.exports = router;

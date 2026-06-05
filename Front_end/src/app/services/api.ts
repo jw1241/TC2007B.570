@@ -254,5 +254,58 @@ console.log(
     }
 
   }
+  async upload<T>(
+  endpoint: string,
+  formData: FormData
+): Promise<T> {
+
+  const token = await this.getToken();
+
+  const controller = new AbortController();
+
+  const timeout = setTimeout(
+    () => controller.abort(),
+    15000
+  );
+
+  try {
+
+    const response = await fetch(
+      `${this.baseUrl}${endpoint}`,
+      {
+        method: 'POST',
+        signal: controller.signal,
+        headers: {
+          ...(token && {
+            Authorization: `Bearer ${token}`
+          })
+          // ❌ DO NOT set Content-Type here
+        },
+        body: formData
+      }
+    );
+
+    let data: any = null;
+
+    try {
+      data = await response.json();
+    } catch {
+      data = null;
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data?.error?.message ||
+        `Upload failed (${response.status})`
+      );
+    }
+
+    return data;
+
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+  
 
 }

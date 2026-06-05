@@ -1,0 +1,250 @@
+<ion-content class="ion-padding bg-[#f4efe6]">
+
+  <div class="p-6 space-y-8 bg-[#f4efe6] min-h-full">
+
+    <!-- HEADER -->
+    <header class="bg-[#fbf7f0] border border-[#e7ddcf] rounded-xl shadow-sm sticky top-0 z-40">
+      <div class="flex items-center justify-between px-4 h-16">
+
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full overflow-hidden bg-white shadow-sm">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcTWCjl-iswn9qGwnguEnmCjn29P95J5eJcgVmSm-NintYMIKF7lpE0P_1gvyd1BCZFtKAtfHruKCz7klA9sXpOfpzIQRkSutztO_sgTxMl9UyK9D_8iFjX0_bTPR4LEiuqJxro6cJ_FQ7Xnk17eMfhjeTMRRjF93F_k_0tWPTsyMC4oDzq6z96jN6uCQs4Zl_f6BJ6HbyNXFj_KYMvEEJnJO1AnKrD0vb2-b_cr_62foul5WzCTEFA89lFl3dFUVL1UYdDOKA9zs"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div class="flex flex-col leading-tight">
+            <span class="font-bold text-gray-900">Escuela Metropolitana</span>
+            <span class="text-sm text-gray-600">"La Luz"</span>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- TITLE -->
+    <div class="bg-[#fbf7f0] border border-[#e7ddcf] rounded-xl p-4 shadow-sm">
+      <h1 class="text-2xl font-bold text-gray-900">
+        Administración Escolar
+      </h1>
+      <p class="text-sm text-gray-700 mt-1">
+        Gestión de grupos, alumnos, materias y profesores
+      </p>
+    </div>
+
+    <!-- ================= GRUPOS ================= -->
+    <section class="bg-[#fbf7f0] border border-[#e7ddcf] rounded-xl shadow-sm p-6">
+
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Grupos</h2>
+
+      <div class="flex items-center gap-3 mb-4">
+
+        <input #fileInputGrupos type="file" class="hidden"
+               (change)="onFileSelected($event, 'grupos')" />
+
+        <button (click)="fileInputGrupos.click()"
+                class="px-3 py-2 bg-gray-900 text-white text-sm rounded-lg">
+          Seleccionar archivo
+        </button>
+
+        <span class="text-sm text-gray-800 truncate max-w-[200px]">
+          {{ fileNames.grupos || 'Ningún archivo seleccionado' }}
+        </span>
+
+        <button (click)="uploadFile('grupos')"
+                class="px-3 py-2 bg-green-600 text-white text-sm rounded-lg">
+          Subir
+        </button>
+
+      </div>
+
+      <table class="w-full text-sm border border-[#e7ddcf] rounded-lg overflow-hidden">
+        <thead class="bg-[#f1e7d8] text-gray-800">
+          <tr>
+            <th class="text-left p-2">Grado</th>
+            <th class="text-left p-2">Sección</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr *ngFor="let g of grupos"
+    class="border-t border-[#e7ddcf] bg-white/60 hover:bg-white transition">
+  <td class="p-2 text-[#2f2f2f]">{{ g.grado }}</td>
+  <td class="p-2 text-[#2f2f2f]">{{ g.seccion }}</td>
+</tr>
+        </tbody>
+      </table>
+
+    </section>
+
+    <!-- ================= ALUMNOS ================= -->
+    <section class="bg-[#fbf7f0] border border-[#e7ddcf] rounded-xl shadow-sm p-6">
+
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Alumnos y Padres</h2>
+
+      <div class="flex items-center gap-3 mb-4">
+
+        <input #fileInputAlumnos type="file" class="hidden"
+               (change)="onFileSelected($event, 'alumnos')" />
+
+        <button (click)="fileInputAlumnos.click()"
+                class="px-3 py-2 bg-gray-900 text-white text-sm rounded-lg">
+          Seleccionar archivo
+        </button>
+
+        <span class="text-sm text-gray-800 truncate max-w-[200px]">
+          {{ fileNames.alumnos || 'Ningún archivo seleccionado' }}
+        </span>
+
+        <button (click)="uploadFile('alumnos')"
+                class="px-3 py-2 bg-green-600 text-white text-sm rounded-lg">
+          Subir
+        </button>
+
+      </div>
+
+      <table class="w-full text-sm border border-[#e7ddcf] rounded-lg overflow-hidden">
+        <thead class="bg-[#f1e7d8] text-gray-800">
+          <tr>
+            <th class="p-2 text-left">Nombre Padre</th>
+            <th class="p-2 text-left">Matrícula</th>
+            <th class="p-2 text-left">Estudiante</th>
+            <th class="p-2 text-left">Grado</th>
+            <th class="p-2 text-left">Sección</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of alumnos"
+    class="border-t border-[#e7ddcf] bg-white/60 hover:bg-white transition">
+
+  <td class="p-2 text-[#2f2f2f]">{{ a.nombre_padre }}</td>
+  <td class="p-2 text-[#2f2f2f]">{{ a.matricula }}</td>
+  <td class="p-2 text-[#2f2f2f]">{{ a.nombre_estudiante }}</td>
+  <td class="p-2 text-[#2f2f2f]">{{ a.grado }}</td>
+  <td class="p-2 text-[#2f2f2f]">{{ a.seccion }}</td>
+
+</tr>
+        </tbody>
+      </table>
+
+    </section>
+
+    <!-- ================= MATERIAS ================= -->
+    <section class="bg-[#fbf7f0] border border-[#e7ddcf] rounded-xl shadow-sm p-6">
+
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Materias</h2>
+
+      <div class="flex items-center gap-3 mb-4">
+
+        <input #fileInputMaterias type="file" class="hidden"
+               (change)="onFileSelected($event, 'materias')" />
+
+        <button (click)="fileInputMaterias.click()"
+                class="px-3 py-2 bg-gray-900 text-white text-sm rounded-lg">
+          Seleccionar archivo
+        </button>
+
+        <span class="text-sm text-gray-800 truncate max-w-[200px]">
+          {{ fileNames.materias || 'Ningún archivo seleccionado' }}
+        </span>
+
+        <button (click)="uploadFile('materias')"
+                class="px-3 py-2 bg-green-600 text-white text-sm rounded-lg">
+          Subir
+        </button>
+
+      </div>
+
+      <table class="w-full text-sm border border-[#e7ddcf] rounded-lg overflow-hidden">
+        <thead class="bg-[#f1e7d8] text-gray-800">
+          <tr>
+            <th class="p-2 text-left">Materia</th>
+            <th class="p-2 text-left">General</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of materias"
+    class="border-t border-[#e7ddcf] bg-white/60 hover:bg-white transition">
+  <td class="p-2 text-[#2f2f2f]">{{ m.nombre_materia }}</td>
+  <td class="p-2 text-[#2f2f2f]">{{ m.es_general }}</td>
+</tr>
+        </tbody>
+      </table>
+
+    </section>
+
+    <!-- ================= PROFESORES ================= -->
+    <section class="bg-[#fbf7f0] border border-[#e7ddcf] rounded-xl shadow-sm p-6">
+
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Profesores</h2>
+
+      <div class="flex items-center gap-3 mb-4">
+
+        <input #fileInputProfesores type="file" class="hidden"
+               (change)="onFileSelected($event, 'profesores')" />
+
+        <button (click)="fileInputProfesores.click()"
+                class="px-3 py-2 bg-gray-900 text-white text-sm rounded-lg">
+          Seleccionar archivo
+        </button>
+
+        <span class="text-sm text-gray-800 truncate max-w-[200px]">
+          {{ fileNames.profesores || 'Ningún archivo seleccionado' }}
+        </span>
+
+        <button (click)="uploadFile('profesores')"
+                class="px-3 py-2 bg-green-600 text-white text-sm rounded-lg">
+          Subir
+        </button>
+
+      </div>
+
+      <table class="w-full text-sm border border-[#e7ddcf] rounded-lg overflow-hidden">
+        <thead class="bg-[#f1e7d8] text-gray-800">
+          <tr>
+            <th class="p-2 text-left">Nombre</th>
+            <th class="p-2 text-left">Docente ID</th>
+            <th class="p-2 text-left">Materia</th>
+            <th class="p-2 text-left">Grado</th>
+            <th class="p-2 text-left">Sección</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr *ngFor="let p of profesores"
+    class="border-t border-[#e7ddcf] bg-white/60 hover:bg-white transition">
+  <td class="p-2 text-[#2f2f2f]">{{ p.nombre_completo }}</td>
+  <td class="p-2 text-[#2f2f2f]">{{ p.docente_id }}</td>
+  <td class="p-2 text-[#2f2f2f]">{{ p.nombre_materia }}</td>
+  <td class="p-2 text-[#2f2f2f]">{{ p.grado }}</td>
+  <td class="p-2 text-[#2f2f2f]">{{ p.seccion }}</td>
+</tr>
+        </tbody>
+      </table>
+
+    </section>
+
+  </div>
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-white border-t shadow-lg">
+  <div class="flex justify-around items-center h-16 max-w-5xl mx-auto">
+
+    <button (click)="navigateTo('/tiquete')"
+      class="flex flex-col items-center text-gray-500 hover:text-blue-600">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span class="text-[10px]">Tiquetes</span>
+    </button>
+
+    <button (click)="navigateTo('/admin-usuario')"
+      class="flex flex-col items-center text-gray-500 hover:text-blue-600">
+      <span class="material-symbols-outlined">group</span>
+      <span class="text-[10px]">Usuarios</span>
+    </button>
+
+    <button (click)="navigateTo('/iniciar-sesion')"
+      class="flex flex-col items-center text-gray-500 hover:text-blue-600">
+      <span class="material-symbols-outlined">person</span>
+      <span class="text-[10px]">Cerrar sesión</span>
+    </button>
+
+  </div>
+</nav>
+</ion-content>

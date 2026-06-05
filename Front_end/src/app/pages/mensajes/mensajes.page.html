@@ -1,100 +1,200 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar style="--background: #f8f9ff;">
-    <div class="flex justify-between items-center w-full px-4 py-2">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full overflow-hidden border border-[#c4c6cf]">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWsV6TntvHy97_s_74m1-yMBSdThE2NAYVtZMq3v0O5Fx5gBlSTODbYxcKDChzOSAz6HYf5a3ho2HjdC6YLRB-gSrRRvmI5Ngvg7dhmU0bYwCWnDvEY10Y_pa3N925wlZn1C6fhvbITOM7IKNcKG56OMs-0DEL-a1XC1fqC-iFxXoRMhSYeHLFubjyFQfoe_yx_wNLLyeYY6kd3Fdy9ToKTDJSJ-qCqA5Sv0OUYMuP8rfoEcFVENNc6Go0A34TE5Hb_HXQiU0FiLk" alt="Logo" class="w-full h-full object-cover">
-        </div>
-        <h1 class="text-xl font-bold text-[#002046] m-0" style="font-family: 'Manrope', sans-serif;">Mensajes</h1>
-      </div>
-      <button class="text-[#002046] p-2 rounded-full">
-        <span class="material-symbols-outlined">search</span>
-      </button>
-    </div>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="bg-[#f4efe6]">
 
-<ion-content style="--background: #f8f9ff;">
-  <div class="flex flex-col gap-6 max-w-3xl mx-auto w-full p-4 pb-24">
-    <!-- Header Section -->
-    <div class="flex flex-col gap-4">
-      <h2 class="text-2xl font-semibold text-[#002046]" style="font-family: 'Manrope', sans-serif;">Bandeja de entrada</h2>
-      <!-- Search Bar -->
-      <div class="relative w-full">
-        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#74777f]">search</span>
-        <input class="w-full bg-[#ffffff] border border-[#c4c6cf] rounded-lg py-3 pl-12 pr-4 text-[#0b1c30] placeholder-[#74777f] focus:outline-none focus:border-[#002046] focus:ring-1 focus:ring-[#002046] transition-all shadow-sm" placeholder="Buscar docentes o materias..." type="text">
+  <div class="p-4 max-w-5xl mx-auto pb-24 min-h-screen bg-[#f4efe6]">
+
+    <!-- HEADER -->
+    <header class="bg-[#fbf7f0] sticky top-0 z-40 shadow-sm border-b border-[#e7ddcf]">
+      <div class="flex items-center justify-between px-4 h-16 max-w-container-max mx-auto">
+
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full overflow-hidden bg-white shadow-sm">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcTWCjl-iswn9qGwnguEnmCjn29P95J5eJcgVmSm-NintYMIKF7lpE0P_1gvyd1BCZFtKAtfHruKCz7klA9sXpOfpzIQRkSutztO_sgTxMl9UyK9D_8iFjX0_bTPR4LEiuqJxro6cJ_FQ7Xnk17eMfhjeTMRRjF93F_k_0tWPTsyMC4oDzq6z96jN6uCQs4Zl_f6BJ6HbyNXFj_KYMvEEJnJO1AnKrD0vb2-b_cr_62foul5WzCTEFA89lFl3dFUVL1UYdDOKA9zs"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div class="flex flex-col leading-tight">
+            <span class="font-bold text-primary">Escuela Metropolitana</span>
+            <span class="text-sm text-on-surface-variant">"La Luz"</span>
+          </div>
+        </div>
+
       </div>
-      <!-- Filters -->
-      <div class="flex gap-2 mt-2 overflow-x-auto pb-2 scrollbar-hide">
-        <button class="px-4 py-1.5 rounded-full bg-[#002046] text-[#ffffff] text-sm font-semibold whitespace-nowrap shadow-sm">Todos</button>
-        <button class="px-4 py-1.5 rounded-full bg-[#ffffff] border border-[#c4c6cf] text-[#44474e] text-sm font-semibold hover:bg-[#eff4ff] transition-colors whitespace-nowrap">No leídos (1)</button>
-        <button class="px-4 py-1.5 rounded-full bg-[#ffffff] border border-[#c4c6cf] text-[#44474e] text-sm font-semibold hover:bg-[#eff4ff] transition-colors whitespace-nowrap">Tutoría</button>
-      </div>
+    </header>
+
+    <!-- TITLE -->
+    <div class="mt-4 mb-6 bg-[#fbf7f0] border border-[#e7ddcf] p-4 rounded-xl shadow-sm">
+      <h1 class="text-xl font-bold text-gray-900">Mensajes</h1>
+      <p class="text-sm text-gray-700 mt-1">
+        Comunicación con padres de familia
+      </p>
     </div>
 
-    <!-- Messages List -->
-    <div class="flex flex-col gap-3">
-      <!-- Chat Card 1 (Unread) -->
-      <div (click)="openChat('Prof. María López')" class="group relative bg-[#ffffff] rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:-translate-y-[1px] hover:shadow-md transition-all border border-[#c4c6cf] border-l-4 border-l-[#002046]">
-        <div class="relative">
-          <div class="h-14 w-14 rounded-full overflow-hidden bg-[#dce9ff] border-2 border-[#f8f9ff] flex-shrink-0">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGDfRXy03nHGvCK7qmRoF01-JLKNeKsbEN3gNBHIZcsTzGesxR-W54awbJW8Co0J06h9_MtgYt8mcvz-uKKGcZF3DIzVnRx3p4kgP0rz69sYd8u3kjZy4t73qcSwdF27xy4FpG2YoUW5bhsHRZfz8rui5o-6e7p1UF7mDQ4LRkA5veKnjS0RJlsPfsj0rxesjGfbqrO2AKxs4FVHMKTLRQhQ7gRn8-EXQe3ak4a7p6Nm8yIAQDmBqxkrPNkS5Gdaglu5gYcrJMnUY" alt="Prof. María López" class="h-full w-full object-cover">
-          </div>
-        </div>
-        <div class="flex-grow min-w-0">
-          <div class="flex justify-between items-start mb-0.5">
-            <h3 class="text-sm font-semibold text-[#0b1c30] truncate pr-2">Prof. María López</h3>
-            <span class="text-xs text-[#002046] whitespace-nowrap font-bold">10:30 AM</span>
-          </div>
-          <p class="text-xs text-[#002046] mb-1">Matemáticas Avanzadas</p>
-          <p class="text-base text-[#0b1c30] font-semibold truncate">Re: Dudas sobre la guía de ejercicios del tema 4. Necesitamos revisar...</p>
-        </div>
-        <div class="flex flex-col items-end justify-center gap-2 flex-shrink-0">
-          <div class="h-6 w-6 rounded-full bg-[#002046] flex items-center justify-center">
-            <span class="text-xs text-[#ffffff] font-bold">1</span>
-          </div>
-        </div>
-      </div>
+    <!-- ================= CONTACT LIST ================= -->
+    <section *ngIf="!selectedStudent">
 
-      <!-- Chat Card 2 (Read, Online) -->
-      <div (click)="openChat('Prof. Carlos Ruiz')" class="group relative bg-[#ffffff] rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:-translate-y-[1px] hover:shadow-md transition-all border border-[#c4c6cf]/50">
-        <div class="relative">
-          <div class="h-14 w-14 rounded-full overflow-hidden bg-[#dce9ff] flex-shrink-0">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAthloix2q7n6ui6Ca643envUrGbDcV5x33hXGjypijpviieODnZSIozO797na2HnMOYc1xTwYUtTIb8iGo6TWsDUiooDdQdjBXzB3GW00OhZXhjgLqb3hUxJZhu93QzHSvqa9WQiAvJ1p2CZ9tZXyIVP0224tYW-PN1OA4FGDlTLmlQmEuIWgRuDFjP520lyeedg4Ip9odvlmKfUu-emdDePYYrNlxnWeGMFF2xXPWL_oHF_241bjUR6BzeuiqjtDNR0S0NtCbi9U" alt="Prof. Carlos Ruiz" class="h-full w-full object-cover">
-          </div>
-          <div class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-[#b7f64a] border-2 border-[#ffffff]"></div>
-        </div>
-        <div class="flex-grow min-w-0">
-          <div class="flex justify-between items-start mb-0.5">
-            <h3 class="text-sm font-semibold text-[#0b1c30] truncate pr-2">Prof. Carlos Ruiz</h3>
-            <span class="text-xs text-[#44474e] whitespace-nowrap">Ayer</span>
-          </div>
-          <p class="text-xs text-[#44474e] mb-1">Física y Química</p>
-          <p class="text-base text-[#44474e] truncate">¿Podemos agendar una tutoría el jueves?</p>
-        </div>
-      </div>
+  <div
+    *ngFor="let c of contactos"
+    (click)="selectStudent(c)"
+    class="bg-[#fbf7f0] border p-4 rounded-xl cursor-pointer flex justify-between items-center"
+  >
+
+    <div>
+      <p class="font-semibold">
+        {{ c.nombre_completo }}
+      </p>
+
+      <p class="text-xs text-gray-600">
+        {{ c.grado }}° {{ c.seccion }}
+      </p>
     </div>
+
+    <span class="material-symbols-outlined text-primary">
+      school
+    </span>
+
   </div>
-</ion-content>
 
-<!-- BottomNavBar -->
-<ion-footer class="ion-no-border">
-  <nav class="w-full z-50 flex justify-around items-center px-2 py-1 bg-[#f8f9ff] h-16 shadow-[0_-4px_16px_rgba(0,0,0,0.03)] border-t border-[#c4c6cf]/30">
-    <button (click)="navigateTo('/inicio-resumen')" class="flex flex-col items-center justify-center text-[#44474e] min-h-[44px] min-w-[44px] w-16">
-      <span class="material-symbols-outlined text-[24px]">home</span>
-      <span class="text-[10px] truncate mt-1">Inicio</span>
+</section>
+
+    <!-- ================= CHAT VIEW ================= -->
+   <section *ngIf="selectedStudent && selectedParents.length">
+
+      <!-- CHAT HEADER -->
+      <div class="flex items-center justify-between mb-4 bg-[#fbf7f0] p-3 rounded-xl border">
+
+  <button (click)="back()" class="text-primary font-semibold">
+    ← Volver
+  </button>
+
+  <div class="flex items-center justify-between mb-4 bg-[#fbf7f0] p-3 rounded-xl border">
+
+
+  <div class="text-right">
+    
+    <p class="font-bold text-gray-900">
+      {{ selectedStudent.nombre_completo }}
+    </p>
+
+    <div class="text-xs text-gray-600">
+      <p *ngFor="let p of selectedParents">
+        👨‍👩‍👧 {{ p.nombre_completo }}
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+      <!-- MESSAGES -->
+      <div class="space-y-3 h-[55vh] overflow-y-auto bg-[#fbf7f0] p-4 rounded-xl border border-[#e7ddcf]">
+
+        <div *ngFor="let m of mensajes"
+     class="max-w-[75%] px-3 py-2 rounded-lg text-sm"
+     [ngClass]="m.remitente_id === currentUserId
+       ? 'bg-gray-200 text-black ml-auto'
+       : 'bg-primary text-white mr-auto'">
+
+  {{ m.contenido }}
+</div>
+
+      </div>
+
+      <!-- INPUT -->
+      <div class="flex gap-2 mt-4 bg-[#fbf7f0] p-3 rounded-xl border border-[#e7ddcf]">
+
+        <input
+  [(ngModel)]="mensajeTexto"
+  class="flex-1 p-2 border rounded-lg bg-white"
+  placeholder="Escribe un mensaje..."
+/>
+
+<button
+  (click)="sendMessage()"
+  class="bg-primary text-white px-4 rounded-lg"
+>
+  Enviar
+</button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <nav
+  class="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-200 z-50"
+>
+  <div class="grid grid-cols-4 h-16 max-w-container-max mx-auto">
+
+    <!-- Inicio -->
+    <button
+      routerLink="/inicio"
+  routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        home
+      </span>
+
+      <span class="text-xs">
+        Inicio
+      </span>
     </button>
-    <button (click)="navigateTo('/boleta')" class="flex flex-col items-center justify-center text-[#44474e] min-h-[44px] min-w-[44px] w-16">
-      <span class="material-symbols-outlined text-[24px]">description</span>
-      <span class="text-[10px] truncate mt-1">Boletas</span>
+
+    <!-- Calificaciones -->
+    <button
+      routerLink="/captura-calificaciones"
+      routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        grading
+      </span>
+
+      <span class="text-xs">
+        Calificaciones
+      </span>
     </button>
-    <button class="flex flex-col items-center justify-center text-[#002046] font-bold bg-[#e5eeff] rounded-xl px-2 min-h-[44px] min-w-[44px] w-16 py-1">
-      <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">mail</span>
-      <span class="text-[10px] truncate mt-1">Mensajes</span>
+
+    <!-- Mensajes -->
+    <button
+      routerLink="/mensajes"
+      routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        chat
+      </span>
+
+      <span class="text-xs">
+        Mensajes
+      </span>
     </button>
-    <button (click)="navigateTo('/perfil')" class="flex flex-col items-center justify-center text-[#44474e] min-h-[44px] min-w-[44px] w-16">
-      <span class="material-symbols-outlined text-[24px]">person</span>
-      <span class="text-[10px] truncate mt-1">Perfil</span>
+
+    <!-- Perfil -->
+    <button
+      routerLink="/iniciar-sesion"
+      routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        person
+      </span>
+
+      <span class="text-xs">
+        Cerrar sesión
+      </span>
     </button>
-  </nav>
-</ion-footer>
+
+  </div>
+</nav>
+
+</ion-content>

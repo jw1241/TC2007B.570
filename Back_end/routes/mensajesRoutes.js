@@ -6,10 +6,21 @@ const { authMiddleware } = require("../middleware/authMiddleware");
 const { requireRole } = require("../middleware/roleMiddleware");
 const ROLES = require("../constants/roles");
 
-const getInternalUserId = async (authUserId) => {
-  const { data } = await supabaseAdmin.from("usuarios").select("id").eq("auth_user_id", authUserId).single();
-  return data ? data.id : null;
+const getInternalUser = async (authUserId) => {
+  const { data, error } = await supabaseAdmin
+    .from("usuarios")
+    .select("id, rol_id, nombre_completo, email")
+    .eq("auth_user_id", authUserId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Supabase error:", error);
+    return null;
+  }
+
+  return data || null;
 };
+
 
 /**
  * @swagger
@@ -20,72 +31,96 @@ const getInternalUserId = async (authUserId) => {
  *     security:
  *       - bearerAuth: []
  */
-router.get("/contactos", authMiddleware, async (req, res, next) => {
-  try {
-    const usuarioId = await getInternalUserId(req.user.id);
-    const rol = req.user.profile.rol_id;
+router.get("/contactos", authMiddleware, async (req, res) => {
+  const usuario = await getInternalUser(req.user.auth_user_id);
+  console.log('usuario', usuario)
 
-    if (!usuarioId) return res.status(404).json({ error: { message: "Perfil no encontrado" } });
-
-    let contactos = [];
-
-    if (rol === ROLES.PADRE) {
-      // El padre puede ver a los docentes de sus hijos
-      // 1. Encontrar sus hijos
-      const { data: parentescos } = await supabaseAdmin.from("parentescos").select("alumno_id").eq("padre_id", usuarioId);
-      const alumnosIds = parentescos?.map(p => p.alumno_id) || [];
-
-      if (alumnosIds.length > 0) {
-        // 2. Encontrar grupos de sus hijos
-        const { data: alumnos } = await supabaseAdmin.from("alumnos").select("grupo_id").in("id", alumnosIds);
-        const gruposIds = alumnos?.map(a => a.grupo_id) || [];
-
-        if (gruposIds.length > 0) {
-          // 3. Encontrar docentes de esos grupos
-          const { data: asignaciones } = await supabaseAdmin.from("asignaciones_docentes").select("docente_id, materias(nombre)").in("grupo_id", gruposIds);
-          const docentesIds = [...new Set(asignaciones?.map(a => a.docente_id) || [])];
-
-          // 4. Obtener perfiles de docentes
-          if (docentesIds.length > 0) {
-             const { data: perfiles } = await supabaseAdmin.from("usuarios").select("id, nombre_completo, email").in("id", docentesIds);
-             contactos = perfiles || [];
-          }
-        }
-      }
-
-    } else if (rol === ROLES.DOCENTE) {
-      // El docente puede ver a los padres de sus alumnos
-      // 1. Encontrar sus grupos
-      const { data: asignaciones } = await supabaseAdmin.from("asignaciones_docentes").select("grupo_id").eq("docente_id", usuarioId);
-      const gruposIds = asignaciones?.map(a => a.grupo_id) || [];
-
-      if (gruposIds.length > 0) {
-        // 2. Encontrar alumnos
-        const { data: alumnos } = await supabaseAdmin.from("alumnos").select("id").in("grupo_id", gruposIds);
-        const alumnosIds = alumnos?.map(a => a.id) || [];
-
-        if (alumnosIds.length > 0) {
-          // 3. Encontrar padres
-          const { data: parentescos } = await supabaseAdmin.from("parentescos").select("padre_id").in("alumno_id", alumnosIds);
-          const padresIds = [...new Set(parentescos?.map(p => p.padre_id) || [])];
-
-          // 4. Obtener perfiles
-          if (padresIds.length > 0) {
-            const { data: perfiles } = await supabaseAdmin.from("usuarios").select("id, nombre_completo, email").in("id", padresIds);
-            contactos = perfiles || [];
-          }
-        }
-      }
-    } else if (rol === ROLES.ADMIN) {
-        // El admin ve a todos
-        const { data: perfiles } = await supabaseAdmin.from("usuarios").select("id, nombre_completo, email, rol_id");
-        contactos = perfiles || [];
-    }
-
-    res.json({ data: contactos });
-  } catch (err) {
-    next(err);
+  if (!usuario) {
+    return res.status(404).json({ error: "Perfil no encontrado" });
   }
+
+  const usuarioId = usuario.id;
+  const rol = usuario.rol_id;
+  console.log('usuarioid',usuarioId)
+  console.log("ROLE RAW:", rol);
+console.log("ROLE DOCENTE CONST:", ROLES.DOCENTE);
+console.log("ROLE PADRE CONST:", ROLES.PADRE);
+
+  let contactos = [];
+  
+
+  if (rol === ROLES.DOCENTE) {
+
+  const { data: asignaciones } = await supabaseAdmin
+    .from("asignaciones_docentes")
+    .select("grupo_id, materia_id")
+    .eq("docente_id", usuarioId);
+
+  const gruposIds = [...new Set((asignaciones || []).map(a => a.grupo_id))];
+
+  if (gruposIds.length) {
+
+    // 1. Get alumnos + grupo info
+    const { data: alumnos } = await supabaseAdmin
+      .from("alumnos")
+      .select(`
+        id,
+        nombre_completo,
+        grupo:grupos!alumnos_grupo_id_fkey (
+          grado,
+          seccion
+        )
+      `)
+      .in("grupo_id", gruposIds);
+
+    // 2. Get materias map (optional enrichment)
+    const { data: materias } = await supabaseAdmin
+      .from("asignaciones_docentes")
+      .select("grupo_id, materia:materias(nombre_materia)")
+      .eq("docente_id", usuarioId);
+
+    contactos = (alumnos || []).map(a => ({
+      id: a.id,
+      tipo: "alumno",
+      nombre_completo: a.nombre_completo,
+      grado: a.grupo?.grado,
+      seccion: a.grupo?.seccion,
+      materias: materias
+        ?.filter(m => m.grupo_id === a.grupo_id)
+        ?.map(m => m.materia?.nombre_materia) || []
+    }));
+    
+  }
+}
+
+  if (rol === ROLES.PADRE) {
+
+  const { data: parentescos } = await supabaseAdmin
+    .from("parentescos")
+    .select(`
+      alumno_id,
+      alumnos (
+        id,
+        nombre_completo,
+        grupo:grupos!alumnos_grupo_id_fkey (
+          grado,
+          seccion
+        )
+      )
+    `)
+    .eq("padre_id", usuarioId);
+
+  contactos = (parentescos || []).map(p => ({
+    id: p.alumnos.id,
+    tipo: "alumno",
+    nombre_completo: p.alumnos.nombre_completo,
+    grado: p.alumnos.grupo?.grado,
+    seccion: p.alumnos.grupo?.seccion
+  }));
+  console.log('contactos',contactos)
+}
+
+  return res.json({ data: contactos });
 });
 
 /**
@@ -99,15 +134,18 @@ router.get("/contactos", authMiddleware, async (req, res, next) => {
  */
 router.get("/chat/:destinatario_id", authMiddleware, async (req, res, next) => {
   try {
+    const usuario = await getInternalUser(req.user.auth_user_id);
+
+    if (!usuario) {
+      return res.status(404).json({ error: "Perfil no encontrado" });
+    }
+
+    const remitenteId = usuario.id;
+    const rol = usuario.rol_id;
+
     const destinatarioId = req.params.destinatario_id;
-    const remitenteId = await getInternalUserId(req.user.id);
-    const rol = req.user.profile.rol_id;
 
-    if (!remitenteId) return res.status(404).json({ error: { message: "Perfil no encontrado" } });
-
-    // Determinar quién es Padre y quién Docente para buscar o crear la conversación
-    let padre_id = null;
-    let docente_id = null;
+    let padre_id, docente_id;
 
     if (rol === ROLES.PADRE) {
       padre_id = remitenteId;
@@ -117,46 +155,32 @@ router.get("/chat/:destinatario_id", authMiddleware, async (req, res, next) => {
       docente_id = remitenteId;
     }
 
-    // Buscar conversación existente
     let { data: conversacion } = await supabaseAdmin
       .from("conversaciones")
       .select("id")
       .eq("padre_id", padre_id)
       .eq("docente_id", docente_id)
-      .single();
+      .eq("alumno_id", alumno_id)
+      .maybeSingle();
 
-    // Si no existe, creamos una (se necesita un alumno_id, buscaremos el primero que tengan en común)
     if (!conversacion) {
-       // Buscar parentesco de este padre
-       const { data: parentescos } = await supabaseAdmin.from("parentescos").select("alumno_id").eq("padre_id", padre_id);
-       const alumnosIds = parentescos?.map(p => p.alumno_id) || [];
-       let alumnoEnComun = alumnosIds[0] || null; // Fallback al primero
+      const { data: nueva, error } = await supabaseAdmin
+        .from("conversaciones")
+        .insert({ padre_id, docente_id, alumno_id: null })
+        .select("id")
+        .single();
 
-       const { data: nuevaConv } = await supabaseAdmin
-         .from("conversaciones")
-         .insert([{ padre_id, docente_id, alumno_id: alumnoEnComun }])
-         .select("id")
-         .single();
-         
-       conversacion = nuevaConv;
+      if (error) throw error;
+      conversacion = nueva;
     }
 
-    // Buscar mensajes de esta conversacion
-    if (!conversacion) return res.json({ data: [] });
-
-    const { data: mensajes, error } = await supabaseAdmin
+    const { data: mensajes, error: msgErr } = await supabaseAdmin
       .from("mensajes")
       .select("*")
       .eq("conversacion_id", conversacion.id)
       .order("creado_en", { ascending: true });
 
-    if (error) throw error;
-
-    // Marcar como leídos los que no son míos
-    const mensajesAActualizar = mensajes.filter(m => m.remitente_id !== remitenteId && m.estado !== 'leido').map(m => m.id);
-    if (mensajesAActualizar.length > 0) {
-      await supabaseAdmin.from("mensajes").update({ estado: 'leido' }).in("id", mensajesAActualizar);
-    }
+    if (msgErr) throw msgErr;
 
     res.json({ data: mensajes });
 
@@ -177,59 +201,397 @@ router.get("/chat/:destinatario_id", authMiddleware, async (req, res, next) => {
 router.post("/enviar", authMiddleware, async (req, res, next) => {
   try {
     const schema = Joi.object({
-      destinatario_id: Joi.string().uuid().required(),
-      contenido: Joi.string().trim().min(1).max(1000).required()
+      alumno_id: Joi.string().uuid().required(),
+      contenido: Joi.string().min(1).max(1000).required()
     });
 
     const { error, value } = schema.validate(req.body);
-    if (error) return res.status(400).json({ error: { message: "Datos inválidos", details: error.details.map(d=>d.message) } });
-
-    const { destinatario_id, contenido } = value;
-    const remitenteId = await getInternalUserId(req.user.id);
-    const rol = req.user.profile.rol_id;
-
-    let padre_id = null;
-    let docente_id = null;
-
-    if (rol === ROLES.PADRE) {
-      padre_id = remitenteId;
-      docente_id = destinatario_id;
-    } else {
-      padre_id = destinatario_id;
-      docente_id = remitenteId;
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
     }
 
-    // Buscar la conversación
-    const { data: conversacion, error: convError } = await supabaseAdmin
+    const usuario = await getInternalUser(req.user.auth_user_id);
+    if (!usuario) {
+      return res.status(404).json({ error: "Perfil no encontrado" });
+    }
+
+    const { alumno_id, contenido } = value;
+    const remitenteId = usuario.id;
+
+    // 1. GET ALL PARENTS
+    const { data: parentescos } = await supabaseAdmin
+      .from("parentescos")
+      .select("padre_id")
+      .eq("alumno_id", alumno_id);
+
+    const padresIds = (parentescos || []).map(p => p.padre_id);
+
+    if (!padresIds.length) {
+      return res.status(400).json({ error: "El alumno no tiene padres" });
+    }
+
+    const resultados = [];
+
+    // 2. SEND TO EACH PARENT
+    for (const padre_id of padresIds) {
+
+  let { data: conversacion } = await supabaseAdmin
+    .from("conversaciones")
+    .select("id")
+    .eq("padre_id", padre_id)
+    .eq("docente_id", remitenteId)
+    .eq("alumno_id", alumno_id)
+    .maybeSingle();
+
+  let conversacionId = conversacion?.id;
+
+  if (!conversacionId) {
+    const { data: nueva, error: convErr } = await supabaseAdmin
       .from("conversaciones")
+      .insert({
+        padre_id,
+        docente_id: remitenteId,
+        alumno_id
+      })
       .select("id")
-      .eq("padre_id", padre_id)
-      .eq("docente_id", docente_id)
       .single();
 
-    if (convError || !conversacion) {
-      return res.status(404).json({ error: { message: "Conversación no encontrada. Debe abrir el chat primero." } });
-    }
+    if (convErr) throw convErr;
 
-    // Insertar el mensaje
-    const { data: nuevoMensaje, error: msgError } = await supabaseAdmin
-      .from("mensajes")
-      .insert([{
-        conversacion_id: conversacion.id,
-        remitente_id: remitenteId,
-        contenido: contenido,
-        estado: 'enviado'
-      }])
-      .select("*")
-      .single();
+    conversacionId = nueva.id;
+  }
 
-    if (msgError) throw msgError;
+  const { data: mensaje, error: msgErr } = await supabaseAdmin
+    .from("mensajes")
+    .insert({
+      conversacion_id: conversacionId,   // 👈 ALWAYS USE THIS
+      remitente_id: remitenteId,
+      contenido,
+      estado: "enviado"
+    })
+    .select("*")
+    .single();
 
-    res.status(201).json({ message: "Mensaje enviado", data: nuevoMensaje });
+  if (msgErr) throw msgErr;
+
+  resultados.push(mensaje);
+}
+
+    return res.status(201).json({
+      message: "Mensaje enviado a todos los padres",
+      data: resultados
+    });
 
   } catch (err) {
     next(err);
   }
 });
 
+router.get("/alumno/:alumno_id/parent", authMiddleware, async (req, res, next) => {
+  try {
+    const alumnoId = req.params.alumno_id;
+
+    const usuario = await getInternalUser(req.user.auth_user_id);
+    if (!usuario) {
+      return res.status(404).json({ error: "Perfil no encontrado" });
+    }
+
+    // Get ALL parents (NOT just first one)
+    const { data: parentescos } = await supabaseAdmin
+      .from("parentescos")
+      .select(`
+        padre_id,
+        usuarios:padre_id (
+          id,
+          nombre_completo,
+          email
+        )
+      `)
+      .eq("alumno_id", alumnoId);
+
+    const parents = (parentescos || []).map(p => ({
+      id: p.usuarios.id,
+      nombre_completo: p.usuarios.nombre_completo,
+      email: p.usuarios.email
+    }));
+
+    return res.json({ data: parents });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/chat/:parent_id", authMiddleware, async (req, res, next) => {
+  try {
+    const parentId = req.params.parent_id;
+
+    const usuario = await getInternalUser(req.user.auth_user_id);
+    if (!usuario) {
+      return res.status(404).json({ error: "Perfil no encontrado" });
+    }
+
+    const docenteId = usuario.id;
+
+    const padre_id = parentId;
+    const docente_id = docenteId;
+
+    // find or create conversation
+    let { data: conversacion } = await supabaseAdmin
+      .from("conversaciones")
+      .select("id")
+      .eq("padre_id", padre_id)
+      .eq("docente_id", docente_id)
+      .maybeSingle();
+
+    if (!conversacion) {
+      const { data: nueva } = await supabaseAdmin
+        .from("conversaciones")
+        .insert({
+          padre_id,
+          docente_id,
+          alumno_id: null
+        })
+        .select("id")
+        .single();
+
+      conversacion = nueva;
+    }
+
+    const { data: mensajes } = await supabaseAdmin
+      .from("mensajes")
+      .select("*")
+      .eq("conversacion_id", conversacion.id)
+      .order("creado_en", { ascending: true });
+
+    res.json({ data: { mensajes, conversacion_id: conversacion.id } });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/chat/alumno/:alumno_id", authMiddleware, async (req, res, next) => {
+  try {
+    const alumnoId = req.params.alumno_id;
+
+    const usuario = await getInternalUser(req.user.auth_user_id);
+    const docenteId = usuario.id;
+
+    // get all parents
+    const { data: parentescos } = await supabaseAdmin
+      .from("parentescos")
+      .select("padre_id")
+      .eq("alumno_id", alumnoId);
+
+    const padresIds = (parentescos || []).map(p => p.padre_id);
+
+    const allMessages = [];
+
+    for (const padre_id of padresIds) {
+
+      const { data: conv } = await supabaseAdmin
+        .from("conversaciones")
+        .select("id")
+        .eq("padre_id", padre_id)
+        .eq("docente_id", docenteId)
+        .eq("alumno_id", alumnoId)
+        .maybeSingle();
+
+      if (!conv) continue;
+
+      const { data: msgs } = await supabaseAdmin
+        .from("mensajes")
+        .select("*")
+        .eq("conversacion_id", conv.id);
+
+      allMessages.push(...(msgs || []));
+    }
+
+    allMessages.sort((a, b) =>
+      new Date(a.creado_en) - new Date(b.creado_en)
+    );
+
+    res.json({ data: allMessages });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/alumno/:alumno_id/teachers", authMiddleware, async (req, res, next) => {
+  try {
+    const alumnoId = req.params.alumno_id;
+
+    const usuario = await getInternalUser(req.user.auth_user_id);
+    if (!usuario) {
+      return res.status(404).json({ error: "Perfil no encontrado" });
+    }
+
+    // 1. Get student's group
+    const { data: alumno, error: alumnoErr } = await supabaseAdmin
+      .from("alumnos")
+      .select("grupo_id")
+      .eq("id", alumnoId)
+      .single();
+
+    if (alumnoErr || !alumno) {
+      return res.status(404).json({ error: "Alumno no encontrado" });
+    }
+
+    // 2. Get teacher assignments for that group
+    const { data: asignaciones, error: asigErr } = await supabaseAdmin
+      .from("asignaciones_docentes")
+      .select(`
+        docente_id,
+        usuarios:docente_id (
+          id,
+          nombre_completo,
+          email
+        )
+      `)
+      .eq("grupo_id", alumno.grupo_id);
+
+    if (asigErr) throw asigErr;
+
+    // 3. Map + deduplicate teachers
+    const teacherMap = new Map();
+
+    (asignaciones || []).forEach(a => {
+      if (a.usuarios) {
+        teacherMap.set(a.usuarios.id, {
+          id: a.usuarios.id,
+          nombre_completo: a.usuarios.nombre_completo,
+          email: a.usuarios.email
+        });
+      }
+    });
+
+    const teachers = Array.from(teacherMap.values());
+
+    return res.json({ data: teachers });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/alumno/:alumno_id/chat", authMiddleware, async (req, res, next) => {
+  try {
+    const alumnoId = req.params.alumno_id;
+    console.log('alumno', alumnoId)
+
+    const usuario = await getInternalUser(req.user.auth_user_id);
+    if (!usuario) {
+      return res.status(404).json({ error: "Perfil no encontrado" });
+    }
+
+    const docenteId = usuario.id;
+    console.log('docente', docenteId)
+
+    // 1. get parents of student
+    const { data: parentescos } = await supabaseAdmin
+      .from("parentescos")
+      .select("padre_id")
+      .eq("alumno_id", alumnoId);
+
+    const padresIds = (parentescos || []).map(p => p.padre_id);
+    console('padre',padresIds)
+
+    const allMessages = [];
+
+    for (const padre_id of padresIds) {
+
+      // 2. ensure conversation exists
+      let { data: conv } = await supabaseAdmin
+        .from("conversaciones")
+        .select("id")
+        .eq("padre_id", padre_id)
+        .eq("docente_id", docenteId)
+        .eq("alumno_id", alumnoId)
+        .maybeSingle();
+
+      if (!conv) {
+        const { data: nueva } = await supabaseAdmin
+          .from("conversaciones")
+          .insert({
+            padre_id,
+            docente_id: docenteId,
+            alumno_id: alumnoId
+          })
+          .select("id")
+          .single();
+
+        conv = nueva;
+      }
+
+      // 3. get messages
+      const { data: msgs } = await supabaseAdmin
+        .from("mensajes")
+        .select("*")
+        .eq("conversacion_id", conv.id)
+        .order("creado_en", { ascending: true });
+
+      allMessages.push(...(msgs || []));
+    }
+
+    // 4. sort globally
+    allMessages.sort((a, b) =>
+      new Date(a.creado_en) - new Date(b.creado_en)
+    );
+
+    return res.json({ data: allMessages });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/chat/:alumno_id/:teacher_id", authMiddleware, async (req, res, next) => {
+  try {
+    const { alumno_id, teacher_id } = req.params;
+
+    const usuario = await getInternalUser(req.user.auth_user_id);
+    if (!usuario) return res.status(404).json({ error: "Perfil no encontrado" });
+
+    const docenteId = teacher_id;
+
+    // 1. get parents (same as SEND)
+    const { data: parentescos } = await supabaseAdmin
+      .from("parentescos")
+      .select("padre_id")
+      .eq("alumno_id", alumno_id);
+
+    const padresIds = (parentescos || []).map(p => p.padre_id);
+
+    const allMessages = [];
+
+    for (const padre_id of padresIds) {
+
+      // 2. SAME EXACT CONVERSATION AS SEND
+      const { data: conv } = await supabaseAdmin
+        .from("conversaciones")
+        .select("id")
+        .eq("padre_id", padre_id)
+        .eq("docente_id", docenteId)
+        .eq("alumno_id", alumno_id)
+        .maybeSingle();
+
+      if (!conv) continue;
+
+      const { data: msgs } = await supabaseAdmin
+        .from("mensajes")
+        .select("*")
+        .eq("conversacion_id", conv.id)
+        .order("creado_en", { ascending: true });
+
+      allMessages.push(...(msgs || []));
+    }
+
+    return res.json({ data: allMessages });
+
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = router;

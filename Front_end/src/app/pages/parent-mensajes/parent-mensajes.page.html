@@ -1,0 +1,157 @@
+<ion-content class="bg-[#f4efe6]">
+
+  <div class="p-4 max-w-5xl mx-auto pb-24 min-h-screen bg-[#f4efe6]">
+
+    <!-- HEADER -->
+    <header class="bg-[#fbf7f0] sticky top-0 z-40 shadow-sm border-b border-[#e7ddcf]">
+      <div class="flex items-center justify-between px-4 h-16">
+
+        <span class="font-bold text-primary">
+          Mensajes Padres
+        </span>
+
+      </div>
+    </header>
+
+    <!-- TITLE -->
+    <div class="mt-4 mb-6 bg-[#fbf7f0] border p-4 rounded-xl">
+      <h1 class="text-xl font-bold">Mensajes</h1>
+      <p class="text-sm text-gray-600">
+        Comunicación con maestros
+      </p>
+    </div>
+
+    <!-- ================= STUDENT LIST ================= -->
+    <section *ngIf="!selectedStudent">
+
+      <div
+        *ngFor="let s of students"
+        (click)="selectStudent(s)"
+        class="bg-[#fbf7f0] border p-4 rounded-xl cursor-pointer flex justify-between items-center mb-3"
+      >
+        <div>
+          <p class="font-semibold">{{ s.nombre_completo }}</p>
+          <p class="text-xs text-gray-600">
+            {{ s.grado }}° {{ s.seccion }}
+          </p>
+        </div>
+
+        <span class="material-symbols-outlined text-primary">
+          school
+        </span>
+      </div>
+
+    </section>
+
+    <!-- ================= TEACHER LIST ================= -->
+    <section *ngIf="selectedStudent && !selectedTeacher">
+
+      <div class="flex justify-between mb-3">
+        <button (click)="backToStudents()" class="text-primary">
+          ← Volver
+        </button>
+      </div>
+
+      <div class="bg-[#fbf7f0] border p-4 rounded-xl mb-4">
+        <p class="font-bold">
+          {{ selectedStudent.nombre_completo }}
+        </p>
+      </div>
+
+      <div
+        *ngFor="let t of teachers"
+        (click)="selectTeacher(t)"
+        class="bg-[#fbf7f0] border p-4 rounded-xl cursor-pointer mb-3 flex justify-between"
+      >
+        <p class="font-semibold">{{ t.nombre_completo }}</p>
+
+        <span class="material-symbols-outlined text-primary">
+          person
+        </span>
+      </div>
+
+    </section>
+
+    <!-- ================= CHAT ================= -->
+    <section *ngIf="selectedTeacher">
+
+      <!-- CHAT HEADER -->
+      <div class="flex justify-between items-center mb-3">
+
+        <button (click)="backToTeachers()" class="text-primary">
+          ← Volver
+        </button>
+
+        <div class="text-right">
+          <p class="font-bold">{{ selectedTeacher.nombre_completo }}</p>
+          <p class="text-xs text-gray-600">
+            {{ selectedStudent.nombre_completo }}
+          </p>
+        </div>
+
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="h-[55vh] overflow-y-auto bg-[#fbf7f0] border p-3 rounded-xl space-y-2">
+
+        <div
+          *ngFor="let m of mensajes"
+          class="max-w-[75%] px-3 py-2 rounded-lg text-sm"
+          [ngClass]="m.remitente_id === currentUserId
+            ? 'bg-gray-200 ml-auto'
+            : 'bg-primary text-white mr-auto'"
+        >
+          {{ m.contenido }}
+        </div>
+
+      </div>
+
+      <!-- INPUT -->
+      <div class="flex gap-2 mt-3 bg-[#fbf7f0] border p-3 rounded-xl">
+
+        <input
+          [(ngModel)]="mensajeTexto"
+          class="flex-1 p-2 border rounded-lg bg-white"
+          placeholder="Escribe un mensaje..."
+        />
+
+        <button
+          (click)="sendMessage()"
+          class="bg-primary text-white px-4 rounded-lg"
+        >
+          Enviar
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 bg-surface-container">
+
+  <button (click)="navigateTo('/inicio-resumen-alumno')"
+    class="flex flex-col items-center">
+    <span class="material-symbols-outlined">home</span>
+    <span class="text-[10px]">Inicio</span>
+  </button>
+
+  <button (click)="navigateTo('/calificaciones-padre')"
+    class="flex flex-col items-center">
+    <span class="material-symbols-outlined">grade</span>
+    <span class="text-[10px]">Calificaciones</span>
+  </button>
+
+  <button (click)="navigateTo('/mensajes-chat')"
+    class="flex flex-col items-center">
+    <span class="material-symbols-outlined">chat</span>
+    <span class="text-[10px]">Mensajes</span>
+  </button>
+
+  <button (click)="navigateTo('/inicar-session')"
+    class="flex flex-col items-center">
+    <span class="material-symbols-outlined">person</span>
+    <span class="text-[10px]">Cerrar sesión</span>
+  </button>
+
+</nav>
+</ion-content>

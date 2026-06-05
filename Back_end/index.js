@@ -62,6 +62,8 @@ const profeRoutes =
 
 const periodosRoutes = require('./routes/periodosRoutes');
 
+const adminUsuario = require("./routes/adminUsuario")
+
 
 /**
  * PROCESS ERROR HANDLERS
@@ -304,7 +306,12 @@ app.use(
   requireRole([ROLES.ADMIN, ROLES.DOCENTE]),
   profeRoutes
 );
-
+app.use(
+  '/api/admin-usuarios',
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  adminUsuario
+);
 /**
  * SWAGGER DOCS
  */

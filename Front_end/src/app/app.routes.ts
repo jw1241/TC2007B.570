@@ -133,8 +133,8 @@ export const routes: Routes = [
     path: 'mensajes-chat',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./pages/mensajes-chat/mensajes-chat.page')
-        .then(m => m.MensajesChatPage)
+      import('./pages/parent-mensajes/parent-mensajes.page')
+        .then(m => m.ParentMensajesPage)
   },
 
   {
@@ -165,6 +165,18 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/inicio-resumen-profesor/inicio-resumen-profesor.page')
         .then(m => m.InicioResumenProfesorPage)
+  },
+  {
+    path: 'admin-usuario',
+    loadComponent: () =>
+      import('./pages/admin-usuario/admin-usuario.component')
+        .then(m => m.AdminImportPage)
+  },
+  {
+    path: 'tiquete',
+    loadComponent: () =>
+      import('./pages/inicio-resumen-administrador/inicio-resumen-administrador.page')
+        .then(m => m.InicioResumenAdministradorPage)
   },
 
   

@@ -6,7 +6,7 @@ const { supabaseAdmin } = require("../config/supabaseClient");
 const { authMiddleware } = require("../middleware/authMiddleware");
 const { requireRole } = require("../middleware/roleMiddleware");
 const ROLES = require("../constants/roles");
-
+const TICKET_STATUS = require("../constants/ticketStatus");
 const crypto = require('crypto');
 
 router.get(
@@ -419,26 +419,6 @@ if (!materia || materiaError) {
   }
 );
 
-router.get("/tickets/recent", authMiddleware, requireRole([ROLES.ADMIN]), async (req, res) => {
-  const { data, error } = await supabaseAdmin
-    .from("soporte_tickets")
-    .select(`
-      id,
-      ticket_codigo,
-      asunto,
-      estado,
-      creado_en,
-      usuarios(nombre_completo),
-      soporte_archivos(archivo_url)
-    `)
-    .order("creado_en", { ascending: false })
-    .limit(20);
-
-  if (error) return res.status(500).json(error);
-
-  res.json(data);
-});
-
 /**
  * @swagger
  * /api/admin/alumnos:
@@ -499,23 +479,56 @@ router.get(
   requireRole([ROLES.ADMIN]),
   async (req, res) => {
 
-    const { data: tickets, error } = await supabaseAdmin
+    const { data, error } = await supabaseAdmin
       .from("soporte_tickets")
       .select(`
-        *,
-        soporte_archivos (
-          id,
-          archivo_url
-        )
+        id,
+        ticket_codigo,
+        asunto,
+        estado,
+        creado_en,
+        descripcion,
+        matricula,
+        estudiante_nombre,
+        fecha_nacimiento,
+        role,
+        usuarios(nombre_completo),
+        soporte_archivos(id, archivo_url)
       `)
-      .order("creado_en", { ascending: false })
-      .limit(20);
+      .order("creado_en", { ascending: false });
+
+    if (error) return res.status(500).json(error);
+
+    const filtered = data.filter(t =>
+      (t.estado || "").trim().toLowerCase() !== "resuelto"
+    );
+
+    res.json(filtered);
+  }
+);
+
+router.put(
+  "/tickets/:id/resolver",
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  async (req, res) => {
+    const { id } = req.params;
+
+    const { error } = await supabaseAdmin
+      .from("soporte_tickets")
+      .update({ estado: "Resuelto" })
+      .eq("id", id);
 
     if (error) {
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({
+        error: {
+          message: "No se pudo actualizar el ticket",
+          details: error.message
+        }
+      });
     }
 
-    return res.json(tickets);
+    res.json({ message: "Ticket resuelto" });
   }
 );
 module.exports = router;

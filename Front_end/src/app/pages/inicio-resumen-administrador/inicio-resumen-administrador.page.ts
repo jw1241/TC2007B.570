@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ApiService } from '../../services/api';
+import { Router } from '@angular/router';
 import { SoporteTicket } from '../../services/support';
 
 @Component({
@@ -20,7 +21,7 @@ export class InicioResumenAdministradorPage implements OnInit {
   previewFileUrl: string | null = null;
   previewOpen = false;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private router: Router) {}
 
   async ngOnInit() {
     await this.loadTickets();
@@ -75,4 +76,19 @@ closePreview() {
   this.previewOpen = false;
   this.previewFileUrl = null;
 }
+async resolverTicket(id: string) {
+  try {
+    await this.api.put(`/admin/tickets/${id}/resolver`, {});
+    await this.loadTickets();
+  } catch (err) {
+    console.error(err);
+  }
+}
+navigateTo(path: string) {
+
+    this.router.navigate([
+      path
+    ]);
+
+  }
 }

@@ -159,7 +159,13 @@ export const routes: Routes = [
   loadComponent: () =>
     import('./pages/calificaciones-padre/calificaciones-padre.component')
       .then(m => m.CalificacionesPadrePage)
-}
+},
+{
+    path: 'inicio',
+    loadComponent: () =>
+      import('./pages/inicio-resumen-profesor/inicio-resumen-profesor.page')
+        .then(m => m.InicioResumenProfesorPage)
+  },
 
   
 ];

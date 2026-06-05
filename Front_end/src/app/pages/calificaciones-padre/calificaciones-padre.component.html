@@ -45,6 +45,26 @@
         </p>
       </div>
 
+      <ion-item>
+
+  <ion-label>Periodo</ion-label>
+
+  <ion-select
+    [value]="selectedPeriodoId"
+    (ionChange)="onPeriodoChange($event)">
+
+    <ion-select-option
+      *ngFor="let p of periodos"
+      [value]="p.id">
+
+      {{ p.nombre }}
+
+    </ion-select-option>
+
+  </ion-select>
+
+</ion-item>
+
       <!-- PERIOD -->
 
       <div
@@ -90,18 +110,36 @@
         </h2>
 
         <div
-          *ngFor="let materia of materias"
-          class="flex justify-between py-3 border-b">
+  *ngFor="let materia of materias"
+  class="py-4 border-b">
 
-          <div>
-            {{ materia.nombre_materia }}
-          </div>
+  <div class="flex justify-between mb-2">
 
-          <div class="font-bold text-primary">
-            {{ materia.promedio }}
-          </div>
+    <div class="font-semibold">
+      {{ materia.nombre_materia }}
+    </div>
 
-        </div>
+    <div class="font-bold text-primary">
+      {{ materia.promedio }}
+    </div>
+
+  </div>
+
+  <div
+    *ngFor="let tarea of materia.tareas"
+    class="flex justify-between text-sm py-1 pl-4">
+
+    <span>
+      {{ tarea.nombre }}
+    </span>
+
+    <span>
+      {{ tarea.calificacion }}
+    </span>
+
+  </div>
+
+</div>
 
       </div>
 

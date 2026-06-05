@@ -1,148 +1,386 @@
 <ion-content [fullscreen]="true" class="bg-background">
-  <div class="bg-background text-on-background font-body-md antialiased min-h-screen pt-24 pb-16">
-    <header class="fixed top-0 w-full z-50 bg-surface shadow-sm">
-      <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-20">
-        <button aria-label="Menu" class="flex items-center justify-center p-2 rounded-full hover:bg-surface-container-low transition-colors text-primary">
-          <span class="material-symbols-outlined" data-icon="menu">menu</span>
-        </button>
-        <div class="font-headline-md text-headline-md text-primary truncate hidden md:block">Escuela Metropolitana La Luz</div>
-        <div class="font-label-md text-label-md font-bold text-primary truncate md:hidden">E.M. La Luz</div>
-        <div class="flex items-center gap-4">
-          <div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-outline-variant cursor-pointer" (click)="navigateTo('/perfil')">
-            <img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYln-Y54lCO50F7Iz9BhYrj5__BjSO34vtG5xDJ3OIEnWRS1LoIeSDk1BoRHzcsMR2oHq5HO8WBgvov7TE-It7ZZKLybdBSRYDlU3IBRh-qlu2Pe5Xo6oeV1bC7d4Y8sodksE2s1Pmk7wYLekIQMsr-J4Tvb9te2urz6KptIpaQIiTzdwLkr3XSrgxEsQe1qE-iFWYmcaI-jy_vvt4OijNMVHaRlERDX1APe6xHJIclvLLWyZ4c3deGbTVskPBz8wTb9YMgJLFuR4"/>
+
+  <div class="bg-background text-on-background min-h-screen pt-24 pb-24">
+    <header class="bg-surface sticky top-0 z-40 shadow-sm">
+      <div class="flex items-center justify-between px-4 h-16 max-w-container-max mx-auto">
+
+        <!-- Logo + Name -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full overflow-hidden bg-white shadow-sm">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcTWCjl-iswn9qGwnguEnmCjn29P95J5eJcgVmSm-NintYMIKF7lpE0P_1gvyd1BCZFtKAtfHruKCz7klA9sXpOfpzIQRkSutztO_sgTxMl9UyK9D_8iFjX0_bTPR4LEiuqJxro6cJ_FQ7Xnk17eMfhjeTMRRjF93F_k_0tWPTsyMC4oDzq6z96jN6uCQs4Zl_f6BJ6HbyNXFj_KYMvEEJnJO1AnKrD0vb2-b_cr_62foul5WzCTEFA89lFl3dFUVL1UYdDOKA9zs" alt="La Luz Logo" class="w-full h-full object-cover" />
+          </div>
+
+          <div class="flex flex-col leading-tight">
+            <span class="font-bold text-primary">
+              Escuela Metropolitana
+            </span>
+            <span class="text-sm text-on-surface-variant">
+              "La Luz"
+            </span>
           </div>
         </div>
+
+      </div>
+    
+
+      <div
+        class="flex justify-between items-center max-w-container-max mx-auto px-4 h-20"
+      >
+
+      
+        <h1 class="text-xl font-bold text-primary">
+          Captura de Calificaciones
+        </h1>
+
+        <button
+          class="px-4 py-2 rounded-lg bg-primary text-white"
+          (click)="publicarBoletas()"
+          [disabled]="!periodoSeleccionado"
+        >
+          Publicar Boletas
+        </button>
+
       </div>
     </header>
-    
-    <main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop space-y-8">
-      <!-- Page Header -->
-      <div class="flex flex-col gap-2">
-        <h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary">Captura de Calificaciones</h1>
-        <p class="font-body-md text-body-md text-on-surface-variant">Seleccione una materia para ingresar las calificaciones del periodo actual.</p>
-      </div>
-      
-      <!-- Subject Selection -->
-      <section class="space-y-4">
-        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-            <h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Materia Activa</h2>
-            <div class="flex bg-surface-container-low rounded-lg p-1 gap-1 border border-outline-variant w-fit">
-                <button (click)="setTrimestre(1)" [class.bg-primary]="trimestreActivo === 1" [class.text-on-primary]="trimestreActivo === 1" class="px-6 py-2 rounded-md text-sm transition-colors font-medium">Trimestre 1</button>
-                <button (click)="setTrimestre(2)" [class.bg-primary]="trimestreActivo === 2" [class.text-on-primary]="trimestreActivo === 2" class="px-6 py-2 rounded-md text-sm transition-colors font-medium">Trimestre 2</button>
-                <button (click)="setTrimestre(3)" [class.bg-primary]="trimestreActivo === 3" [class.text-on-primary]="trimestreActivo === 3" class="px-6 py-2 rounded-md text-sm transition-colors font-medium">Trimestre 3</button>
-            </div>
-        </div>
 
-        <div *ngIf="isLoading && clases.length === 0" class="flex justify-center p-8">
-            <ion-spinner color="primary"></ion-spinner>
-        </div>
+    <div class="grid grid-cols-2 gap-4">
 
-        <div *ngIf="clases.length === 0 && !isLoading" class="p-8 bg-surface-container-lowest border border-outline-variant rounded-xl text-center">
-            <span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2">assignment_late</span>
-            <p class="text-on-surface-variant font-body-lg">No tienes materias asignadas actualmente.</p>
-        </div>
+</div>
 
-        <div *ngIf="clases.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          
-          <button *ngFor="let clase of clases" 
-                  (click)="seleccionarClase(clase)"
-                  [ngClass]="activeClase?.id === clase.id ? 'border-primary bg-primary-container text-on-primary-container' : 'border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low hover:border-outline text-on-surface'"
-                  class="flex flex-col items-start p-4 rounded-xl border shadow-sm transition-transform hover:-translate-y-1 text-left relative overflow-hidden group w-full">
-            
-            <div class="absolute top-0 right-0 p-2 opacity-10 transition-opacity"
-                 [ngClass]="activeClase?.id === clase.id ? 'opacity-20 text-on-primary-container' : 'group-hover:opacity-20 text-on-surface'">
-              <span class="material-symbols-outlined text-4xl" data-icon="functions">class</span>
-            </div>
-            
-            <span class="font-caption text-caption mb-1"
-                  [ngClass]="activeClase?.id === clase.id ? 'text-on-primary-container/80' : 'text-on-surface-variant'">
-              Grupo {{ clase.grupos?.grado }}º "{{ clase.grupos?.nombre || clase.grupos?.grado }}"
-            </span>
-            
-            <span class="font-headline-md text-headline-md">{{ clase.materias?.nombre }}</span>
-            
-            <div class="mt-4 flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full" [ngClass]="activeClase?.id === clase.id ? 'bg-secondary' : 'bg-outline-variant'"></span>
-              <span class="font-caption text-caption" [ngClass]="activeClase?.id === clase.id ? '' : 'text-on-surface-variant'">
-                {{ activeClase?.id === clase.id ? 'Seleccionada' : 'Seleccionar' }}
-              </span>
-            </div>
-          </button>
-          
-        </div>
-      </section>
+    <main class="max-w-container-max mx-auto px-4 space-y-8">
 
-      <!-- Dense Data Entry Table -->
-      <section *ngIf="activeClase" class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden flex flex-col mt-8">
-        <!-- Table Toolbar -->
-        <div class="flex items-center justify-between p-4 border-b border-outline-variant bg-surface-container-low/50">
-          <div class="font-label-md text-label-md text-primary">Listado de Alumnos ({{ alumnos.length }})</div>
-          <div class="relative hidden sm:block">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
-            <input class="pl-9 pr-3 py-1.5 bg-surface border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-48 md:w-64 transition-all" placeholder="Buscar alumno..." type="text"/>
-          </div>
-        </div>
-        
-        <!-- Table Header -->
-        <div class="grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_1fr_auto] gap-4 px-6 py-3 border-b border-outline-variant bg-surface-container-lowest font-label-md text-label-md text-on-surface-variant">
-          <div class="w-8">No.</div>
-          <div>Nombre del Alumno</div>
-          <div class="hidden md:block">Matrícula</div>
-          <div class="text-right w-24">Calificación</div>
-        </div>
-        
-        <!-- Loading State for students -->
-        <div *ngIf="isLoading && alumnos.length === 0" class="flex justify-center p-8">
-            <ion-spinner color="primary"></ion-spinner>
-        </div>
+      <div class="grid grid-cols-2 gap-4">
 
-        <div *ngIf="alumnos.length === 0 && !isLoading" class="p-8 text-center">
-            <p class="text-on-surface-variant">No hay alumnos inscritos en esta clase.</p>
-        </div>
-
-        <!-- Table Body -->
-        <div *ngIf="!isLoading && alumnos.length > 0" class="flex flex-col overflow-y-auto max-h-[500px]">
-          
-          <div *ngFor="let alumno of alumnos; let i = index" 
-               class="grid grid-cols-[auto_1fr_auto] md:grid-cols-[auto_1fr_1fr_auto] gap-4 px-6 py-3 border-b border-outline-variant items-center hover:bg-surface-container-low/30 transition-colors">
-            
-            <div class="font-caption text-caption text-on-surface-variant w-8">{{ (i + 1).toString().padStart(2, '0') }}</div>
-            
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md text-label-md uppercase shrink-0 hidden sm:flex">
-                {{ getIniciales(alumno.nombre, alumno.apellidos) }}
-              </div>
-              <span class="font-body-md text-body-md text-on-surface font-medium truncate">{{ alumno.apellidos }}, {{ alumno.nombre }}</span>
-            </div>
-            
-            <div class="hidden md:block font-body-md text-body-md text-on-surface-variant">{{ alumno.matricula }}</div>
-            
-            <div class="flex justify-end w-24 shrink-0">
-              <input class="w-full text-right px-3 py-1.5 border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" 
-                     max="10" min="0" placeholder="--" step="0.1" type="number"
-                     [ngModel]="calificacionesEditadas[alumno.id]"
-                     (change)="onCalificacionChange(alumno.id, $event)"/>
-            </div>
-          </div>
-          
-        </div>
-      </section>
-      
-      <!-- Action Bar -->
-      <div *ngIf="activeClase && !isLoading && alumnos.length > 0" class="flex flex-col-reverse sm:flex-row justify-end items-center gap-4 pt-4 pb-8">
-        <button class="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-outline font-label-md text-label-md text-primary hover:bg-surface-container-low transition-colors" 
-                (click)="seleccionarClase(activeClase)"
-                [disabled]="isSaving">
-          Descartar Cambios
-        </button>
-        <button class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-primary/90 shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50" 
-                (click)="guardarCambios()"
-                [disabled]="isSaving">
-          <span *ngIf="!isSaving" class="material-symbols-outlined text-sm" data-icon="save">save</span>
-          <ion-spinner *ngIf="isSaving" name="crescent" class="h-4 w-4" color="light"></ion-spinner>
-          {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
-        </button>
-      </div>
-    </main>
+  <div class="bg-green-50 p-4 rounded-xl">
+    <div class="text-3xl font-bold">
+      {{ firmadas }}
+    </div>
+    <div>Firmadas</div>
   </div>
+
+  <div class="bg-red-50 p-4 rounded-xl">
+    <div class="text-3xl font-bold">
+      {{ pendientes }}
+    </div>
+    <div>Pendientes</div>
+  </div>
+
+</div>
+
+      <!-- PERIODO -->
+      <section>
+
+        <h2 class="font-semibold text-primary mb-3">
+          Periodo de Evaluación
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+          <button
+            *ngFor="let periodo of periodos"
+            (click)="seleccionarPeriodo(periodo)"
+            class="p-4 rounded-xl border transition-all"
+            [ngClass]="
+  periodoSeleccionado?.id === periodo.id
+    ? 'bg-primary text-white border-primary'
+    : 'bg-white border-gray-200'
+"
+          >
+            {{ periodo.nombre }}
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- MATERIAS -->
+      <section>
+
+        <h2 class="font-semibold text-primary mb-3">
+          Materias Asignadas
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          <button
+  *ngFor="let materia of materias"
+  (click)="seleccionarMateria(materia)"
+  class="p-4 rounded-xl text-left transition-all duration-200"
+  [ngClass]="
+    materiaSeleccionada?.materia_id === materia.materia_id &&
+    materiaSeleccionada?.grupo_id === materia.grupo_id
+      ? 'border-4 border-primary bg-blue-50 shadow-lg scale-[1.02]'
+      : 'border border-gray-200 bg-white hover:border-primary hover:shadow-md'
+  "
+>
+
+            <p class="font-bold">
+              {{ materia.nombre_materia }}
+            </p>
+
+            <p class="text-sm text-gray-500">
+              {{ materia.grado }}° {{ materia.seccion }}
+            </p>
+
+          </button>
+
+        </div>
+
+      </section>
+
+     <!-- TABLA -->
+<section
+  *ngIf="materiaSeleccionada && periodoSeleccionado"
+  class="bg-white rounded-xl shadow overflow-hidden"
+>
+
+  <div class="flex justify-between items-center px-6 py-4 border-b">
+
+    <h2 class="font-bold text-primary">
+      Calificaciones
+    </h2>
+
+    <span class="text-sm text-gray-500">
+      {{ alumnos.length }} alumnos
+    </span>
+
+  </div>
+
+  <div
+    *ngFor="let alumno of alumnos"
+    class="border-b p-6 space-y-4"
+  >
+
+    <div class="flex justify-between items-center">
+
+      <div>
+
+        <div class="font-bold">
+          {{ alumno.nombre_completo }}
+        </div>
+
+        <div class="text-sm text-gray-500">
+          {{ alumno.matricula }}
+        </div>
+
+      </div>
+
+      <button
+        class="px-3 py-2 bg-primary text-white rounded-lg"
+        (click)="agregarTarea(alumno)"
+      >
+        + Agregar tarea
+      </button>
+
+    </div>
+
+    <div
+      *ngFor="let tarea of alumno.tareas"
+      class="grid grid-cols-3 gap-4"
+    >
+
+      <input
+        type="text"
+        placeholder="Nombre de tarea"
+        class="border rounded-lg px-3 py-2"
+        [(ngModel)]="tarea.tarea"
+      />
+
+      <input
+        type="number"
+        min="0"
+        max="10"
+        step="0.1"
+        class="border rounded-lg px-3 py-2"
+        [(ngModel)]="tarea.nota"
+      />
+
+      <input
+        type="text"
+        placeholder="Comentario"
+        class="border rounded-lg px-3 py-2"
+        [(ngModel)]="tarea.comentario"
+      />
+
+    </div>
+
+  </div>
+
+</section>
+
+      <!-- ACTIONS -->
+      <section
+        *ngIf="materiaSeleccionada && periodoSeleccionado"
+        class="flex justify-end gap-4"
+      >
+
+        <button
+          class="px-6 py-3 border rounded-lg"
+          (click)="cargarAlumnos()"
+        >
+          Recargar
+        </button>
+
+        <button
+          class="px-6 py-3 bg-primary text-white rounded-lg"
+          (click)="guardarCambios()"
+          [disabled]="isSaving"
+        >
+          {{ isSaving ? 'Guardando...' : 'Guardar Calificaciones' }}
+        </button>
+
+      </section>
+<section
+  *ngIf="periodoSeleccionado"
+  class="bg-white rounded-xl shadow p-6"
+>
+
+  <h2 class="font-bold text-primary mb-4">
+    Estado de Firmas
+  </h2>
+
+  <table class="w-full">
+
+    <thead>
+
+      <tr class="border-b">
+
+        <th class="text-left py-2">
+          Alumno
+        </th>
+
+        <th class="text-left py-2">
+          Padre
+        </th>
+
+        <th class="text-left py-2">
+          Estado
+        </th>
+
+        <th class="text-left py-2">
+          Fecha
+        </th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr
+        *ngFor="let f of firmas"
+        class="border-b"
+      >
+
+        <td class="py-3">
+          {{ f.alumno }}
+        </td>
+
+        <td>
+          {{ f.padre }}
+        </td>
+
+        <td>
+
+          <span
+            *ngIf="f.firmada"
+            class="text-green-600 font-bold"
+          >
+            ✓ Firmada
+          </span>
+
+          <span
+            *ngIf="!f.firmada"
+            class="text-red-600 font-bold"
+          >
+            ✕ Pendiente
+          </span>
+
+        </td>
+
+        <td>
+          {{ f.fechaFirma | date:'medium' }}
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</section>
+    </main>
+
+  </div>
+<nav
+  class="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-200 z-50"
+>
+  <div class="grid grid-cols-4 h-16 max-w-container-max mx-auto">
+
+    <!-- Inicio -->
+    <button
+      routerLink="/inicio"
+  routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        home
+      </span>
+
+      <span class="text-xs">
+        Inicio
+      </span>
+    </button>
+
+    <!-- Calificaciones -->
+    <button
+      routerLink="/captura-calificaciones"
+      routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        grading
+      </span>
+
+      <span class="text-xs">
+        Calificaciones
+      </span>
+    </button>
+
+    <!-- Mensajes -->
+    <button
+      routerLink="/profesor/mensajes"
+      routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        chat
+      </span>
+
+      <span class="text-xs">
+        Mensajes
+      </span>
+    </button>
+
+    <!-- Perfil -->
+    <button
+      routerLink="/profesor/perfil"
+      routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        person
+      </span>
+
+      <span class="text-xs">
+        Perfil
+      </span>
+    </button>
+
+  </div>
+</nav>
 </ion-content>

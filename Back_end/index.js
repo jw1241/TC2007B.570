@@ -60,6 +60,8 @@ const gradesRoutes =
 const profeRoutes =
   require("./routes/profeRoutes");
 
+const periodosRoutes = require('./routes/periodosRoutes');
+
 
 /**
  * PROCESS ERROR HANDLERS
@@ -244,6 +246,8 @@ app.use(
   adminRoutes
 );
 
+app.use('/api/periodos', periodosRoutes);
+
 /**
  * PROTECTED PADRE ROUTES
  */
@@ -290,6 +294,8 @@ app.use(
   authMiddleware,
   gradesRoutes
 );
+
+app.use("/api/boletas", boletasRoutes);
 
 
 app.use(

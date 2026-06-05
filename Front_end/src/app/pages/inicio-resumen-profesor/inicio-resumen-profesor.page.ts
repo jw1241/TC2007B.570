@@ -3,26 +3,14 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ApiService } from '../../services/api';
 import { AuthService } from '../../services/auth.service';
-
-interface TeacherDashboard {
-  docente: any;
-  resumen: {
-    grupos: number;
-    materias: number;
-    mensajes: number;
-    calificaciones: number;
-  };
-  materias: any[];
-  calificaciones: any[];
-  mensajes: any[];
-}
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-inicio-resumen-profesor',
   templateUrl: './inicio-resumen-profesor.page.html',
   styleUrls: ['./inicio-resumen-profesor.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule]
+  imports: [CommonModule, IonicModule, RouterModule]
 })
 export class InicioResumenProfesorPage implements OnInit {
 

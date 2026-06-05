@@ -1,148 +1,320 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, NavController, ToastController } from '@ionic/angular';
+import {
+  IonicModule,
+  ToastController,
+  NavController
+} from '@ionic/angular';
 import { RouterModule } from '@angular/router';
+
 import { ApiService } from '../../services/api';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-captura-calificaciones',
+  standalone: true,
   templateUrl: './captura-calificaciones.page.html',
   styleUrls: ['./captura-calificaciones.page.scss'],
-  standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, RouterModule]
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    RouterModule
+  ]
 })
 export class CapturaCalificacionesPage implements OnInit {
-  clases: any[] = [];
-  activeClase: any = null;
-  alumnos: any[] = [];
-  isLoading = true;
-  isSaving = false;
-  trimestreActivo: number = 1;
 
-  // We need to keep track of changes to save them
-  // A map of alumno_id -> calificacion
-  calificacionesEditadas: { [key: number]: number } = {};
+  docenteId = '';
+
+  materias: any[] = [];
+  periodos: any[] = [];
+
+  materiaSeleccionada: any = null;
+  periodoSeleccionado: any = null;
+
+  alumnos: any[] = [];
+
+  isLoading = false;
+  isSaving = false;
+  isPublishing = false;
+
+  
 
   constructor(
-    private navCtrl: NavController,
     private api: ApiService,
-    private toastCtrl: ToastController
+    private auth: AuthService,
+    private toastCtrl: ToastController,
+    private navCtrl: NavController
   ) {}
 
   async ngOnInit() {
-    await this.cargarClases();
+    const profile = await this.auth.getProfile();
+
+    this.docenteId = profile?.id;
+
+    await this.cargarMaterias();
+    await this.cargarPeriodos();
   }
-  
+
   navigateTo(path: string) {
     this.navCtrl.navigateRoot(path);
   }
 
-  async cargarClases() {
-    this.isLoading = true;
-    try {
-      const response = await this.api.get<any>('/docente/mis-clases');
-      this.clases = response.data || [];
-      if (this.clases.length > 0) {
-        this.seleccionarClase(this.clases[0]);
-      }
-    } catch (error) {
-      console.error('Error cargando clases:', error);
-      this.mostrarToast('Error al cargar clases asignadas', 'danger');
-    } finally {
-      this.isLoading = false;
-    }
-  }
+  async cargarMaterias() {
+  try {
 
-  async seleccionarClase(clase: any) {
-    this.activeClase = clase;
-    this.calificacionesEditadas = {};
     this.isLoading = true;
-    this.alumnos = [];
+
+    const response = await this.api.get<any>(
+      `/teacher/${this.docenteId}/clases`
+    );
+
+    console.log('CLASES RESPONSE', response);
+
+    this.materias = response || [];
+
+  } catch (err) {
+
+    console.error(err);
+    this.toast('Error cargando materias', 'danger');
+
+  } finally {
+
+    this.isLoading = false;
+
+  }
+}
+
+  async cargarPeriodos() {
     try {
       const response = await this.api.get<any>(
-        `/docente/clase/${clase.grupos.id}/materia/${clase.materias.id}/alumnos`
+        '/periodos'
       );
-      this.alumnos = response.data || [];
-      
-      // Initialize edit form with existing grades
-      this.alumnos.forEach(alumno => {
-        const califObj = alumno.calificaciones[`trimestre_${this.trimestreActivo}`];
-        if (califObj && califObj.calificacion !== null) {
-          this.calificacionesEditadas[alumno.id] = califObj.calificacion;
-        }
-      });
-    } catch (error) {
-      console.error('Error cargando alumnos:', error);
-      this.mostrarToast('Error al cargar alumnos de la clase', 'danger');
+
+      this.periodos = response || [];
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async seleccionarMateria(materia: any) {
+
+  console.log('CLICK MATERIA', materia);
+
+  this.materiaSeleccionada = materia;
+
+  if (this.periodoSeleccionado) {
+    await this.cargarAlumnos();
+  }
+}
+
+  async seleccionarPeriodo(periodo: any) {
+
+  this.periodoSeleccionado = periodo;
+
+  await this.cargarFirmas();
+
+  if (this.materiaSeleccionada) {
+    await this.cargarAlumnos();
+  }
+}
+
+  firmas: any[] = [];
+
+async cargarFirmas() {
+
+  if (!this.periodoSeleccionado) {
+    return;
+  }
+
+  this.firmas =
+    await this.api.get(
+      `/teacher/periodos/${this.periodoSeleccionado.id}/firmas`
+    );
+
+  console.log('FIRMAS', this.firmas);
+}
+
+  async cargarAlumnos() {
+
+    console.log('MATERIA SELECCIONADA', this.materiaSeleccionada);
+  console.log('PERIODO SELECCIONADO', this.periodoSeleccionado);
+
+    if (!this.materiaSeleccionada || !this.periodoSeleccionado) {
+      return;
+    }
+
+    try {
+      this.isLoading = true;
+
+      const response = await this.api.get<any>(
+  `/teacher/materia/${this.materiaSeleccionada.materia_id}/grupo/${this.materiaSeleccionada.grupo_id}/periodo/${this.periodoSeleccionado.id}`
+);
+
+      this.alumnos = response || [];
+      console.log('ALUMNOS RESPONSE', response);
+
+    } catch (err) {
+      console.error(err);
+
+      this.toast(
+        'Error cargando alumnos',
+        'danger'
+      );
     } finally {
       this.isLoading = false;
     }
   }
 
-  setTrimestre(t: number) {
-    this.trimestreActivo = t;
-    // Re-initialize form
-    this.calificacionesEditadas = {};
-    this.alumnos.forEach(alumno => {
-        const califObj = alumno.calificaciones[`trimestre_${this.trimestreActivo}`];
-        if (califObj && califObj.calificacion !== null) {
-          this.calificacionesEditadas[alumno.id] = califObj.calificacion;
-        }
-      });
-  }
+  actualizarNota(alumno: any, event: any) {
 
-  onCalificacionChange(alumnoId: number, event: any) {
-    const val = parseFloat(event.target.value);
-    if (!isNaN(val)) {
-      this.calificacionesEditadas[alumnoId] = val;
-    } else {
-      delete this.calificacionesEditadas[alumnoId];
-    }
+    const valor = parseFloat(event.target.value);
+
+    alumno.nota = isNaN(valor)
+      ? null
+      : valor;
   }
 
   async guardarCambios() {
-    if (!this.activeClase) return;
+
+  if (!this.periodoSeleccionado) return;
+
+  try {
+
     this.isSaving = true;
 
+    const requests: Promise<any>[] = [];
+
+    for (const alumno of this.alumnos) {
+
+      for (const tarea of (alumno.tareas || [])) {
+
+        requests.push(
+
+          this.api.put('/teacher/calificaciones', {
+
+            id: tarea.id,
+
+            alumno_id: alumno.id,
+
+            materia_id:
+              this.materiaSeleccionada.materia_id,
+
+            periodo_id:
+              this.periodoSeleccionado.id,
+
+            tarea: tarea.tarea,
+
+            nota: tarea.nota,
+
+            comentario: tarea.comentario
+          })
+
+        );
+      }
+    }
+
+    await Promise.all(requests);
+
+    this.toast(
+      'Calificaciones guardadas',
+      'success'
+    );
+
+  } catch (err) {
+
+    console.error(err);
+
+    this.toast(
+      'Error guardando calificaciones',
+      'danger'
+    );
+
+  } finally {
+
+    this.isSaving = false;
+  }
+}
+
+  async publicarBoletas() {
+
+    if (!this.periodoSeleccionado) return;
+
     try {
-      const requests = Object.keys(this.calificacionesEditadas).map(alumnoIdStr => {
-        const alumnoId = parseInt(alumnoIdStr, 10);
-        const calificacion = this.calificacionesEditadas[alumnoId];
-        
-        return this.api.put('/docente/calificaciones', {
-          alumno_id: alumnoId,
-          materia_id: this.activeClase.materias.id,
-          trimestre: this.trimestreActivo,
-          calificacion: calificacion
-        });
-      });
 
-      await Promise.all(requests);
-      this.mostrarToast('Calificaciones guardadas exitosamente', 'success');
-      
-      // Refresh to get DB state
-      await this.seleccionarClase(this.activeClase);
+      this.isPublishing = true;
 
-    } catch (error) {
-      console.error('Error guardando:', error);
-      this.mostrarToast('Error al guardar calificaciones', 'danger');
+      await this.api.post(
+        `/teacher/periodos/${this.periodoSeleccionado.id}/publicar`,
+        {usuarioId: this.docenteId}
+      );
+
+      this.toast(
+        'Boletas publicadas correctamente',
+        'success'
+      );
+
+    } catch (err) {
+
+      console.error(err);
+
+      this.toast(
+        'Error publicando boletas',
+        'danger'
+      );
+
     } finally {
-      this.isSaving = false;
+
+      this.isPublishing = false;
+
     }
   }
 
-  async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastCtrl.create({
-      message: mensaje,
-      duration: 3000,
-      color: color,
-      position: 'top'
-    });
+  async toast(
+    message: string,
+    color: string
+  ) {
+
+    const toast =
+      await this.toastCtrl.create({
+        message,
+        color,
+        duration: 3000,
+        position: 'top'
+      });
+
     await toast.present();
   }
 
-  getIniciales(nombre: string, apellidos: string): string {
-    return (nombre?.charAt(0) || '') + (apellidos?.charAt(0) || '');
+  agregarTarea(alumno: any) {
+
+  if (!alumno.tareas) {
+    alumno.tareas = [];
   }
+
+  alumno.tareas.push({
+    tarea: '',
+    nota: null,
+    comentario: ''
+  });
+}
+
+  getIniciales(nombre: string) {
+
+    return nombre
+      ?.split(' ')
+      ?.map(x => x[0])
+      ?.slice(0, 2)
+      ?.join('')
+      ?.toUpperCase() || '';
+  }
+
+  get firmadas(): number {
+  return this.firmas.filter(f => f.firmada).length;
+}
+
+get pendientes(): number {
+  return this.firmas.filter(f => !f.firmada).length;
+}
 }

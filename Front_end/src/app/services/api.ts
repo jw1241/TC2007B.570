@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase';
 import { environment } from 'src/environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ export class ApiService {
   private baseUrl = environment.apiUrl;
 
   constructor(
-    private supabase: SupabaseService
+    private supabase: SupabaseService,
+    private auth: AuthService
   ) {}
 
   private async getToken(): Promise<string | undefined> {
@@ -161,6 +163,31 @@ console.log(
     );
 
   }
+
+  async getBlob(endpoint: string): Promise<Blob> {
+
+  const token = await this.getToken();
+
+  const response = await fetch(
+    `${this.baseUrl}${endpoint}`,
+    {
+      method: 'GET',
+      headers: {
+        ...(token && {
+          Authorization: `Bearer ${token}`
+        })
+      }
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Request failed (${response.status})`
+    );
+  }
+
+  return response.blob();
+}
 
   async createTicket(
     formData: FormData

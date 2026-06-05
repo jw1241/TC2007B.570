@@ -1,6 +1,4 @@
 <ion-content>
-  
-
       <div class="bg-surface text-on-surface font-body-md min-h-screen pb-24">
 
     <!-- HEADER -->
@@ -89,77 +87,81 @@
   </div>
 </section>
 
-      <!-- CALIFICACIONES -->
-      <section class="flex flex-col gap-3">
-        <h2 class="font-bold text-primary text-lg">Actividad reciente</h2>
-
-        <div class="space-y-3">
-          <div
-            *ngFor="let c of calificaciones"
-            class="bg-surface-container-lowest p-4 rounded-xl flex justify-between items-center"
-          >
-
-            <div>
-              <p class="font-semibold text-primary">
-                {{ c.alumno }}
-              </p>
-              <p class="text-sm text-on-surface-variant">
-                {{ c.materia }} - {{ c.nota }}/10
-              </p>
-            </div>
-
-            <span class="text-lg font-bold text-primary">
-              {{ c.nota }}
-            </span>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- MENSAJES -->
-      <section class="flex flex-col gap-3">
-        <h2 class="font-bold text-primary text-lg">Mensajes</h2>
-
-        <div class="space-y-3">
-          <div
-            *ngFor="let msg of mensajes"
-            class="bg-surface-container-lowest p-4 rounded-xl"
-          >
-            <p class="font-semibold text-primary">
-              {{ msg.remitente }}
-            </p>
-            <p class="text-sm text-on-surface-variant">
-              {{ msg.contenido }}
-            </p>
-
-            <span
-              *ngIf="msg.estado !== 'leido'"
-              class="inline-block mt-2 text-xs bg-red-100 text-red-600 px-2 py-1 rounded"
-            >
-              Nuevo
-            </span>
-          </div>
-        </div>
-      </section>
-
     </main>
 
-    <!-- FLOATING ACTION -->
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button>
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
+  <!-- BOTTOM NAVIGATION -->
+<nav
+  class="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-200 z-50"
+>
+  <div class="grid grid-cols-4 h-16 max-w-container-max mx-auto">
 
-      <ion-fab-list side="top">
-        <ion-fab-button (click)="crearCalificacion()">
-          <ion-icon name="create"></ion-icon>
-        </ion-fab-button>
+    <!-- Inicio -->
+    <button
+      routerLink="/profesor/inicio"
+  routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        home
+      </span>
 
-        <ion-fab-button (click)="abrirMensajes()">
-          <ion-icon name="chatbubbles"></ion-icon>
-        </ion-fab-button>
-      </ion-fab-list>
-    </ion-fab>
+      <span class="text-xs">
+        Inicio
+      </span>
+    </button>
+
+    <!-- Calificaciones -->
+    <button
+      routerLink="/captura-calificaciones"
+      routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        grading
+      </span>
+
+      <span class="text-xs">
+        Calificaciones
+      </span>
+    </button>
+
+    <!-- Mensajes -->
+    <button
+      routerLink="/profesor/mensajes"
+      routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        chat
+      </span>
+
+      <span class="text-xs">
+        Mensajes
+      </span>
+    </button>
+
+    <!-- Perfil -->
+    <button
+      routerLink="/profesor/perfil"
+      routerLinkActive="text-primary"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="flex flex-col items-center justify-center text-on-surface-variant"
+    >
+      <span class="material-symbols-outlined">
+        person
+      </span>
+
+      <span class="text-xs">
+        Perfil
+      </span>
+    </button>
 
   </div>
+</nav>
+
+</div>
+
 </ion-content>

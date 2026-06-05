@@ -10,7 +10,15 @@ interface BoletaResponse {
   periodo: any;
 
   materias: {
+    materia_id: string;
     nombre_materia: string;
+
+    tareas: {
+      nombre: string;
+      calificacion: number;
+      comentario?: string;
+    }[];
+
     promedio: number;
   }[];
 
@@ -35,17 +43,22 @@ interface BoletaResponse {
 export class CalificacionesPadrePage implements OnInit {
 
   alumno: any;
-  periodo: any;
 
-  materias: any[] = [];
+periodo: any;
 
-  promedio = 0;
+materias: any[] = [];
 
-  boletaDisponible = false;
+promedio = 0;
 
-  firmada = false;
+boletaDisponible = false;
 
-  fechaFirma: string | null = null;
+firmada = false;
+
+fechaFirma: string | null = null;
+
+periodos: any[] = [];
+
+selectedPeriodoId!: string;
 
   constructor(
     private api: ApiService,
@@ -58,61 +71,131 @@ export class CalificacionesPadrePage implements OnInit {
   this.alumno =
     this.studentService.getAlumno();
 
+    console.log(this.alumno);
+
   if (!this.alumno) {
     this.router.navigate(['/seleccionar-alumno']);
     return;
   }
 
-  await this.loadGrades();
-}
-
-  async loadGrades() {
-
-  const res = await this.api.get<BoletaResponse>(
-    `/grades/${this.alumno.id}/boleta`
+  this.periodos =
+  await this.api.get<any[]>(
+    '/padre/periodos'
   );
 
-  this.periodo = res.periodo;
+  if (this.periodos.length) {
 
-  this.materias = res.materias;
+    const ultimoPeriodo =
+  this.periodos[this.periodos.length - 1];
 
-  this.promedio = res.promedio;
+this.selectedPeriodoId =
+  ultimoPeriodo.id;
 
-  this.boletaDisponible = res.boletaDisponible;
+    await this.loadGrades();
+  }
+}
 
-  this.firmada = res.firmada;
+async loadGrades() {
 
-  this.fechaFirma = res.fechaFirma;
+  try {
+
+    const res =
+      await this.api.get<BoletaResponse>(
+        `/padre/${this.alumno.id}/boleta/${this.selectedPeriodoId}`
+      );
+
+    this.periodo = res.periodo;
+    this.materias = res.materias;
+    this.promedio = res.promedio;
+    this.boletaDisponible = res.boletaDisponible;
+    this.firmada = res.firmada;
+    this.fechaFirma = res.fechaFirma;
+
+  } catch (error) {
+
+    console.error(error);
+
+    this.materias = [];
+    this.promedio = 0;
+
+  }
+
 }
 
   async firmarBoleta() {
 
     await this.api.post(
-      `/boletas/${this.alumno.id}/sign`,
-      {}
-    );
+  `/padre/${this.alumno.id}/firmar`,
+  {
+    periodo_id: this.selectedPeriodoId
+  }
+);
 
     await this.loadGrades();
 
   }
 
-  viewBoleta() {
+  async viewBoleta() {
 
-    window.open(
-      `/api/boletas/${this.alumno.id}/pdf`,
-      '_blank'
-    );
+  try {
+
+    const blob =
+      await this.api.getBlob(
+        `/padre/${this.alumno.id}/pdf/${this.selectedPeriodoId}`
+      );
+
+    const url =
+      window.URL.createObjectURL(blob);
+
+    window.open(url, '_blank');
+
+  } catch (error) {
+
+    console.error(error);
 
   }
 
-  downloadBoleta() {
+}
 
-    window.open(
-      `/api/boletas/${this.alumno.id}/pdf?download=1`,
-      '_blank'
-    );
+  async downloadBoleta() {
+
+  try {
+
+    const blob =
+      await this.api.getBlob(
+        `/padre/${this.alumno.id}/pdf/${this.selectedPeriodoId}?download=1`
+      );
+
+    const url =
+      window.URL.createObjectURL(blob);
+
+    const a =
+      document.createElement('a');
+
+    a.href = url;
+
+    a.download =
+      `boleta-${this.alumno.matricula}.pdf`;
+
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+
+    console.error(error);
 
   }
+
+}
+
+async onPeriodoChange(event: any) {
+
+  this.selectedPeriodoId =
+    event.detail.value;
+
+  await this.loadGrades();
+}
 
   navigateTo(path: string) {
     this.router.navigate([path]);

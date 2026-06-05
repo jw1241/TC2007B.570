@@ -271,6 +271,425 @@ router.get('/:docenteId/dashboard', async (req, res) => {
   }
 });
 
+router.get('/:docenteId/clases', async (req, res) => {
+  const { docenteId } = req.params;
 
+  const { data, error } = await supabaseAdmin
+    .from('asignaciones_docentes')
+    .select(`
+      grupo_id,
+      materia_id,
+      grupos:grupo_id (
+        id,
+        grado,
+        seccion
+      ),
+      materias:materia_id (
+        id,
+        nombre_materia
+      )
+    `)
+    .eq('docente_id', docenteId);
+
+  if (error) {
+    return res.status(500).json(error);
+  }
+
+  const clases = (data || []).map(c => ({
+    grupo_id: c.grupo_id,
+    materia_id: c.materia_id,
+    nombre_materia: c.materias?.nombre_materia,
+    grado: c.grupos?.grado,
+    seccion: c.grupos?.seccion
+  }));
+
+  res.json(clases);
+});
+
+router.get('/periodos', async (req, res) => {
+
+  const { data, error } = await supabaseAdmin
+    .from('periodos_evaluacion')
+    .select('*')
+    .order('mes_inicio');
+
+  if (error) return res.status(500).json(error);
+
+  res.json(data || []);
+});
+
+router.get(
+  '/grupo/:grupoId/materia/:materiaId/periodo/:periodoId/alumnos',
+  async (req, res) => {
+
+    const {
+      grupoId,
+      materiaId,
+      periodoId
+    } = req.params;
+
+    const { data: alumnos, error } = await supabaseAdmin
+      .from('alumnos')
+      .select(`
+        id,
+        matricula,
+        nombre_completo
+      `)
+      .eq('grupo_id', grupoId)
+      .order('nombre_completo');
+
+    if (error) {
+      return res.status(500).json(error);
+    }
+
+    const alumnoIds = alumnos.map(a => a.id);
+
+    const { data: calificaciones } = await supabaseAdmin
+      .from('calificaciones')
+      .select('*')
+      .eq('materia_id', materiaId)
+      .eq('periodo_id', periodoId)
+      .in('alumno_id', alumnoIds);
+
+    const gradesMap = new Map();
+
+    (calificaciones || []).forEach(c => {
+      gradesMap.set(c.alumno_id, c);
+    });
+
+    const response = alumnos.map(a => ({
+      id: a.id,
+      matricula: a.matricula,
+      nombre_completo: a.nombre_completo,
+      nota: gradesMap.get(a.id)?.nota ?? null,
+      comentario: gradesMap.get(a.id)?.comentario ?? ''
+    }));
+
+    res.json(response);
+  }
+);
+
+router.put('/calificaciones', async (req, res) => {
+
+  const {
+    id,
+    alumno_id,
+    materia_id,
+    periodo_id,
+    tarea,
+    nota,
+    comentario
+  } = req.body;
+
+  if (id) {
+
+    const { error } = await supabaseAdmin
+      .from('calificaciones')
+      .update({
+        tarea,
+        nota,
+        comentario
+      })
+      .eq('id', id);
+
+    if (error) return res.status(500).json(error);
+
+  } else {
+
+    const { error } = await supabaseAdmin
+      .from('calificaciones')
+      .insert({
+        alumno_id,
+        materia_id,
+        periodo_id,
+        tarea,
+        nota,
+        comentario
+      });
+
+    if (error) return res.status(500).json(error);
+  }
+
+  res.json({ success: true });
+});
+
+router.get('/periodos/:periodoId/status', async (req, res) => {
+
+  const { periodoId } = req.params;
+
+  const { data } = await supabaseAdmin
+    .from('boletas_publicadas')
+    .select('*')
+    .eq('periodo_id', periodoId)
+    .maybeSingle();
+
+  res.json({
+    publicada: data?.publicada || false
+  });
+});
+
+router.post('/periodos/:periodoId/publicar', async (req, res) => {
+
+  const { periodoId } = req.params;
+  const { usuarioId } = req.body;
+
+  console.log(usuarioId)
+
+  const { error } = await supabaseAdmin
+    .from('boletas_publicadas')
+    .upsert({
+      periodo_id: periodoId,
+      publicada: true,
+      publicada_por: usuarioId,
+      publicada_en: new Date()
+    });
+
+  if (error) {
+    return res.status(500).json(error);
+  }
+
+  res.json({
+    success: true
+  });
+});
+
+router.get(
+  '/alumnos/:alumnoId/boleta/:periodoId',
+  async (req, res) => {
+
+    const { alumnoId, periodoId } = req.params;
+
+    const { data, error } = await supabaseAdmin
+      .from('calificaciones')
+      .select(`
+        nota,
+        comentario,
+        materias (
+          nombre_materia
+        )
+      `)
+      .eq('alumno_id', alumnoId)
+      .eq('periodo_id', periodoId);
+
+    if (error) {
+      return res.status(500).json(error);
+    }
+
+    res.json(data || []);
+  }
+);
+
+router.get(
+  '/materia/:materiaId/grupo/:grupoId/periodo/:periodoId',
+  async (req, res) => {
+
+    const { materiaId, grupoId, periodoId } = req.params;
+
+    try {
+
+      const { data: alumnos, error } = await supabaseAdmin
+        .from('alumnos')
+        .select(`
+          id,
+          nombre_completo,
+          matricula
+        `)
+        .eq('grupo_id', grupoId)
+        .order('nombre_completo');
+
+      if (error) {
+        return res.status(500).json(error);
+      }
+
+      const alumnoIds = (alumnos || []).map(a => a.id);
+
+      const { data: calificaciones, error: gradesError } =
+        await supabaseAdmin
+          .from('calificaciones')
+          .select(`
+            id,
+            alumno_id,
+            tarea,
+            nota,
+            comentario
+          `)
+          .eq('materia_id', materiaId)
+          .eq('periodo_id', periodoId)
+          .in('alumno_id', alumnoIds);
+
+      if (gradesError) {
+        return res.status(500).json(gradesError);
+      }
+
+      const resultado = (alumnos || []).map(alumno => ({
+
+  id: alumno.id,
+
+  nombre_completo: alumno.nombre_completo,
+
+  matricula: alumno.matricula,
+
+  tareas: (calificaciones || [])
+    .filter(c => c.alumno_id === alumno.id)
+    .map(c => ({
+      id: c.id,
+      tarea: c.tarea,
+      nota: c.nota,
+      comentario: c.comentario
+    }))
+}));
+
+res.json(resultado);
+
+    } catch (err) {
+
+      console.error(err);
+
+      res.status(500).json({
+        message: 'Error obteniendo alumnos'
+      });
+    }
+  }
+);
+
+router.post('/calificaciones', async (req, res) => {
+
+  const {
+    alumno_id,
+    materia_id,
+    periodo_id,
+    tarea,
+    nota,
+    comentario
+  } = req.body;
+
+  const { data, error } = await supabaseAdmin
+    .from('calificaciones')
+    .insert({
+      alumno_id,
+      materia_id,
+      periodo_id,
+      tarea,
+      nota,
+      comentario
+    })
+    .select()
+    .single();
+
+  if (error) {
+    return res.status(500).json(error);
+  }
+
+  res.json(data);
+});
+
+router.put('/calificaciones/:id', async (req, res) => {
+
+  const { id } = req.params;
+
+  const {
+    tarea,
+    nota,
+    comentario
+  } = req.body;
+
+  const { error } = await supabaseAdmin
+    .from('calificaciones')
+    .update({
+      tarea,
+      nota,
+      comentario
+    })
+    .eq('id', id);
+
+  if (error) {
+    return res.status(500).json(error);
+  }
+
+  res.json({
+    success: true
+  });
+});
+
+router.delete('/calificaciones/:id', async (req, res) => {
+
+  const { id } = req.params;
+
+  const { error } = await supabaseAdmin
+    .from('calificaciones')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    return res.status(500).json(error);
+  }
+
+  res.json({
+    success: true
+  });
+});
+
+router.get(
+  '/periodos/:periodoId/firmas',
+  async (req, res) => {
+
+    const { periodoId } = req.params;
+
+    // all student-parent relationships
+    const { data: parentescos, error } =
+      await supabaseAdmin
+        .from('parentescos')
+        .select(`
+          alumno_id,
+          padre_id,
+          alumnos (
+            nombre_completo
+          ),
+          usuarios (
+            nombre_completo
+          )
+        `);
+
+    if (error) {
+      return res.status(500).json(error);
+    }
+
+    const { data: firmas, error: firmasError } =
+  await supabaseAdmin
+    .from('firmas_boletas')
+    .select('*')
+    .eq('periodo_id', periodoId);
+
+console.log('PERIODO ID', periodoId);
+console.log('FIRMAS DATA', firmas);
+console.log('FIRMAS ERROR', firmasError);
+
+    const firmasMap =
+  new Map(
+    (firmas || []).map(f => [
+      `${f.alumno_id}-${f.padre_id}`,
+      f
+    ])
+  );
+
+const resultado =
+  parentescos.map(p => {
+
+    const firma =
+      firmasMap.get(
+        `${p.alumno_id}-${p.padre_id}`
+      );
+
+    return {
+      alumno: p.alumnos.nombre_completo,
+      padre: p.usuarios.nombre_completo,
+      firmada: !!firma,
+      fechaFirma: firma?.firmado_en || null
+    };
+  });
+
+    res.json(resultado);
+  }
+);
 
 module.exports = router;

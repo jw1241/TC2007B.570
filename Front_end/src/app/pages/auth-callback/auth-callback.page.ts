@@ -5,39 +5,42 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
 
+import { ApiService } from '../../services/api';
+
 @Component({
-selector: 'app-auth-callback',
-templateUrl: './auth-callback.page.html',
-styleUrls: ['./auth-callback.page.scss'],
-standalone: true,
-imports: [
-CommonModule,
-FormsModule,
-IonContent
-]
+  selector: 'app-auth-callback',
+  templateUrl: './auth-callback.page.html',
+  styleUrls: ['./auth-callback.page.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonContent
+  ]
 })
 export class AuthCallbackPage implements OnInit {
 
-password = '';
-confirmPassword = '';
+  password = '';
+  confirmPassword = '';
 
-showPassword = false;
-showConfirmPassword = false;
+  showPassword = false;
+  showConfirmPassword = false;
 
-loading = false;
+  loading = false;
 
-passwordRules = {
-length: false,
-upper: false,
-lower: false,
-number: false,
-special: false
-};
+  passwordRules = {
+    length: false,
+    upper: false,
+    lower: false,
+    number: false,
+    special: false
+  };
 
-constructor(
-private supabaseService: SupabaseService,
-private router: Router
-) {}
+  constructor(
+    private supabaseService: SupabaseService,
+    private router: Router,
+    private api: ApiService
+  ) {}
 
 async ngOnInit() {
 
@@ -134,67 +137,12 @@ async updatePassword() {
 
     console.log('STEP 3');
 
-    // UPDATE PASSWORD
-    const {
-      data: passwordData,
-      error: passwordError
-    } =
-      await supabase.auth.updateUser({
-
-        password: this.password
-
-      });
-
-    const loginTest =
-  await supabase.auth.signInWithPassword({
-
-    email: user.email!,
-    password: this.password
-
-  });
-
-console.log('LOGIN TEST:', loginTest);
+    // UPDATE PASSWORD VIA SECURE BACKEND API
+    await this.api.post('/auth/update-password', {
+      newPassword: this.password
+    });
 
     console.log('STEP 4');
-    console.log('PASSWORD DATA:', passwordData);
-    console.log('PASSWORD ERROR:', passwordError);
-
-    const sessionCheck =
-  await supabase.auth.getSession();
-
-console.log(sessionCheck);
-
-    if (passwordError) {
-
-      alert(
-        passwordError.message
-      );
-
-      return;
-    }
-
-    console.log('STEP 5');
-
-    // UPDATE PROFILE
-    const {
-      data: updatedUser,
-      error: updateError
-    } =
-      await supabase
-        .from('usuarios')
-        .update({
-
-          activo: true,
-          activado_en:
-            new Date().toISOString()
-
-        })
-        .eq('id', user.id)
-        .select();
-
-    console.log('STEP 6');
-    console.log('UPDATED USER:', updatedUser);
-    console.log('UPDATE ERROR:', updateError);
 
     alert(
       'Cuenta activada correctamente'

@@ -155,13 +155,21 @@ router.get("/chat/:destinatario_id", authMiddleware, async (req, res, next) => {
       docente_id = remitenteId;
     }
 
-    let { data: conversacion } = await supabaseAdmin
+    const alumno_id = req.query.alumno_id || null;
+
+    let query = supabaseAdmin
       .from("conversaciones")
       .select("id")
       .eq("padre_id", padre_id)
-      .eq("docente_id", docente_id)
-      .eq("alumno_id", alumno_id)
-      .maybeSingle();
+      .eq("docente_id", docente_id);
+    
+    if (alumno_id) {
+        query = query.eq("alumno_id", alumno_id);
+    } else {
+        query = query.is("alumno_id", null);
+    }
+    
+    let { data: conversacion } = await query.maybeSingle();
 
     if (!conversacion) {
       const { data: nueva, error } = await supabaseAdmin
@@ -201,7 +209,8 @@ router.get("/chat/:destinatario_id", authMiddleware, async (req, res, next) => {
 router.post("/enviar", authMiddleware, async (req, res, next) => {
   try {
     const schema = Joi.object({
-      alumno_id: Joi.string().uuid().required(),
+      alumno_id: Joi.any().required(),
+      docente_id: Joi.any().optional(),
       contenido: Joi.string().min(1).max(1000).required()
     });
 
@@ -215,70 +224,105 @@ router.post("/enviar", authMiddleware, async (req, res, next) => {
       return res.status(404).json({ error: "Perfil no encontrado" });
     }
 
-    const { alumno_id, contenido } = value;
+    const { alumno_id, docente_id, contenido } = value;
     const remitenteId = usuario.id;
-
-    // 1. GET ALL PARENTS
-    const { data: parentescos } = await supabaseAdmin
-      .from("parentescos")
-      .select("padre_id")
-      .eq("alumno_id", alumno_id);
-
-    const padresIds = (parentescos || []).map(p => p.padre_id);
-
-    if (!padresIds.length) {
-      return res.status(400).json({ error: "El alumno no tiene padres" });
-    }
-
     const resultados = [];
 
-    // 2. SEND TO EACH PARENT
-    for (const padre_id of padresIds) {
+    if (usuario.rol_id === ROLES.DOCENTE) {
+      // 1. GET ALL PARENTS
+      const { data: parentescos } = await supabaseAdmin
+        .from("parentescos")
+        .select("padre_id")
+        .eq("alumno_id", alumno_id);
 
-  let { data: conversacion } = await supabaseAdmin
-    .from("conversaciones")
-    .select("id")
-    .eq("padre_id", padre_id)
-    .eq("docente_id", remitenteId)
-    .eq("alumno_id", alumno_id)
-    .maybeSingle();
+      const padresIds = (parentescos || []).map(p => p.padre_id);
 
-  let conversacionId = conversacion?.id;
+      if (!padresIds.length) {
+        return res.status(400).json({ error: "El alumno no tiene padres" });
+      }
 
-  if (!conversacionId) {
-    const { data: nueva, error: convErr } = await supabaseAdmin
-      .from("conversaciones")
-      .insert({
-        padre_id,
-        docente_id: remitenteId,
-        alumno_id
-      })
-      .select("id")
-      .single();
+      // 2. SEND TO EACH PARENT
+      for (const padre_id of padresIds) {
+        let { data: conversacion } = await supabaseAdmin
+          .from("conversaciones")
+          .select("id")
+          .eq("padre_id", padre_id)
+          .eq("docente_id", remitenteId)
+          .eq("alumno_id", alumno_id)
+          .maybeSingle();
 
-    if (convErr) throw convErr;
+        let conversacionId = conversacion?.id;
 
-    conversacionId = nueva.id;
-  }
+        if (!conversacionId) {
+          const { data: nueva, error: convErr } = await supabaseAdmin
+            .from("conversaciones")
+            .insert({ padre_id, docente_id: remitenteId, alumno_id })
+            .select("id")
+            .single();
 
-  const { data: mensaje, error: msgErr } = await supabaseAdmin
-    .from("mensajes")
-    .insert({
-      conversacion_id: conversacionId,   // 👈 ALWAYS USE THIS
-      remitente_id: remitenteId,
-      contenido,
-      estado: "enviado"
-    })
-    .select("*")
-    .single();
+          if (convErr) throw convErr;
+          conversacionId = nueva.id;
+        }
 
-  if (msgErr) throw msgErr;
+        const { data: mensaje, error: msgErr } = await supabaseAdmin
+          .from("mensajes")
+          .insert({
+            conversacion_id: conversacionId,
+            remitente_id: remitenteId,
+            contenido,
+            estado: "enviado"
+          })
+          .select("*")
+          .single();
 
-  resultados.push(mensaje);
-}
+        if (msgErr) throw msgErr;
+        resultados.push(mensaje);
+      }
+    } else if (usuario.rol_id === ROLES.PADRE) {
+      if (!docente_id) {
+        return res.status(400).json({ error: "docente_id es requerido para padres" });
+      }
+      
+      const padre_id = remitenteId;
+
+      let { data: conversacion } = await supabaseAdmin
+        .from("conversaciones")
+        .select("id")
+        .eq("padre_id", padre_id)
+        .eq("docente_id", docente_id)
+        .eq("alumno_id", alumno_id)
+        .maybeSingle();
+
+      let conversacionId = conversacion?.id;
+
+      if (!conversacionId) {
+        const { data: nueva, error: convErr } = await supabaseAdmin
+          .from("conversaciones")
+          .insert({ padre_id, docente_id, alumno_id })
+          .select("id")
+          .single();
+
+        if (convErr) throw convErr;
+        conversacionId = nueva.id;
+      }
+
+      const { data: mensaje, error: msgErr } = await supabaseAdmin
+        .from("mensajes")
+        .insert({
+          conversacion_id: conversacionId,
+          remitente_id: remitenteId,
+          contenido,
+          estado: "enviado"
+        })
+        .select("*")
+        .single();
+
+      if (msgErr) throw msgErr;
+      resultados.push(mensaje);
+    }
 
     return res.status(201).json({
-      message: "Mensaje enviado a todos los padres",
+      message: "Mensaje procesado correctamente",
       data: resultados
     });
 
@@ -496,7 +540,7 @@ router.get("/alumno/:alumno_id/chat", authMiddleware, async (req, res, next) => 
       .eq("alumno_id", alumnoId);
 
     const padresIds = (parentescos || []).map(p => p.padre_id);
-    console('padre',padresIds)
+    console.log('padre',padresIds)
 
     const allMessages = [];
 

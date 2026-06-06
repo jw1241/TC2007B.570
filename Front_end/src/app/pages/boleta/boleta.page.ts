@@ -82,18 +82,9 @@ export class BoletaPage implements OnInit {
   }
 
   async descargarBoleta() {
-    // Para descargar el PDF generamos un request nativo manejando el token para no bloquear el popup o usar window.open si el token está en cookie.
-    // Como usamos token en header, hacemos un fetch blob manual usando ApiService o lo redirigimos.
     try {
-      const response = await fetch(`${environment.apiUrl}/boletas/${this.alumno.id}/descargar-pdf`, {
-        headers: {
-          'Authorization': `Bearer ${(await this.getSupabaseToken())}`
-        }
-      });
+      const blob = await this.api.getBlob(`/boletas/${this.alumno.id}/descargar-pdf`);
       
-      if (!response.ok) throw new Error('Error al descargar');
-      
-      const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -108,11 +99,6 @@ export class BoletaPage implements OnInit {
       console.error('Error descargar PDF', error);
       this.mostrarToast('Error al generar PDF', 'danger');
     }
-  }
-  
-  private async getSupabaseToken() {
-    const { data } = await this.api['supabase'].supabase.auth.getSession();
-    return data.session?.access_token;
   }
 
   async mostrarToast(mensaje: string, color: string) {

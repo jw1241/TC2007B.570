@@ -151,8 +151,7 @@ router.post(
       // INVITE USER
       // =====================================
 
-      const temporaryPassword =
-  Math.random().toString(36).slice(-10) + "A1!";
+      const temporaryPassword = require('crypto').randomBytes(8).toString('hex') + "A1!";
 
 const {
   data,

@@ -47,7 +47,7 @@ router.get(
       .select(`
         id,
         relacion,
-        alumnos ( id, nombre, apellidos, matricula, fecha_nacimiento, grupos ( id, nombre, grado ) )
+        alumnos ( id, nombre_completo, matricula, fecha_nacimiento, grupo_id, grupos ( id, nombre, grado, seccion ) )
       `)
       .eq("padre_id", padreId);
 

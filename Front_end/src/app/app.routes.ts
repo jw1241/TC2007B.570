@@ -155,25 +155,33 @@ export const routes: Routes = [
   },   
 
   {
-  path: 'calificaciones-padre',
-  loadComponent: () =>
-    import('./pages/calificaciones-padre/calificaciones-padre.component')
-      .then(m => m.CalificacionesPadrePage)
-},
-{
+    path: 'calificaciones-padre',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [3] },
+    loadComponent: () =>
+      import('./pages/calificaciones-padre/calificaciones-padre.component')
+        .then(m => m.CalificacionesPadrePage)
+  },
+  {
     path: 'inicio',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [2] },
     loadComponent: () =>
       import('./pages/inicio-resumen-profesor/inicio-resumen-profesor.page')
         .then(m => m.InicioResumenProfesorPage)
   },
   {
     path: 'admin-usuario',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [1] },
     loadComponent: () =>
       import('./pages/admin-usuario/admin-usuario.component')
         .then(m => m.AdminImportPage)
   },
   {
     path: 'tiquete',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [1] },
     loadComponent: () =>
       import('./pages/inicio-resumen-administrador/inicio-resumen-administrador.page')
         .then(m => m.InicioResumenAdministradorPage)

@@ -1,311 +1,52 @@
 import { Injectable } from '@angular/core';
-import { SupabaseService } from './supabase';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { AuthService } from './auth.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-
   private baseUrl = environment.apiUrl;
 
-  constructor(
-    private supabase: SupabaseService,
-    private auth: AuthService
-  ) {}
+  constructor(private http: HttpClient) {}
 
-  private async getToken(): Promise<string | undefined> {
-
-    const { data } =
-      await this.supabase.supabase.auth.getSession();
-
-    return data.session?.access_token;
-
-  }
-
-  private async request(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<any> {
-
-    const token =
-  await this.getToken();
-
-console.log(
-  'ACCESS TOKEN:',
-  token
-);
-
-    const controller =
-      new AbortController();
-
-    const timeout =
-      setTimeout(
-        () => controller.abort(),
-        15000
-      );
-
+  private async handleRequest<T>(request: Promise<T>): Promise<T> {
     try {
-
-      const response =
-        await fetch(
-          `${this.baseUrl}${endpoint}`,
-          {
-            ...options,
-            signal: controller.signal,
-            headers: {
-              ...(options.headers || {}),
-              ...(token && {
-                Authorization:
-                  `Bearer ${token}`
-              })
-            }
-          }
-        );
-
-      let data: any = null;
-
-      try {
-
-        data =
-          await response.json();
-
-      } catch {
-
-        data = null;
-
+      return await request;
+    } catch (error: any) {
+      if (error instanceof HttpErrorResponse) {
+        throw new Error(error.error?.error?.message || error.error?.message || error.message || 'Request failed');
       }
-
-      if (!response.ok) {
-
-        throw new Error(
-          data?.error?.message ||
-          `Request failed (${response.status})`
-        );
-
-      }
-
-      return data;
-
-    } finally {
-
-      clearTimeout(timeout);
-
-    }
-
-  }
-
-  async get<T>(
-    endpoint: string
-  ): Promise<T> {
-
-    return this.request(
-  endpoint,
-  {
-    method: 'GET',
-    headers: {
-      'Content-Type':
-        'application/json'
+      throw error;
     }
   }
-) as Promise<T>;
 
+  async get<T>(endpoint: string): Promise<T> {
+    return this.handleRequest(firstValueFrom(this.http.get<T>(`${this.baseUrl}${endpoint}`)));
   }
 
-  async post<T>(
-    endpoint: string,
-    body: any
-  ): Promise<T> {
-
-    return this.request(
-      endpoint,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type':
-            'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-    );
-
+  async post<T>(endpoint: string, body: any): Promise<T> {
+    return this.handleRequest(firstValueFrom(this.http.post<T>(`${this.baseUrl}${endpoint}`, body)));
   }
 
-  async put<T>(
-    endpoint: string,
-    body: any
-  ): Promise<T> {
-
-    return this.request(
-      endpoint,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type':
-            'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-    );
-
+  async put<T>(endpoint: string, body: any): Promise<T> {
+    return this.handleRequest(firstValueFrom(this.http.put<T>(`${this.baseUrl}${endpoint}`, body)));
   }
 
-  async delete<T>(
-    endpoint: string
-  ): Promise<T> {
-
-    return this.request(
-      endpoint,
-      {
-        method: 'DELETE'
-      }
-    );
-
+  async delete<T>(endpoint: string): Promise<T> {
+    return this.handleRequest(firstValueFrom(this.http.delete<T>(`${this.baseUrl}${endpoint}`)));
   }
 
   async getBlob(endpoint: string): Promise<Blob> {
-
-  const token = await this.getToken();
-
-  const response = await fetch(
-    `${this.baseUrl}${endpoint}`,
-    {
-      method: 'GET',
-      headers: {
-        ...(token && {
-          Authorization: `Bearer ${token}`
-        })
-      }
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      `Request failed (${response.status})`
-    );
+    return this.handleRequest(firstValueFrom(this.http.get(`${this.baseUrl}${endpoint}`, { responseType: 'blob' })));
   }
 
-  return response.blob();
-}
-
-  async createTicket(
-    formData: FormData
-  ): Promise<any> {
-
-    const token =
-      await this.getToken();
-
-    const controller =
-      new AbortController();
-
-    const timeout =
-      setTimeout(
-        () => controller.abort(),
-        15000
-      );
-
-    try {
-
-      const response =
-        await fetch(
-          `${this.baseUrl}/soporte/soporte-ticket`,
-          {
-            method: 'POST',
-            signal: controller.signal,
-            headers: {
-              ...(token && {
-                Authorization:
-                  `Bearer ${token}`
-              })
-            },
-            body: formData
-          }
-        );
-
-      let data: any = null;
-
-      try {
-
-        data =
-          await response.json();
-
-      } catch {
-
-        data = null;
-
-      }
-
-      if (!response.ok) {
-
-        throw new Error(
-          data?.error?.message ||
-          `Ticket creation failed (${response.status})`
-        );
-
-      }
-
-      return data;
-
-    } finally {
-
-      clearTimeout(timeout);
-
-    }
-
+  async createTicket(formData: FormData): Promise<any> {
+    return this.handleRequest(firstValueFrom(this.http.post(`${this.baseUrl}/soporte/soporte-ticket`, formData)));
   }
-  async upload<T>(
-  endpoint: string,
-  formData: FormData
-): Promise<T> {
 
-  const token = await this.getToken();
-
-  const controller = new AbortController();
-
-  const timeout = setTimeout(
-    () => controller.abort(),
-    15000
-  );
-
-  try {
-
-    const response = await fetch(
-      `${this.baseUrl}${endpoint}`,
-      {
-        method: 'POST',
-        signal: controller.signal,
-        headers: {
-          ...(token && {
-            Authorization: `Bearer ${token}`
-          })
-          // ❌ DO NOT set Content-Type here
-        },
-        body: formData
-      }
-    );
-
-    let data: any = null;
-
-    try {
-      data = await response.json();
-    } catch {
-      data = null;
-    }
-
-    if (!response.ok) {
-      throw new Error(
-        data?.error?.message ||
-        `Upload failed (${response.status})`
-      );
-    }
-
-    return data;
-
-  } finally {
-    clearTimeout(timeout);
+  async upload<T>(endpoint: string, formData: FormData): Promise<T> {
+    return this.handleRequest(firstValueFrom(this.http.post<T>(`${this.baseUrl}${endpoint}`, formData)));
   }
-}
-  
-
 }

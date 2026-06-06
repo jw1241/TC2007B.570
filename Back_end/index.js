@@ -233,10 +233,6 @@ app.use(
   regRoutes
 );
 
-app.use(
-  "/api/items",
-  itemRoutes
-);
 
 /**
  * PROTECTED ADMIN ROUTES
@@ -248,7 +244,12 @@ app.use(
   adminRoutes
 );
 
-app.use('/api/periodos', periodosRoutes);
+app.use(
+  '/api/periodos',
+  authMiddleware,
+  requireRole([ROLES.ADMIN, ROLES.DOCENTE]),
+  periodosRoutes
+);
 
 /**
  * PROTECTED PADRE ROUTES
@@ -297,7 +298,6 @@ app.use(
   gradesRoutes
 );
 
-app.use("/api/boletas", boletasRoutes);
 
 
 app.use(

@@ -129,10 +129,6 @@ router.post(
 const fileName =
   `${ticket.id}/${Date.now()}-${safeName}`;
 
-  uploadedFiles.push({
-  nombre: safeName,
-  archivo_url: publicUrlData.publicUrl
-});
 
           const {
             error: uploadError
@@ -158,6 +154,11 @@ const fileName =
             .storage
             .from("soporte-archivos")
             .getPublicUrl(fileName);
+
+          uploadedFiles.push({
+            nombre: safeName,
+            archivo_url: publicUrlData.publicUrl
+          });
 
           await supabaseAdmin
             .from("soporte_archivos")

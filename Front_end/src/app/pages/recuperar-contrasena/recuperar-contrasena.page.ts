@@ -5,6 +5,8 @@ import { IonicModule, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase';
 
+import { ApiService } from '../../services/api';
+
 @Component({
   selector: 'app-recuperar-contrasena',
   templateUrl: './recuperar-contrasena.page.html',
@@ -21,7 +23,8 @@ export class RecuperarContrasenaPage {
   constructor(
     private router: Router,
     private supabaseService: SupabaseService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private api: ApiService
   ) {}
 
   volver() {
@@ -47,61 +50,14 @@ export class RecuperarContrasenaPage {
 
   try {
 
-    // CHECK IF USER EXISTS
-    const {
-      data: existingUser
-    } =
-      await this.supabaseService.supabase
-        .from('usuarios')
-        .select('email')
-        .eq('email', this.email)
-        .maybeSingle();
-
-    // EMAIL NOT FOUND
-    if (!existingUser) {
-
-      await this.showAlert(
-        'Correo no encontrado',
-        'No existe una cuenta registrada con este correo electrónico.'
-      );
-
-      return;
-
-    }
-
-    // SEND RECOVERY EMAIL
-    const { error } =
-      await this.supabaseService.supabase.auth
-        .resetPasswordForEmail(
-          this.email,
-          {
-
-            redirectTo:
-              'http://localhost:8100/reset-password'
-
-          }
-        );
-
-    if (error) {
-
-      console.error(error);
-
-      await this.showAlert(
-        'Error',
-        'No se pudo enviar el correo de recuperación.'
-      );
-
-      return;
-
-    }
+    await this.api.post('/auth/recuperar-contrasena', { email: this.email });
 
     // SUCCESS
     await this.showAlert(
       'Correo enviado',
-      'Te enviamos un enlace para restablecer tu contraseña.'
+      'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
     );
 
-    // OPTIONAL:
     // RETURN TO LOGIN PAGE
     this.router.navigate([
       '/iniciar-sesion'

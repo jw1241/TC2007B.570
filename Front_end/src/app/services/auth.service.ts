@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from './supabase';
+import { ApiService } from './api';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
   constructor(
     private router: Router,
-    private supabase: SupabaseService
+    private supabase: SupabaseService,
+    private api: ApiService
   ) {}
 
   async login(email: string, password: string) {
@@ -25,21 +27,26 @@ export class AuthService {
   if (!data.user) return { success: false };
 
   // 🔥 GET PROFILE (IMPORTANT)
-  const { data: profile } = await this.supabase.supabase
-    .from('usuarios')
-    .select('id')
-    .eq('auth_user_id', data.user.id)
-    .maybeSingle();
+  try {
+    const profileRes = await this.api.get<any>('/auth/me');
+    const profile = profileRes.user;
 
-  if (profile) {
-    localStorage.setItem('user_id', profile.id); // ✅ THIS is correct ID
+    if (profile) {
+      localStorage.setItem('user_id', profile.id); // ✅ THIS is correct ID
+    }
+
+    return {
+      success: true,
+      user: data.user,
+      profile
+    };
+  } catch (err) {
+    return {
+      success: true,
+      user: data.user,
+      profile: null
+    };
   }
-
-  return {
-    success: true,
-    user: data.user,
-    profile
-  };
 }
 
   async getUsuario() {
@@ -47,7 +54,7 @@ export class AuthService {
       await this.supabase.supabase.auth.getUser();
 
       if (data.user) {
-  localStorage.setItem('user_id', data.user.id);
+  localStorage.setItem('auth_user_id', data.user.id);
 }
 
     return data.user;
@@ -76,53 +83,12 @@ export class AuthService {
   }
   
 async getProfile() {
-
-  /**
-   * GET AUTH USER
-   */
-  const {
-    data: { user }
-  } =
-    await this.supabase
-      .supabase
-      .auth
-      .getUser();
-
-  if (!user) return null;
-
-  /**
-   * FIND usuario PROFILE
-   * USING auth_user_id
-   */
-  const {
-    data,
-    error
-  } =
-    await this.supabase
-      .supabase
-      .from('usuarios')
-      .select('*')
-      .eq(
-        'auth_user_id',
-        user.id
-      )
-      .eq('activo', true)
-      .maybeSingle();
-
-  
-
-  if (error) {
-
-    console.error(
-      'PROFILE ERROR:',
-      error
-    );
-
+  try {
+    const res = await this.api.get<any>('/auth/me');
+    return res.user || null;
+  } catch (err) {
+    console.error('PROFILE ERROR:', err);
     return null;
-
   }
-
-  return data;
-
 }
 }

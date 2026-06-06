@@ -243,6 +243,17 @@ router.post("/update-password", async (req, res, next) => {
       });
     }
 
+    const { data: userData } = await authClient.auth.getUser();
+
+    await supabaseAdmin
+      .from('usuarios')
+      .update({
+        activo: true,
+        requiere_cambio_password: false,
+        activado_en: new Date().toISOString()
+      })
+      .eq('auth_user_id', userData.user.id);
+
     res.json({ message: "Password updated successfully" });
   } catch (err) {
     next(err);

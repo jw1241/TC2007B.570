@@ -101,6 +101,7 @@ this.mensajes =
 
   await this.api.post('/mensajes/enviar', {
     alumno_id: this.selectedStudent.id,
+    docente_id: this.selectedTeacher.id,
     contenido: this.mensajeTexto
   });
 

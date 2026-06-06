@@ -4,8 +4,10 @@ import { SupabaseService } from './supabase';
 import { ApiService } from './api';
 export const roleGuard: CanActivateFn = async (route: ActivatedRouteSnapshot) => {
 
+
   const router = inject(Router);
   const supabase = inject(SupabaseService);
+  const api = inject(ApiService);
 
   const allowedRoles = route.data?.['roles'] ?? [];
 
@@ -19,7 +21,6 @@ export const roleGuard: CanActivateFn = async (route: ActivatedRouteSnapshot) =>
     return false;
   }
 
-  const api = inject(ApiService);
   let profile = null;
 
   try {

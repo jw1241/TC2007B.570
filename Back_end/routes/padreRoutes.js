@@ -216,59 +216,7 @@ router.post(
   }
 );
 
-router.post(
-  "/:alumnoId/firmar",
-  authMiddleware,
-  requireRole([ROLES.PADRE]),
-  async (req, res) => {
 
-    const { alumnoId } = req.params;
-
-const { periodo_id } = req.body;
-
-const padreId = req.user.id;
-
-const { data: existing } =
-  await supabaseAdmin
-    .from("firmas_boletas")
-    .select("id")
-    .eq("alumno_id", alumnoId)
-    .eq("padre_id", padreId)
-    .eq("periodo_id", periodo_id)
-    .maybeSingle();
-
-if (existing) {
-  return res.status(400).json({
-    error: {
-      message: "La boleta ya fue firmada."
-    }
-  });
-}
-
-    const { error } =
-      await supabaseAdmin
-        .from("firmas_boletas")
-        .insert({
-
-          alumno_id: alumnoId,
-
-          padre_id: padreId,
-
-          periodo_id
-
-        });
-
-    if (error) {
-      return res.status(400).json(error);
-    }
-
-    res.json({
-      message:
-        "Boleta firmada correctamente"
-    });
-
-  }
-);
 
 router.post(
   '/admin/periods/:periodId/release',

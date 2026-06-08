@@ -47,6 +47,7 @@ Back_end/coverage/
 Back_end/.nyc_output/
 Back_end/node_modules/
 Back_end/.env
+Back_end/.env.production
 
 
 # =========================
@@ -59,6 +60,7 @@ Front_end/out-tsc/
 Front_end/.angular/
 Front_end/.cache/
 Front_end/node_modules/
+Front_end/src/environments/environment*.ts
 
 # Plugins y configuraciones móviles (Capacitor/Cordova)
 Front_end/plugins/

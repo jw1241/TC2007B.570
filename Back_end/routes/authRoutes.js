@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
-const createAuthClient = require("../config/supabaseClient");
-
-const { supabase, supabaseAdmin } = require("../config/supabaseClient");
+const { supabase, supabaseAdmin, createAuthClient } = require("../config/supabaseClient");
 const { authMiddleware } = require("../middleware/authMiddleware");
 
 const rateLimit = require("express-rate-limit");
@@ -230,16 +228,10 @@ router.post("/update-password", async (req, res, next) => {
 
     if (updateError) {
       return res.status(400).json({
-  error: {
-    message: "La contraseña no cumple con los requisitos de seguridad",
-    rules: [
-      "12 a 16 caracteres",
-      "Al menos una letra mayúscula",
-      "Al menos una letra minúscula",
-      "Al menos un número",
-      "Al menos un carácter especial"
-    ]
-  }
+        error: {
+          message: "No se pudo actualizar la contraseña",
+          details: updateError.message
+        }
       });
     }
 
@@ -333,7 +325,7 @@ router.post("/registro-padres", authLimiter, async (req, res, next) => {
     const authUserId = authData.user.id;
 
     // 3. Crear el perfil público en la tabla 'usuarios' con rol_id = 3 (Padre)
-    const { error: usuarioError } = await supabaseAdmin
+    const { data: usuarioData, error: usuarioError } = await supabaseAdmin
       .from("usuarios")
       .insert([
         {
@@ -343,21 +335,23 @@ router.post("/registro-padres", authLimiter, async (req, res, next) => {
           rol_id: 3,
           activo: true
         }
-      ]);
+      ])
+      .select("id")
+      .single();
 
-    if (usuarioError) {
+    if (usuarioError || !usuarioData) {
       // Si falla, podríamos hacer un "rollback" eliminando el usuario de Auth, pero lo dejaremos así por ahora y lo loggeamos
       console.error("Error creando perfil de usuario:", usuarioError);
       return res.status(500).json({ error: { message: "El usuario se creó en Auth, pero falló la creación del perfil." } });
     }
 
     // 4. Vincular al Padre con el Alumno en la tabla 'parentescos'
-    // Recuperamos el ID del usuario recién creado para insertarlo (si la PK es autoincremental, auth_user_id servirá como FK)
+    // Recuperamos el ID del usuario recién creado para insertarlo
     const { error: parentescoError } = await supabaseAdmin
       .from("parentescos")
       .insert([
         {
-          padre_id: authUserId, // OJO: Verifica si padre_id es el UUID de auth.users o el ID serial de usuarios. Normalmente es el UUID si se usan las convenciones estándar de Supabase
+          padre_id: usuarioData.id,
           alumno_id: alumno.id,
           relacion: "Padre/Tutor"
         }

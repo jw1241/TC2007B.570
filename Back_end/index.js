@@ -83,12 +83,8 @@ process.on(
 process.on(
   "unhandledRejection",
   (err) => {
-
-    console.error(
-      "UNHANDLED REJECTION:",
-      err
-    );
-
+    console.error("UNHANDLED REJECTION:", err);
+    process.exit(1);
   }
 );
 
@@ -127,7 +123,10 @@ const corsOptions = {
      * Postman, curl
      */
     if (!origin) {
-      return callback(null, true);
+      if (process.env.NODE_ENV !== "production") {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
     }
 
     if (

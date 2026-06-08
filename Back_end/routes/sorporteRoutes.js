@@ -30,7 +30,11 @@ router.post(
       const schema = Joi.object({
         role: Joi.string().valid("padre", "docente").required(),
         studentId: Joi.string().required(),
-        birthDate: Joi.string().isoDate().required(),
+        birthDate: Joi.string().isoDate().when('role', {
+          is: 'padre',
+          then: Joi.required(),
+          otherwise: Joi.optional().allow(null, "")
+        }),
         subject: Joi.string().max(255).required(),
         description: Joi.string().max(1000).required()
       });
@@ -97,7 +101,7 @@ router.post(
           matricula: studentId,
           estudiante_nombre:
             validatedUser.nombre_completo,
-          fecha_nacimiento: birthDate,
+          fecha_nacimiento: birthDate || null,
           asunto: subject,
           descripcion: description,
           estado: "Pendiente",

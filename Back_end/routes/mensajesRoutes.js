@@ -21,6 +21,21 @@ const getInternalUser = async (authUserId) => {
   return data || null;
 };
 
+const verifyAccessToStudent = async (usuario, alumno_id) => {
+  if (usuario.rol_id === ROLES.ADMIN) return true;
+  if (usuario.rol_id === ROLES.PADRE) {
+    const { data } = await supabaseAdmin.from("parentescos").select("padre_id").eq("padre_id", usuario.id).eq("alumno_id", alumno_id).maybeSingle();
+    return !!data;
+  }
+  if (usuario.rol_id === ROLES.DOCENTE) {
+    const { data: alumno } = await supabaseAdmin.from("alumnos").select("grupo_id").eq("id", alumno_id).maybeSingle();
+    if (!alumno || !alumno.grupo_id) return false;
+    const { data } = await supabaseAdmin.from("asignaciones_docentes").select("docente_id").eq("docente_id", usuario.id).eq("grupo_id", alumno.grupo_id).maybeSingle();
+    return !!data;
+  }
+  return false;
+};
+
 
 /**
  * @swagger
@@ -225,6 +240,12 @@ router.post("/enviar", authMiddleware, async (req, res, next) => {
     }
 
     const { alumno_id, docente_id, contenido } = value;
+
+    const hasAccess = await verifyAccessToStudent(usuario, alumno_id);
+    if (!hasAccess) {
+      return res.status(403).json({ error: "No tienes permiso para comunicarte sobre este alumno." });
+    }
+
     const remitenteId = usuario.id;
     const resultados = [];
 
@@ -340,6 +361,11 @@ router.get("/alumno/:alumno_id/parent", authMiddleware, async (req, res, next) =
       return res.status(404).json({ error: "Perfil no encontrado" });
     }
 
+    const hasAccess = await verifyAccessToStudent(usuario, alumnoId);
+    if (!hasAccess) {
+      return res.status(403).json({ error: "No tienes permiso para ver los padres de este alumno." });
+    }
+
     // Get ALL parents (NOT just first one)
     const { data: parentescos } = await supabaseAdmin
       .from("parentescos")
@@ -420,6 +446,15 @@ router.get("/chat/alumno/:alumno_id", authMiddleware, async (req, res, next) => 
     const alumnoId = req.params.alumno_id;
 
     const usuario = await getInternalUser(req.user.auth_user_id);
+    if (!usuario) {
+      return res.status(404).json({ error: "Perfil no encontrado" });
+    }
+
+    const hasAccess = await verifyAccessToStudent(usuario, alumnoId);
+    if (!hasAccess) {
+      return res.status(403).json({ error: "No tienes permiso para ver los chats de este alumno." });
+    }
+
     const docenteId = usuario.id;
 
     // get all parents
@@ -470,6 +505,11 @@ router.get("/alumno/:alumno_id/teachers", authMiddleware, async (req, res, next)
     const usuario = await getInternalUser(req.user.auth_user_id);
     if (!usuario) {
       return res.status(404).json({ error: "Perfil no encontrado" });
+    }
+
+    const hasAccess = await verifyAccessToStudent(usuario, alumnoId);
+    if (!hasAccess) {
+      return res.status(403).json({ error: "No tienes permiso para ver los docentes de este alumno." });
     }
 
     // 1. Get student's group
@@ -528,6 +568,11 @@ router.get("/alumno/:alumno_id/chat", authMiddleware, async (req, res, next) => 
     const usuario = await getInternalUser(req.user.auth_user_id);
     if (!usuario) {
       return res.status(404).json({ error: "Perfil no encontrado" });
+    }
+
+    const hasAccess = await verifyAccessToStudent(usuario, alumnoId);
+    if (!hasAccess) {
+      return res.status(403).json({ error: "No tienes permiso para ver este chat." });
     }
 
     const docenteId = usuario.id;
@@ -597,6 +642,9 @@ router.get("/chat/:alumno_id/:teacher_id", authMiddleware, async (req, res, next
 
     const usuario = await getInternalUser(req.user.auth_user_id);
     if (!usuario) return res.status(404).json({ error: "Perfil no encontrado" });
+
+    const hasAccess = await verifyAccessToStudent(usuario, alumno_id);
+    if (!hasAccess) return res.status(403).json({ error: "No tienes permiso." });
 
     const docenteId = teacher_id;
 

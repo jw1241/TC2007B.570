@@ -177,7 +177,7 @@ const {
 
         return res.status(400).json({
 
-          Error: {
+          error: {
 
             message:
               "Error creando usarios",
@@ -209,7 +209,7 @@ const {
       false
 
   })
-  .eq('id', authUserId);
+  .eq('auth_user_id', authUserId);
 
       const {
   data: usuario,
@@ -218,7 +218,7 @@ const {
   await supabaseAdmin
     .from('usuarios')
     .select('id')
-    .eq('id', authUserId)
+    .eq('auth_user_id', authUserId)
     .single();
 
 if (usuarioFetchError || !usuario) {

@@ -4,11 +4,8 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-console.log("SUPABASE URL:", supabaseUrl);
-console.log(
-  "SERVICE ROLE:",
-  serviceRoleKey?.slice(0, 20)
-);
+console.log('URL:', process.env.SUPABASE_URL);
+console.log('KEY exists:', !!process.env.SUPABASE_ANON_KEY);
 
 const supabase = createClient(
   supabaseUrl,

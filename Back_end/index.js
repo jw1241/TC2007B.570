@@ -354,4 +354,8 @@ app.listen(PORT, () => {
 
   }
 
+const supportRoutes = require("./routes/sorporteRoutes");
+
+app.use("/api", supportRoutes);
+
 });

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ApiService } from '../../services/api';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 import { SoporteTicket } from '../../services/support';
 
 @Component({
@@ -21,7 +22,7 @@ export class InicioResumenAdministradorPage implements OnInit {
   previewFileUrl: string | null = null;
   previewOpen = false;
 
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(private api: ApiService, private router: Router, private authService: AuthService) {}
 
   async ngOnInit() {
     await this.loadTickets();
@@ -90,5 +91,9 @@ navigateTo(path: string) {
       path
     ]);
 
+  }
+
+  async logout() {
+    await this.authService.logout();
   }
 }

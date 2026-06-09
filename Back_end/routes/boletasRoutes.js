@@ -26,7 +26,7 @@ router.get("/:alumno_id/descargar-pdf", authMiddleware, async (req, res, next) =
     // Obtener datos del alumno y grupo
     const { data: alumno, error: alumError } = await supabaseAdmin
       .from("alumnos")
-      .select("nombre, apellidos, matricula, grupos(nombre, grado)")
+      .select("nombre, apellidos, matricula, grupos(grado, seccion)")
       .eq("id", alumno_id)
       .single();
 
@@ -68,7 +68,7 @@ router.get("/:alumno_id/descargar-pdf", authMiddleware, async (req, res, next) =
     // Datos del Alumno
     doc.fontSize(12).text(`Alumno: ${alumno.nombre} ${alumno.apellidos}`);
     doc.text(`Matrícula: ${alumno.matricula}`);
-    doc.text(`Grupo: ${alumno.grupos.grado}° "${alumno.grupos.nombre}"`);
+    doc.text(`Grupo: ${alumno.grupos.grado}° "${alumno.grupos.seccion || ''}"`);
     doc.moveDown(2);
 
     // Tabla de Calificaciones (Simulada con texto posicionado)

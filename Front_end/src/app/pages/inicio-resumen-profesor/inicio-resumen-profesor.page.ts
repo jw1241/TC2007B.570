@@ -87,4 +87,8 @@ console.log('FULL RESPONSE:', response);
 crearCalificacion() {
   console.log('Create grade');
 }
+
+async logout() {
+  await this.authService.logout();
+}
 }

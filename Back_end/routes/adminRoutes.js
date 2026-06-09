@@ -445,7 +445,7 @@ router.get(
           apellidos,
           fecha_nacimiento,
           codigo_registro,
-          grupos ( id, nombre, grado, seccion )
+          grupos ( id, grado, seccion )
         `)
         .order('apellidos', { ascending: true });
 

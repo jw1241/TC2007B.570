@@ -33,7 +33,7 @@ export class MensajesPage implements OnInit {
     await this.loadContactos();
 
     const me = await this.api.get<any>('/auth/me');
-    this.currentUserId = me.data.id;
+    this.currentUserId = me?.user?.id || me?.data?.id;
   }
 
   async loadContactos() {

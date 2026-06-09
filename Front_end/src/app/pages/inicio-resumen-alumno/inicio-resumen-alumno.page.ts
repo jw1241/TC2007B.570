@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 
 import { StudentService } from '../../services/student';
 import { ApiService } from '../../services/api';
+import { AuthService } from '../../services/auth.service';
 
 interface StudentSummary {
   alumno: any;
@@ -68,7 +69,8 @@ export class InicioResumenAlumnoPage
   constructor(
     private router: Router,
     private studentService: StudentService,
-    private api: ApiService
+    private api: ApiService,
+    private authService: AuthService
   ) {}
 
   async ngOnInit() {
@@ -184,6 +186,10 @@ this.peorMateria = summary.resumen?.peorMateria || null;
       path
     ]);
 
+  }
+
+  async logout() {
+    await this.authService.logout();
   }
 
 }

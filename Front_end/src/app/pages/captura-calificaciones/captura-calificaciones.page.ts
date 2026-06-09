@@ -317,4 +317,8 @@ async cargarFirmas() {
 get pendientes(): number {
   return this.firmas.filter(f => !f.firmada).length;
 }
+
+async logout() {
+  await this.auth.logout();
+}
 }

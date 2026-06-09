@@ -66,6 +66,7 @@
             <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
           </button>
           <button
+            (click)="logout()"
             class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors text-left w-full">
             <div class="flex items-center gap-4">
               <span class="material-symbols-outlined text-error">logout</span>
@@ -80,28 +81,28 @@
     <nav
       class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface border-t border-outline-variant h-16 max-w-5xl md:left-1/2 md:-translate-x-1/2">
       <!-- Tab 1: Inicio (INACTIVE) -->
-      <button (click)="navigateTo('/inicio-resumen')"
+      <button (click)="navigateTo('/inicio-resumen-alumno')"
         class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
         <span class="material-symbols-outlined">home</span>
         <span class="font-label-md text-label-md mt-1">Inicio</span>
       </button>
-      <!-- Tab 2: Boletas (INACTIVE) -->
-      <button (click)="navigateTo('/boleta')"
+      <!-- Tab 2: Calificaciones (INACTIVE) -->
+      <button (click)="navigateTo('/calificaciones-padre')"
         class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
-        <span class="material-symbols-outlined">description</span>
-        <span class="font-label-md text-label-md mt-1">Boletas</span>
+        <span class="material-symbols-outlined">grade</span>
+        <span class="font-label-md text-label-md mt-1">Calificaciones</span>
       </button>
       <!-- Tab 3: Mensajes (INACTIVE) -->
-      <button (click)="navigateTo('/mensajes')"
+      <button (click)="navigateTo('/mensajes-chat')"
         class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
-        <span class="material-symbols-outlined">mail</span>
+        <span class="material-symbols-outlined">chat</span>
         <span class="font-label-md text-label-md mt-1">Mensajes</span>
       </button>
-      <!-- Tab 4: Perfil (ACTIVE) -->
-      <button
-        class="flex flex-col items-center justify-center text-primary font-bold bg-surface-container rounded-xl px-2 min-h-[44px] min-w-[44px] transition-transform active:scale-90">
-        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
-        <span class="font-label-md text-label-md mt-1">Perfil</span>
+      <!-- Tab 4: Cerrar sesión -->
+      <button (click)="logout()"
+        class="flex flex-col items-center justify-center text-on-surface-variant min-h-[44px] min-w-[44px] hover:bg-surface-container-low transition-all active:scale-90 rounded-xl px-2">
+        <span class="material-symbols-outlined">person</span>
+        <span class="font-label-md text-label-md mt-1">Cerrar sesión</span>
       </button>
     </nav>
   </div>

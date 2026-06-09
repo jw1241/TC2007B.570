@@ -145,9 +145,7 @@
 
     <!-- Perfil -->
     <button
-      routerLink="/inicar-sesion"
-      routerLinkActive="text-primary"
-  [routerLinkActiveOptions]="{ exact: true }"
+      (click)="logout()"
   class="flex flex-col items-center justify-center text-on-surface-variant"
     >
       <span class="material-symbols-outlined">

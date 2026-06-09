@@ -45,9 +45,8 @@ router.get(
     const { data, error } = await supabaseAdmin
       .from("parentescos")
       .select(`
-        id,
-        relacion,
-        alumnos ( id, nombre_completo, matricula, fecha_nacimiento, grupo_id, grupos ( id, nombre, grado, seccion ) )
+        padre_id,
+        alumnos ( id, nombre_completo, matricula, fecha_nacimiento, grupo_id, grupos ( id, grado, seccion ) )
       `)
       .eq("padre_id", padreId);
 

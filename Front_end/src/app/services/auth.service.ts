@@ -62,6 +62,7 @@ export class AuthService {
 
   async logout() {
     await this.supabase.supabase.auth.signOut();
+    localStorage.clear();
 
     this.router.navigate(['/iniciar-sesion'], {
       replaceUrl: true

@@ -5,6 +5,7 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api';
 import { StudentService } from '../../services/student';
+import { AuthService } from '../../services/auth.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -25,7 +26,8 @@ export class BoletaPage implements OnInit {
     private router: Router,
     private api: ApiService,
     private studentService: StudentService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private authService: AuthService
   ) { }
 
   async ngOnInit() {
@@ -109,5 +111,9 @@ export class BoletaPage implements OnInit {
       position: 'top'
     });
     await toast.present();
+  }
+
+  async logout() {
+    await this.authService.logout();
   }
 }

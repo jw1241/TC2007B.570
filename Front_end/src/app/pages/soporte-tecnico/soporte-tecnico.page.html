@@ -84,7 +84,6 @@
   </label>
 
   <input
-<<<<<<< HEAD:Front_end/src/app/pages/soporte-tecnico/soporte-tecnico.page.html
   type="date"
   [(ngModel)]="birthDate"
   name="birthDate"
@@ -93,38 +92,6 @@
 />
 
 </div>
-=======
-    type="date"
-    [(ngModel)]="birthDate"
-    name="birthDate"
-    required
-    class="w-full px-4 py-3 border rounded-lg"
-  />
-
-</div>
-
-          <!-- VALIDATION BUTTON -->
-          <button
-            type="button"
-            (click)="role === 'padre' ? buscarAlumno() : validarDocente()"
-            class="w-full py-2 rounded-lg bg-[#465f88] text-white"
-          >
-            Validar {{ role }}
-          </button>
-
-          <!-- INFO (PADRE) -->
-          <div *ngIf="role === 'padre' && studentFound"
-               class="bg-[#eff4ff] p-4 rounded-lg">
-
-            <p class="font-semibold">Alumno:</p>
-            <p>{{ studentName }}</p>
-
-            <p class="text-sm text-gray-600">
-              {{ birthDate }}
-            </p>
-
-          </div>
->>>>>>> 5387514 (Update):Front_end_1/src/app/pages/soporte-tecnico/soporte-tecnico.page.html
 
           <!-- SUBJECT -->
           <div>

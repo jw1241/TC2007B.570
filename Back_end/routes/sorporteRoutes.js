@@ -1,32 +1,19 @@
 const express = require("express");
 const router = express.Router();
 
-<<<<<<< HEAD
 const multer = require("multer");
 
 const upload = multer({
   storage: multer.memoryStorage()
-=======
-const { supabaseAdmin } = require("../config/supabaseClient");
-
-const validateStudentSchema = Joi.object({
-  studentId: Joi.string().required(),
-  birthDate: Joi.string().required()
->>>>>>> 5387514 (Update)
 });
 
 const { supabaseAdmin } =
   require("../config/supabaseClient");
 
 router.post(
-<<<<<<< HEAD
   "/soporte-ticket",
   upload.array("files", 10),
   async (req, res) => {
-=======
-  "/soporte-alumno",
-  async (req, res, next) => {
->>>>>>> 5387514 (Update)
 
     try {
 
@@ -57,14 +44,7 @@ router.post(
         return res.status(400).json({ error: { message: validationError.details[0].message } });
       }
 
-<<<<<<< HEAD
       let validatedUser;
-=======
-      const {
-  studentId,
-  birthDate
-} = value;
->>>>>>> 5387514 (Update)
 
       if (role === "padre") {
 
@@ -112,7 +92,6 @@ router.post(
         `TKT-${Date.now()}`;
 
       const {
-<<<<<<< HEAD
         data: ticket,
         error: ticketError
       } = await supabaseAdmin
@@ -130,22 +109,6 @@ router.post(
         })
         .select()
         .single();
-=======
-  data: alumno,
-  error: alumnoError
-} = await supabaseAdmin
-  .from("alumnos")
-  .select(`
-    id,
-    matricula,
-    nombre_completo,
-    fecha_nacimiento,
-    codigo_registro
-  `)
-  .eq("matricula", studentId)
-  .eq("fecha_nacimiento", birthDate)
-  .maybeSingle();
->>>>>>> 5387514 (Update)
 
       if (ticketError) {
         console.error(ticketError);
@@ -212,21 +175,10 @@ const fileName =
       }
 
       return res.json({
-<<<<<<< HEAD
         success: true,
         ticketCode,
         uploadedFiles
       });
-=======
-  success: true,
-  alumno: {
-    id: alumno.id,
-    matricula: alumno.matricula,
-    nombre_completo: alumno.nombre_completo,
-    fecha_nacimiento: alumno.fecha_nacimiento
-  }
-});
->>>>>>> 5387514 (Update)
 
     } catch (err) {
 
@@ -241,120 +193,4 @@ const fileName =
   }
 );
 
-<<<<<<< HEAD
-=======
-const validateDocenteSchema = Joi.object({
-
-  docenteId: Joi.string()
-    .trim()
-    .required(),
-});
-
-router.post(
-  "/soporte-docente",
-  async (req, res, next) => {
-
-    try {
-
-      const {
-        error,
-        value
-      } = validateDocenteSchema.validate(req.body);
-
-      if (error) {
-
-        return res.status(400).json({
-          error: {
-            message: "Datos inválidos",
-            details: error.details.map(d => d.message)
-          }
-        });
-
-      }
-
-      const {
-        docenteId,
-      } = value;
-
-      console.log("DOCENTE INPUT:", {
-        docenteId,
-      });
-
-      /**
-       * VALIDATE DOCENTE
-       * REQUIREMENTS:
-       * - rol_id = 2
-       * - registration code matches
-       * - activo = false
-       */
-      const {
-        data: docente,
-        error: docenteError
-      } = await supabaseAdmin
-        .from("usuarios")
-        .select(`
-          id,
-          nombre_completo,
-          email,
-          rol_id,
-          identificacion_docente,
-          activo
-        `)
-        .eq("rol_id", 2)
-        .eq("identificacion_docente", docenteId)
-        .maybeSingle();
-
-        console.log("DOCENTE RESULT:", docente);
-        console.log("DOCENTE ERROR:", docenteError);
-
-      if (docenteError || !docente) {
-
-        return res.status(400).json({
-          error: {
-            message:
-              "Información incorrecta o cuenta ya activada"
-          }
-        });
-
-      }
-
-      /**
-       * SAFE RESPONSE
-       */
-      return res.json({
-
-        success: true,
-
-        docente: {
-
-          usuario_id: docente.id,
-
-          nombre_completo:
-            docente.nombre_completo,
-
-          email:
-            docente.email,
-
-          identificacion_docente:
-            docente.identificacion_docente
-
-        }
-
-      });
-
-    } catch (err) {
-
-      console.error(
-        "VALIDATE DOCENTE ERROR:",
-        err
-      );
-
-      next(err);
-
-    }
-
-  }
-);
-
->>>>>>> 5387514 (Update)
 module.exports = router;

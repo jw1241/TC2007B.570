@@ -67,15 +67,38 @@ async function run() {
     console.log('✅ Maestro creado:', maestroEmail);
 
     // Asignar grupo a Maestro
-    const { data: materias } = await supabase.from('materias').select('id').limit(1);
-    const { data: grupos } = await supabase.from('grupos').select('id').limit(1);
+    let { data: materias } = await supabase.from('materias').select('id').limit(1);
+    let { data: grupos } = await supabase.from('grupos').select('id').limit(1);
+
+    if (!materias || materias.length === 0) {
+      console.log('Creando materia semilla...');
+      const { data: newMateria } = await supabase.from('materias').insert({
+        nombre_materia: 'Materia de Prueba',
+        es_general: true
+      }).select().single();
+      materias = [newMateria];
+    }
+
+    if (!grupos || grupos.length === 0) {
+      console.log('Creando grupo semilla...');
+      const { data: newGrupo } = await supabase.from('grupos').insert({
+        grado: 1,
+        seccion: 'A'
+      }).select().single();
+      grupos = [newGrupo];
+    }
+
     if (materias?.length && grupos?.length) {
-      await supabase.from('asignaciones_docentes').insert({
+      const { error: asignError } = await supabase.from('asignaciones_docentes').insert({
         docente_id: maestroUser.id,
         materia_id: materias[0].id,
         grupo_id: grupos[0].id
       });
-      console.log('✅ Clase asignada al maestro.');
+      if (asignError) {
+        console.error("❌ Error al asignar clase al maestro:", asignError.message);
+      } else {
+        console.log('✅ Clase asignada al maestro.');
+      }
     }
 
     // 3. Create Alumno & Padre

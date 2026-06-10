@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ApiService } from '../../services/api';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { SoporteTicket } from '../../services/support';
 
@@ -11,7 +11,7 @@ import { SoporteTicket } from '../../services/support';
   templateUrl: './inicio-resumen-administrador.page.html',
   styleUrls: ['./inicio-resumen-administrador.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule]
+  imports: [CommonModule, IonicModule, RouterModule]
 })
 export class InicioResumenAdministradorPage implements OnInit {
 

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { AutoLogoutService } from './services/auto-logout.service';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,7 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private autoLogout: AutoLogoutService) {
+    this.autoLogout.startWatching();
+  }
 }

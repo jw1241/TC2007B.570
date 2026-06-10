@@ -1,0 +1,80 @@
+<ion-content class="ion-padding bg-[#f4efe6]">
+
+  <div class="p-6 space-y-8 bg-[#f4efe6] min-h-full">
+
+    <!-- HEADER -->
+    <header class="bg-[#fbf7f0] border border-[#e7ddcf] rounded-xl shadow-sm sticky top-0 z-40">
+      <div class="flex items-center justify-between px-4 h-16">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full overflow-hidden bg-white shadow-sm">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcTWCjl-iswn9qGwnguEnmCjn29P95J5eJcgVmSm-NintYMIKF7lpE0P_1gvyd1BCZFtKAtfHruKCz7klA9sXpOfpzIQRkSutztO_sgTxMl9UyK9D_8iFjX0_bTPR4LEiuqJxro6cJ_FQ7Xnk17eMfhjeTMRRjF93F_k_0tWPTsyMC4oDzq6z96jN6uCQs4Zl_f6BJ6HbyNXFj_KYMvEEJnJO1AnKrD0vb2-b_cr_62foul5WzCTEFA89lFl3dFUVL1UYdDOKA9zs"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="flex flex-col leading-tight">
+            <span class="font-bold text-gray-900">Escuela Metropolitana</span>
+            <span class="text-sm text-gray-600">"La Luz"</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- TITLE -->
+    <div class="bg-[#fbf7f0] border border-[#e7ddcf] rounded-xl p-4 shadow-sm">
+      <h1 class="text-2xl font-bold text-gray-900">
+        Boletas Masivas
+      </h1>
+      <p class="text-sm text-gray-700 mt-1">
+        Descarga de todas las boletas del ciclo escolar para archivo.
+      </p>
+    </div>
+
+    <!-- CONTENT -->
+    <section class="bg-[#fbf7f0] border border-[#e7ddcf] rounded-xl shadow-sm p-6 text-center">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Generar Archivo Consolidado</h2>
+      <p class="text-sm text-gray-600 mb-6">Esta acción generará un archivo PDF único que contiene las boletas de todos los alumnos registrados en el sistema.</p>
+      
+      <button 
+        (click)="descargarBoletasMasivas()" 
+        [disabled]="isDownloading"
+        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 mx-auto disabled:opacity-50">
+        <span class="material-symbols-outlined">download</span>
+        <span *ngIf="!isDownloading">Descargar Todas las Boletas</span>
+        <span *ngIf="isDownloading">Generando...</span>
+      </button>
+    </section>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="fixed bottom-0 left-0 w-full z-50 bg-white border-t shadow-lg">
+    <div class="flex justify-around items-center h-16 max-w-5xl mx-auto">
+
+      <a [routerLink]="['/inicio-resumen-administrador']" class="flex flex-col items-center text-gray-500 hover:text-[#0b1c30] outline-none cursor-pointer">
+        <span class="material-symbols-outlined">receipt_long</span>
+        <span class="text-[10px]">Tiquetes</span>
+      </a>
+
+      <a [routerLink]="['/admin-usuario']"
+        class="flex flex-col items-center text-gray-500 hover:text-blue-600 outline-none cursor-pointer">
+        <span class="material-symbols-outlined">group</span>
+        <span class="text-[10px]">Usuarios</span>
+      </a>
+
+      <a [routerLink]="['/boletas-masivas']"
+        class="flex flex-col items-center text-blue-600 outline-none cursor-pointer">
+        <span class="material-symbols-outlined">description</span>
+        <span class="text-[10px]">Boletas</span>
+      </a>
+
+      <a (click)="logout()"
+        class="flex flex-col items-center text-gray-500 hover:text-blue-600 outline-none cursor-pointer">
+        <span class="material-symbols-outlined">person</span>
+        <span class="text-[10px]">Cerrar sesión</span>
+      </a>
+
+    </div>
+  </nav>
+
+</ion-content>

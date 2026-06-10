@@ -163,14 +163,6 @@ export const routes: Routes = [
         .then(m => m.CalificacionesPadrePage)
   },
   {
-    path: 'inicio',
-    canActivate: [authGuard, roleGuard],
-    data: { roles: [2] },
-    loadComponent: () =>
-      import('./pages/inicio-resumen-profesor/inicio-resumen-profesor.page')
-        .then(m => m.InicioResumenProfesorPage)
-  },
-  {
     path: 'admin-usuario',
     canActivate: [authGuard, roleGuard],
     data: { roles: [1] },
@@ -179,13 +171,14 @@ export const routes: Routes = [
         .then(m => m.AdminImportPage)
   },
   {
-    path: 'tiquete',
+    path: 'boletas-masivas',
     canActivate: [authGuard, roleGuard],
     data: { roles: [1] },
     loadComponent: () =>
-      import('./pages/inicio-resumen-administrador/inicio-resumen-administrador.page')
-        .then(m => m.InicioResumenAdministradorPage)
-  },
+      import('./pages/boletas-masivas/boletas-masivas.component')
+        .then(m => m.BoletasMasivasPage)
+  }
+
 
   
 ];

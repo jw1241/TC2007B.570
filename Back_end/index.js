@@ -27,8 +27,6 @@ const ROLES =
 /**
  * ROUTES
  */
-const itemRoutes =
-  require("./routes/items");
 
 const adminRoutes =
   require("./routes/adminRoutes");
@@ -39,8 +37,6 @@ const authRoutes =
 const regRoutes =
   require("./routes/registration.routes");
 
-const docenteRoutes =
-  require("./routes/docenteRoutes");
 
 const padreRoutes =
   require("./routes/padreRoutes");
@@ -84,7 +80,10 @@ process.on(
   "unhandledRejection",
   (err) => {
     console.error("UNHANDLED REJECTION:", err);
-    process.exit(1);
+    // Para RNF04 (Disponibilidad), evitamos cerrar el servidor abruptamente.
+    // En un entorno de producción, un process manager como PM2 reiniciaría el proceso 
+    // pero Node.js recomienda hacer un graceful shutdown.
+    // process.exit(1);
   }
 );
 
@@ -103,7 +102,13 @@ app.set("trust proxy", 1);
 /**
  * SECURITY HEADERS
  */
-app.use(helmet());
+app.use(helmet({
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
 
 /**
  * CORS
@@ -244,6 +249,12 @@ app.use(
 );
 
 app.use(
+  "/api/soporte",
+  authMiddleware,
+  supportRoutes
+);
+
+app.use(
   '/api/periodos',
   authMiddleware,
   requireRole([ROLES.ADMIN, ROLES.DOCENTE]),
@@ -281,15 +292,6 @@ app.use(
   mensajesRoutes
 );
 
-app.use(
-  "/api/docente",
-  authMiddleware,
-  requireRole([
-    ROLES.ADMIN,
-    ROLES.DOCENTE
-  ]),
-  docenteRoutes
-);
 
 app.use(
   "/api/grades",

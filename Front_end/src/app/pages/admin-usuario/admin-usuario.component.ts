@@ -46,6 +46,21 @@ export class AdminImportPage implements OnInit {
     profesores: null
   };
 
+  // =========================
+  // MANUAL FORMS STATE
+  // =========================
+  showForm: Record<FileType, boolean> = {
+    grupos: false,
+    alumnos: false,
+    materias: false,
+    profesores: false
+  };
+
+  nuevoGrupo = { grado: null, seccion: '' };
+  nuevaMateria = { nombre_materia: '', es_general: false };
+  nuevoAlumno = { matricula: '', nombre_estudiante: '', nombre_padre: '', grado: null, seccion: '' };
+  nuevoProfesor = { docente_id: '', nombre_completo: '', nombre_materia: '', grado: null, seccion: '' };
+
   isUploading = false;
 
   constructor(
@@ -124,6 +139,49 @@ export class AdminImportPage implements OnInit {
     this.isUploading = false;
   }
 }
+
+  // =========================
+  // MANUAL FORMS METHODS
+  // =========================
+  toggleForm(type: FileType) {
+    this.showForm[type] = !this.showForm[type];
+  }
+
+  async submitManual(type: FileType) {
+    try {
+      let payload;
+      let endpoint = '';
+      if (type === 'grupos') {
+        payload = this.nuevoGrupo;
+        endpoint = '/admin-usuarios/grupo';
+      } else if (type === 'materias') {
+        payload = this.nuevaMateria;
+        endpoint = '/admin-usuarios/materia';
+      } else if (type === 'alumnos') {
+        payload = this.nuevoAlumno;
+        endpoint = '/admin-usuarios/alumno';
+      } else if (type === 'profesores') {
+        payload = this.nuevoProfesor;
+        endpoint = '/admin-usuarios/profesor';
+      }
+
+      await this.api.post(endpoint, payload);
+      console.log('MANUAL CREATE SUCCESS:', type);
+      await this.cargarTodo();
+      
+      // Reset form
+      if (type === 'grupos') this.nuevoGrupo = { grado: null, seccion: '' };
+      if (type === 'materias') this.nuevaMateria = { nombre_materia: '', es_general: false };
+      if (type === 'alumnos') this.nuevoAlumno = { matricula: '', nombre_estudiante: '', nombre_padre: '', grado: null, seccion: '' };
+      if (type === 'profesores') this.nuevoProfesor = { docente_id: '', nombre_completo: '', nombre_materia: '', grado: null, seccion: '' };
+      
+      this.showForm[type] = false;
+    } catch (err: any) {
+      console.error('MANUAL CREATE FAILED:', err);
+      const msg = err?.error?.message || 'Verifica que los datos sean correctos.';
+      alert('Error al registrar manualmente: ' + msg);
+    }
+  }
 
   // =========================
   // NAVIGATION

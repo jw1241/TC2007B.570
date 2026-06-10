@@ -192,7 +192,7 @@ const limiter = rateLimit({
   windowMs:
     15 * 60 * 1000,
 
-  max: 100,
+  max: 10000, // [Demo-Safe] Elevado a 10,000 para evitar bloqueos en la presentación
 
   standardHeaders: true,
 

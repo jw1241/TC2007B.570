@@ -14,7 +14,7 @@ const generarBoletaIndividual = async (req, res, next) => {
     // Obtener datos del alumno y grupo
     const { data: alumno, error: alumError } = await supabaseAdmin
       .from("alumnos")
-      .select("nombre, apellidos, matricula, grupos(grado, seccion)")
+      .select("nombre_completo, matricula, grupos(grado, seccion)")
       .eq("id", alumno_id)
       .single();
 
@@ -22,10 +22,19 @@ const generarBoletaIndividual = async (req, res, next) => {
       return res.status(404).json({ error: { message: "Alumno no encontrado." } });
     }
 
+    // Obtener periodos de evaluacion para mapearlos a 1, 2, 3
+    const { data: periodos } = await supabaseAdmin.from("periodos_evaluacion").select("id, mes_inicio").order("mes_inicio", { ascending: true });
+    const periodosMap = {};
+    if (periodos) {
+      periodos.forEach((p, index) => {
+        periodosMap[p.id] = index + 1; // 1, 2, 3
+      });
+    }
+
     // Obtener calificaciones
     const { data: calificaciones, error: califError } = await supabaseAdmin
       .from("calificaciones")
-      .select("trimestre, calificacion, materias(nombre)")
+      .select("periodo_id, nota, materias(nombre)")
       .eq("alumno_id", alumno_id);
 
     if (califError) throw califError;
@@ -33,9 +42,10 @@ const generarBoletaIndividual = async (req, res, next) => {
     // Agrupar calificaciones por materia
     const boletaMap = {};
     calificaciones.forEach(c => {
-      const mat = c.materias.nombre;
+      const mat = c.materias?.nombre || 'Desconocida';
       if (!boletaMap[mat]) boletaMap[mat] = { 1: "-", 2: "-", 3: "-" };
-      boletaMap[mat][c.trimestre] = c.calificacion;
+      const trim = periodosMap[c.periodo_id] || 1;
+      boletaMap[mat][trim] = c.nota;
     });
 
     // Iniciar PDF
@@ -54,7 +64,7 @@ const generarBoletaIndividual = async (req, res, next) => {
     doc.moveDown(2);
 
     // Datos del Alumno
-    doc.fontSize(12).text(`Alumno: ${alumno.nombre} ${alumno.apellidos}`);
+    doc.fontSize(12).text(`Alumno: ${alumno.nombre_completo}`);
     doc.text(`Matrícula: ${alumno.matricula}`);
     doc.text(`Grupo: ${alumno.grupos?.grado || ''}° "${alumno.grupos?.seccion || ''}"`);
     doc.moveDown(2);
@@ -115,7 +125,7 @@ const generarBoletasMasivas = async (req, res, next) => {
 
     const { data: alumnos, error: alumError } = await supabaseAdmin
       .from("alumnos")
-      .select("id, nombre, apellidos, matricula, grupos(grado, seccion)");
+      .select("id, nombre_completo, matricula, grupos(grado, seccion)");
 
     if (alumError) throw alumError;
 
@@ -123,9 +133,17 @@ const generarBoletasMasivas = async (req, res, next) => {
       return res.status(404).json({ error: { message: "No hay alumnos registrados." } });
     }
 
+    const { data: periodos } = await supabaseAdmin.from("periodos_evaluacion").select("id, mes_inicio").order("mes_inicio", { ascending: true });
+    const periodosMap = {};
+    if (periodos) {
+      periodos.forEach((p, index) => {
+        periodosMap[p.id] = index + 1;
+      });
+    }
+
     const { data: calificaciones, error: califError } = await supabaseAdmin
       .from("calificaciones")
-      .select("alumno_id, trimestre, calificacion, materias(nombre)");
+      .select("alumno_id, periodo_id, nota, materias(nombre)");
 
     if (califError) throw califError;
 
@@ -145,9 +163,10 @@ const generarBoletasMasivas = async (req, res, next) => {
       
       const boletaMap = {};
       califsAlumno.forEach(c => {
-        const mat = c.materias.nombre;
+        const mat = c.materias?.nombre || 'Desconocida';
         if (!boletaMap[mat]) boletaMap[mat] = { 1: "-", 2: "-", 3: "-" };
-        boletaMap[mat][c.trimestre] = c.calificacion;
+        const trim = periodosMap[c.periodo_id] || 1;
+        boletaMap[mat][trim] = c.nota;
       });
 
       // Encabezado
@@ -157,7 +176,7 @@ const generarBoletasMasivas = async (req, res, next) => {
       doc.moveDown(2);
 
       // Datos del Alumno
-      doc.fontSize(12).text(`Alumno: ${alumno.nombre} ${alumno.apellidos}`);
+      doc.fontSize(12).text(`Alumno: ${alumno.nombre_completo}`);
       doc.text(`Matrícula: ${alumno.matricula}`);
       doc.text(`Grupo: ${alumno.grupos?.grado || ''}° "${alumno.grupos?.seccion || ''}"`);
       doc.moveDown(2);

@@ -469,4 +469,196 @@ function normalizeRow(row) {
 
   return cleaned;
 }
+
+router.post(
+  "/grupo",
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  safeRoute(async (req, res) => {
+    const { grado, seccion } = req.body;
+    
+    const gradoInt = toInt(grado);
+    const seccionClean = cleanStr(seccion).toUpperCase();
+
+    if (!Number.isInteger(gradoInt) || gradoInt < 1 || gradoInt > 6) {
+      return res.status(400).json({ ok: false, message: "Grado inválido" });
+    }
+    if (!seccionClean) {
+      return res.status(400).json({ ok: false, message: "Sección requerida" });
+    }
+
+    const { error } = await supabaseAdmin
+      .from("grupos")
+      .insert([{ grado: gradoInt, seccion: seccionClean }]);
+
+    if (error) throw error;
+    res.json({ ok: true });
+  })
+);
+
+router.post(
+  "/materia",
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  safeRoute(async (req, res) => {
+    const { nombre_materia, es_general } = req.body;
+    
+    const nombreClean = cleanStr(nombre_materia);
+    const esGeneralBool = toBool(es_general);
+
+    if (!nombreClean) {
+      return res.status(400).json({ ok: false, message: "Nombre de materia requerido" });
+    }
+
+    const { error } = await supabaseAdmin
+      .from("materias")
+      .insert([{ nombre_materia: nombreClean, es_general: esGeneralBool }]);
+
+    if (error) throw error;
+    res.json({ ok: true });
+  })
+);
+
+router.post(
+  "/alumno",
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  safeRoute(async (req, res) => {
+    const { matricula, nombre_estudiante, nombre_padre, grado, seccion } = req.body;
+    
+    const matClean = cleanStr(matricula);
+    const estClean = cleanStr(nombre_estudiante);
+    const padreClean = cleanStr(nombre_padre);
+    const gradoInt = toInt(grado);
+    const secClean = cleanStr(seccion).toUpperCase();
+
+    if (!matClean || !estClean || !padreClean || !gradoInt || !secClean) {
+      return res.status(400).json({ ok: false, message: "Faltan campos requeridos" });
+    }
+
+    const existing = await supabaseAdmin
+      .from("alumnos")
+      .select("id")
+      .eq("matricula", matClean)
+      .maybeSingle();
+
+    if (existing.data) return res.status(400).json({ ok: false, message: "La matrícula ya existe" });
+
+    const { data: grupo } = await supabaseAdmin
+      .from("grupos")
+      .select("id")
+      .eq("grado", gradoInt)
+      .eq("seccion", secClean)
+      .maybeSingle();
+
+    if (!grupo) return res.status(404).json({ ok: false, message: "Grupo no encontrado en el sistema" });
+
+    const codigo = codigoRegistro();
+
+    const { data: padreUser, error: padreErr } = await supabaseAdmin
+      .from("usuarios")
+      .insert({
+        nombre_completo: padreClean,
+        rol_id: 3,
+        activo: false,
+        codigo_registro: codigo
+      })
+      .select()
+      .single();
+
+    if (padreErr) throw padreErr;
+
+    const { data: alumno, error: alumnoErr } = await supabaseAdmin
+      .from("alumnos")
+      .insert({
+        matricula: matClean,
+        nombre_completo: estClean,
+        grupo_id: grupo.id,
+        fecha_nacimiento: "2015-01-01",
+        codigo_registro: codigo
+      })
+      .select()
+      .single();
+
+    if (alumnoErr) throw alumnoErr;
+
+    await supabaseAdmin
+      .from("parentescos")
+      .insert({
+        padre_id: padreUser.id,
+        alumno_id: alumno.id
+      });
+
+    res.json({ ok: true });
+  })
+);
+
+router.post(
+  "/profesor",
+  authMiddleware,
+  requireRole([ROLES.ADMIN]),
+  safeRoute(async (req, res) => {
+    const { docente_id, nombre_completo, nombre_materia, grado, seccion } = req.body;
+    
+    const docClean = cleanStr(docente_id);
+    const nomClean = cleanStr(nombre_completo);
+    const matClean = cleanStr(nombre_materia);
+    const gradoInt = toInt(grado);
+    const secClean = cleanStr(seccion).toUpperCase();
+
+    if (!docClean || !nomClean || !matClean || !gradoInt || !secClean) {
+      return res.status(400).json({ ok: false, message: "Faltan campos requeridos" });
+    }
+
+    const existing = await supabaseAdmin
+      .from("usuarios")
+      .select("id")
+      .eq("identificacion_docente", docClean)
+      .maybeSingle();
+
+    if (existing.data) return res.status(400).json({ ok: false, message: "El docente con este ID ya existe" });
+
+    const codigo = codigoRegistro();
+
+    const { data: docente, error: docErr } = await supabaseAdmin
+      .from("usuarios")
+      .insert({
+        nombre_completo: nomClean,
+        identificacion_docente: docClean,
+        rol_id: 2,
+        activo: false,
+        codigo_registro: codigo
+      })
+      .select()
+      .single();
+
+    if (docErr) throw docErr;
+
+    const { data: materia } = await supabaseAdmin
+      .from("materias")
+      .select("id")
+      .eq("nombre_materia", matClean)
+      .maybeSingle();
+
+    const { data: grupo } = await supabaseAdmin
+      .from("grupos")
+      .select("id")
+      .eq("grado", gradoInt)
+      .eq("seccion", secClean)
+      .maybeSingle();
+
+    if (!materia || !grupo) return res.status(404).json({ ok: false, message: "La materia o el grupo no existen en el sistema" });
+
+    await supabaseAdmin
+      .from("asignaciones_docentes")
+      .insert({
+        docente_id: docente.id,
+        materia_id: materia.id,
+        grupo_id: grupo.id
+      });
+
+    res.json({ ok: true });
+  })
+);
+
 module.exports = router;

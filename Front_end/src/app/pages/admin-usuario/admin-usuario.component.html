@@ -39,7 +39,12 @@
       <h2 class="text-lg font-bold text-gray-900 mb-4">Grupos</h2>
 
       <div class="flex items-center gap-3 mb-4">
-
+        <button (click)="toggleForm('grupos')"
+                class="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg flex items-center gap-1">
+          <span class="material-symbols-outlined text-[18px]">add</span> {{ showForm['grupos'] ? 'Ocultar manual' : 'Agregar manual' }}
+        </button>
+        <span class="text-sm text-gray-500 mx-2">o</span>
+        
         <input #fileInputGrupos type="file" class="hidden"
                (change)="onFileSelected($event, 'grupos')" />
 
@@ -58,6 +63,22 @@
         </button>
 
       </div>
+
+      <!-- FORMULARIO MANUAL GRUPOS -->
+      <form *ngIf="showForm['grupos']" (ngSubmit)="submitManual('grupos')" class="mb-6 p-4 bg-white rounded-lg shadow-inner border border-gray-200">
+        <h3 class="text-sm font-bold text-gray-700 mb-3">Registrar Nuevo Grupo</h3>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">Grado</label>
+            <input type="number" [(ngModel)]="nuevoGrupo.grado" name="grado" required class="w-full border rounded p-2 text-sm" placeholder="Ej. 1">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">Sección</label>
+            <input type="text" [(ngModel)]="nuevoGrupo.seccion" name="seccion" required class="w-full border rounded p-2 text-sm" placeholder="Ej. A">
+          </div>
+        </div>
+        <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg font-bold">Guardar Grupo</button>
+      </form>
 
       <table class="w-full text-sm border border-[#e7ddcf] rounded-lg overflow-hidden">
         <thead class="bg-[#f1e7d8] text-gray-800">
@@ -83,7 +104,12 @@
       <h2 class="text-lg font-bold text-gray-900 mb-4">Alumnos y Padres</h2>
 
       <div class="flex items-center gap-3 mb-4">
-
+        <button (click)="toggleForm('alumnos')"
+                class="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg flex items-center gap-1">
+          <span class="material-symbols-outlined text-[18px]">add</span> {{ showForm['alumnos'] ? 'Ocultar manual' : 'Agregar manual' }}
+        </button>
+        <span class="text-sm text-gray-500 mx-2">o</span>
+        
         <input #fileInputAlumnos type="file" class="hidden"
                (change)="onFileSelected($event, 'alumnos')" />
 
@@ -102,6 +128,36 @@
         </button>
 
       </div>
+
+      <!-- FORMULARIO MANUAL ALUMNOS -->
+      <form *ngIf="showForm['alumnos']" (ngSubmit)="submitManual('alumnos')" class="mb-6 p-4 bg-white rounded-lg shadow-inner border border-gray-200">
+        <h3 class="text-sm font-bold text-gray-700 mb-3">Registrar Nuevo Alumno y Tutor</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">Nombre Alumno</label>
+            <input type="text" [(ngModel)]="nuevoAlumno.nombre_estudiante" name="nombre_estudiante" required class="w-full border rounded p-2 text-sm" placeholder="Nombre completo">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">Matrícula</label>
+            <input type="text" [(ngModel)]="nuevoAlumno.matricula" name="matricula" required class="w-full border rounded p-2 text-sm" placeholder="Matrícula">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">Nombre Tutor</label>
+            <input type="text" [(ngModel)]="nuevoAlumno.nombre_padre" name="nombre_padre" required class="w-full border rounded p-2 text-sm" placeholder="Nombre del tutor/padre">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs text-gray-600 mb-1">Grado</label>
+              <input type="number" [(ngModel)]="nuevoAlumno.grado" name="grado" required class="w-full border rounded p-2 text-sm" placeholder="Ej. 1">
+            </div>
+            <div>
+              <label class="block text-xs text-gray-600 mb-1">Sección</label>
+              <input type="text" [(ngModel)]="nuevoAlumno.seccion" name="seccion" required class="w-full border rounded p-2 text-sm" placeholder="Ej. A">
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg font-bold">Guardar Alumno</button>
+      </form>
 
       <table class="w-full text-sm border border-[#e7ddcf] rounded-lg overflow-hidden">
         <thead class="bg-[#f1e7d8] text-gray-800">
@@ -135,7 +191,12 @@
       <h2 class="text-lg font-bold text-gray-900 mb-4">Materias</h2>
 
       <div class="flex items-center gap-3 mb-4">
-
+        <button (click)="toggleForm('materias')"
+                class="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg flex items-center gap-1">
+          <span class="material-symbols-outlined text-[18px]">add</span> {{ showForm['materias'] ? 'Ocultar manual' : 'Agregar manual' }}
+        </button>
+        <span class="text-sm text-gray-500 mx-2">o</span>
+        
         <input #fileInputMaterias type="file" class="hidden"
                (change)="onFileSelected($event, 'materias')" />
 
@@ -154,6 +215,24 @@
         </button>
 
       </div>
+
+      <!-- FORMULARIO MANUAL MATERIAS -->
+      <form *ngIf="showForm['materias']" (ngSubmit)="submitManual('materias')" class="mb-6 p-4 bg-white rounded-lg shadow-inner border border-gray-200">
+        <h3 class="text-sm font-bold text-gray-700 mb-3">Registrar Nueva Materia</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">Nombre de la Materia</label>
+            <input type="text" [(ngModel)]="nuevaMateria.nombre_materia" name="nombre_materia" required class="w-full border rounded p-2 text-sm" placeholder="Ej. Matemáticas">
+          </div>
+          <div class="flex items-end mb-2">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" [(ngModel)]="nuevaMateria.es_general" name="es_general" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+              <span class="text-sm text-gray-700">Es materia general</span>
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg font-bold">Guardar Materia</button>
+      </form>
 
       <table class="w-full text-sm border border-[#e7ddcf] rounded-lg overflow-hidden">
         <thead class="bg-[#f1e7d8] text-gray-800">
@@ -179,7 +258,12 @@
       <h2 class="text-lg font-bold text-gray-900 mb-4">Profesores</h2>
 
       <div class="flex items-center gap-3 mb-4">
-
+        <button (click)="toggleForm('profesores')"
+                class="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg flex items-center gap-1">
+          <span class="material-symbols-outlined text-[18px]">add</span> {{ showForm['profesores'] ? 'Ocultar manual' : 'Agregar manual' }}
+        </button>
+        <span class="text-sm text-gray-500 mx-2">o</span>
+        
         <input #fileInputProfesores type="file" class="hidden"
                (change)="onFileSelected($event, 'profesores')" />
 
@@ -198,6 +282,36 @@
         </button>
 
       </div>
+
+      <!-- FORMULARIO MANUAL PROFESORES -->
+      <form *ngIf="showForm['profesores']" (ngSubmit)="submitManual('profesores')" class="mb-6 p-4 bg-white rounded-lg shadow-inner border border-gray-200">
+        <h3 class="text-sm font-bold text-gray-700 mb-3">Registrar Nuevo Profesor</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">Nombre Completo</label>
+            <input type="text" [(ngModel)]="nuevoProfesor.nombre_completo" name="nombre_completo" required class="w-full border rounded p-2 text-sm" placeholder="Nombre completo">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">ID Docente (Matrícula)</label>
+            <input type="text" [(ngModel)]="nuevoProfesor.docente_id" name="docente_id" required class="w-full border rounded p-2 text-sm" placeholder="Ej. DOC-1234">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-600 mb-1">Nombre Materia Asignada</label>
+            <input type="text" [(ngModel)]="nuevoProfesor.nombre_materia" name="nombre_materia" required class="w-full border rounded p-2 text-sm" placeholder="Materia que impartirá">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs text-gray-600 mb-1">Grado (Grupo)</label>
+              <input type="number" [(ngModel)]="nuevoProfesor.grado" name="grado" required class="w-full border rounded p-2 text-sm" placeholder="Ej. 1">
+            </div>
+            <div>
+              <label class="block text-xs text-gray-600 mb-1">Sección</label>
+              <input type="text" [(ngModel)]="nuevoProfesor.seccion" name="seccion" required class="w-full border rounded p-2 text-sm" placeholder="Ej. A">
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg font-bold">Guardar Profesor</button>
+      </form>
 
       <table class="w-full text-sm border border-[#e7ddcf] rounded-lg overflow-hidden">
         <thead class="bg-[#f1e7d8] text-gray-800">

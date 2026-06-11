@@ -5,11 +5,13 @@ const PDFDocument = require("pdfkit");
 const mockSupabaseChain = {
   select: jest.fn(),
   eq: jest.fn(),
-  single: jest.fn()
+  single: jest.fn(),
+  order: jest.fn()
 };
 
 mockSupabaseChain.select.mockReturnValue(mockSupabaseChain);
 mockSupabaseChain.eq.mockReturnValue(mockSupabaseChain);
+mockSupabaseChain.order.mockReturnValue(mockSupabaseChain);
 
 jest.mock("../../config/supabaseClient", () => ({
   supabaseAdmin: {
@@ -88,11 +90,13 @@ describe("Boletas Controller Unit Tests", () => {
     it("debería generar el PDF correctamente si el alumno existe", async () => {
       req.params = { alumno_id: "real-uuid" };
 
-      // Configurar la secuencia para `eq`
+      // Configurar la secuencia para `eq` y `order`
       // 1ra llamada: en `alumnos`, retorna la cadena para poder llamar a `.single()`
       mockSupabaseChain.eq.mockReturnValueOnce(mockSupabaseChain);
-      // 2da llamada: en `calificaciones`, se espera que `eq` se resuelva (await eq)
-      mockSupabaseChain.eq.mockResolvedValueOnce({
+      mockSupabaseChain.eq.mockReturnValueOnce(mockSupabaseChain); // para calificaciones
+
+      // en calificaciones se llama a order al final
+      mockSupabaseChain.order.mockResolvedValueOnce({
         data: [
           { trimestre: 1, calificacion: 10, materias: { nombre: "Matemáticas" } }
         ],
@@ -162,8 +166,9 @@ describe("Boletas Controller Unit Tests", () => {
         error: null
       });
 
-      // Mockear respuesta calificaciones
-      mockSupabaseChain.select.mockResolvedValueOnce({
+      // Mockear respuesta calificaciones (que ahora usa order)
+      mockSupabaseChain.select.mockReturnValueOnce(mockSupabaseChain);
+      mockSupabaseChain.order.mockResolvedValueOnce({
         data: [
           { alumno_id: "a1", trimestre: 1, calificacion: 9, materias: { nombre: "Mates" } }
         ],

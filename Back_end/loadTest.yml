@@ -1,0 +1,35 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      maxVusers: 50
+      name: "Prueba de carga de 50 usuarios recurrentes"
+  payload:
+    # Usaremos un archivo CSV hipotético con credenciales de prueba si es necesario
+    # path: "users.csv"
+    # fields:
+    #   - "email"
+    #   - "password"
+  plugins:
+    expect: {}
+
+scenarios:
+  - name: "Flujo de Autenticación y Consulta"
+    flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "profesor1@example.com"
+            password: "password123"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+      - get:
+          url: "/api/boletas/masivas"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          expect:
+            - statusCode: 200
+            # Queremos que la respuesta sea en menos de 5 segundos
+            - maxResponseTime: 5000

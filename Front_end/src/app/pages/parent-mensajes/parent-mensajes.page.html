@@ -1,9 +1,9 @@
-<ion-content class="bg-[#f4efe6]">
+<ion-content class="bg-background">
 
-  <div class="p-4 max-w-5xl mx-auto pb-24 min-h-screen bg-[#f4efe6]">
+  <div class="p-4 max-w-5xl mx-auto pb-24 min-h-screen bg-background">
 
     <!-- HEADER -->
-    <header class="bg-[#fbf7f0] sticky top-0 z-40 shadow-sm border-b border-[#e7ddcf]">
+    <header class="bg-surface sticky top-0 z-40 shadow-sm border-b border-outline-variant">
       <div class="flex items-center justify-between px-4 h-16">
 
         <span class="font-bold text-primary">
@@ -14,9 +14,9 @@
     </header>
 
     <!-- TITLE -->
-    <div class="mt-4 mb-6 bg-[#fbf7f0] border p-4 rounded-xl">
+    <div class="mt-4 mb-6 bg-surface border p-4 rounded-xl">
       <h1 class="text-xl font-bold">Mensajes</h1>
-      <p class="text-sm text-gray-600">
+      <p class="text-sm text-outline">
         Comunicación con maestros
       </p>
     </div>
@@ -27,11 +27,11 @@
       <div
         *ngFor="let s of students"
         (click)="selectStudent(s)"
-        class="bg-[#fbf7f0] border p-4 rounded-xl cursor-pointer flex justify-between items-center mb-3"
+        class="bg-surface border p-4 rounded-xl cursor-pointer flex justify-between items-center mb-3"
       >
         <div>
           <p class="font-semibold">{{ s.nombre_completo }}</p>
-          <p class="text-xs text-gray-600">
+          <p class="text-xs text-outline">
             {{ s.grado }}° {{ s.seccion }}
           </p>
         </div>
@@ -52,7 +52,7 @@
         </button>
       </div>
 
-      <div class="bg-[#fbf7f0] border p-4 rounded-xl mb-4">
+      <div class="bg-surface border p-4 rounded-xl mb-4">
         <p class="font-bold">
           {{ selectedStudent.nombre_completo }}
         </p>
@@ -61,7 +61,7 @@
       <div
         *ngFor="let t of teachers"
         (click)="selectTeacher(t)"
-        class="bg-[#fbf7f0] border p-4 rounded-xl cursor-pointer mb-3 flex justify-between"
+        class="bg-surface border p-4 rounded-xl cursor-pointer mb-3 flex justify-between"
       >
         <p class="font-semibold">{{ t.nombre_completo }}</p>
 
@@ -84,7 +84,7 @@
 
         <div class="text-right">
           <p class="font-bold">{{ selectedTeacher.nombre_completo }}</p>
-          <p class="text-xs text-gray-600">
+          <p class="text-xs text-outline">
             {{ selectedStudent.nombre_completo }}
           </p>
         </div>
@@ -92,7 +92,7 @@
       </div>
 
       <!-- MESSAGES -->
-      <div class="h-[55vh] overflow-y-auto bg-[#fbf7f0] border p-3 rounded-xl space-y-2">
+      <div class="h-[55vh] overflow-y-auto bg-surface border p-3 rounded-xl space-y-2">
 
         <div
           *ngFor="let m of mensajes"
@@ -107,7 +107,7 @@
       </div>
 
       <!-- INPUT -->
-      <div class="flex gap-2 mt-3 bg-[#fbf7f0] border p-3 rounded-xl">
+      <div class="flex gap-2 mt-3 bg-surface border p-3 rounded-xl">
 
         <input
           [(ngModel)]="mensajeTexto"

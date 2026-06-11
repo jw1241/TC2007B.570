@@ -83,7 +83,7 @@
             [ngClass]="
   periodoSeleccionado?.id === periodo.id
     ? 'bg-primary text-white border-primary'
-    : 'bg-white border-gray-200'
+    : 'bg-white border-surface-dim'
 "
           >
             {{ periodo.nombre }}
@@ -110,7 +110,7 @@
     materiaSeleccionada?.materia_id === materia.materia_id &&
     materiaSeleccionada?.grupo_id === materia.grupo_id
       ? 'border-4 border-primary bg-blue-50 shadow-lg scale-[1.02]'
-      : 'border border-gray-200 bg-white hover:border-primary hover:shadow-md'
+      : 'border border-surface-dim bg-white hover:border-primary hover:shadow-md'
   "
 >
 
@@ -118,7 +118,7 @@
               {{ materia.nombre_materia }}
             </p>
 
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-outline">
               {{ materia.grado }}° {{ materia.seccion }}
             </p>
 
@@ -140,7 +140,7 @@
       Calificaciones
     </h2>
 
-    <span class="text-sm text-gray-500">
+    <span class="text-sm text-outline">
       {{ alumnos.length }} alumnos
     </span>
 
@@ -159,7 +159,7 @@
           {{ alumno.nombre_completo }}
         </div>
 
-        <div class="text-sm text-gray-500">
+        <div class="text-sm text-outline">
           {{ alumno.matricula }}
         </div>
 
@@ -313,7 +313,7 @@
 
   </div>
 <nav
-  class="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-200 z-50"
+  class="fixed bottom-0 left-0 right-0 bg-surface border-t border-surface-dim z-50"
 >
   <div class="grid grid-cols-4 h-16 max-w-container-max mx-auto">
 

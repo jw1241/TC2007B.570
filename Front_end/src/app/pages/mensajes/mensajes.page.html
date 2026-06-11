@@ -1,9 +1,9 @@
-<ion-content class="bg-[#f4efe6]">
+<ion-content class="bg-background">
 
-  <div class="p-4 max-w-5xl mx-auto pb-24 min-h-screen bg-[#f4efe6]">
+  <div class="p-4 max-w-5xl mx-auto pb-24 min-h-screen bg-background">
 
     <!-- HEADER -->
-    <header class="bg-[#fbf7f0] sticky top-0 z-40 shadow-sm border-b border-[#e7ddcf]">
+    <header class="bg-surface sticky top-0 z-40 shadow-sm border-b border-outline-variant">
       <div class="flex items-center justify-between px-4 h-16 max-w-container-max mx-auto">
 
         <div class="flex items-center gap-3">
@@ -24,9 +24,9 @@
     </header>
 
     <!-- TITLE -->
-    <div class="mt-4 mb-6 bg-[#fbf7f0] border border-[#e7ddcf] p-4 rounded-xl shadow-sm">
-      <h1 class="text-xl font-bold text-gray-900">Mensajes</h1>
-      <p class="text-sm text-gray-700 mt-1">
+    <div class="mt-4 mb-6 bg-surface border border-outline-variant p-4 rounded-xl shadow-sm">
+      <h1 class="text-xl font-bold text-on-background">Mensajes</h1>
+      <p class="text-sm text-on-surface-variant mt-1">
         Comunicación con padres de familia
       </p>
     </div>
@@ -37,7 +37,7 @@
   <div
     *ngFor="let c of contactos"
     (click)="selectStudent(c)"
-    class="bg-[#fbf7f0] border p-4 rounded-xl cursor-pointer flex justify-between items-center"
+    class="bg-surface border p-4 rounded-xl cursor-pointer flex justify-between items-center"
   >
 
     <div>
@@ -45,7 +45,7 @@
         {{ c.nombre_completo }}
       </p>
 
-      <p class="text-xs text-gray-600">
+      <p class="text-xs text-outline">
         {{ c.grado }}° {{ c.seccion }}
       </p>
     </div>
@@ -62,22 +62,22 @@
    <section *ngIf="selectedStudent && selectedParents.length">
 
       <!-- CHAT HEADER -->
-      <div class="flex items-center justify-between mb-4 bg-[#fbf7f0] p-3 rounded-xl border">
+      <div class="flex items-center justify-between mb-4 bg-surface p-3 rounded-xl border">
 
   <button (click)="back()" class="text-primary font-semibold">
     ← Volver
   </button>
 
-  <div class="flex items-center justify-between mb-4 bg-[#fbf7f0] p-3 rounded-xl border">
+  <div class="flex items-center justify-between mb-4 bg-surface p-3 rounded-xl border">
 
 
   <div class="text-right">
     
-    <p class="font-bold text-gray-900">
+    <p class="font-bold text-on-background">
       {{ selectedStudent.nombre_completo }}
     </p>
 
-    <div class="text-xs text-gray-600">
+    <div class="text-xs text-outline">
       <p *ngFor="let p of selectedParents">
         👨‍👩‍👧 {{ p.nombre_completo }}
       </p>
@@ -90,7 +90,7 @@
 </div>
 
       <!-- MESSAGES -->
-      <div class="space-y-3 h-[55vh] overflow-y-auto bg-[#fbf7f0] p-4 rounded-xl border border-[#e7ddcf]">
+      <div class="space-y-3 h-[55vh] overflow-y-auto bg-surface p-4 rounded-xl border border-outline-variant">
 
         <div *ngFor="let m of mensajes"
      class="max-w-[75%] px-3 py-2 rounded-lg text-sm"
@@ -104,7 +104,7 @@
       </div>
 
       <!-- INPUT -->
-      <div class="flex gap-2 mt-4 bg-[#fbf7f0] p-3 rounded-xl border border-[#e7ddcf]">
+      <div class="flex gap-2 mt-4 bg-surface p-3 rounded-xl border border-outline-variant">
 
         <input
   [(ngModel)]="mensajeTexto"
@@ -126,7 +126,7 @@
   </div>
 
   <nav
-  class="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-200 z-50"
+  class="fixed bottom-0 left-0 right-0 bg-surface border-t border-surface-dim z-50"
 >
   <div class="grid grid-cols-4 h-16 max-w-container-max mx-auto">
 

@@ -2,20 +2,20 @@
 
   <div class="min-h-full flex items-center justify-center py-10 px-4">
 
-    <div class="w-full max-w-2xl bg-white rounded-2xl shadow border border-[#c4c6cf]/30 overflow-hidden">
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow border border-outline-variant/30 overflow-hidden">
 
       <!-- HEADER -->
-      <div class="px-6 pt-6 pb-4 border-b bg-[#eff4ff]/60">
+      <div class="px-6 pt-6 pb-4 border-b bg-surface-dim/60">
 
         <button
           (click)="volverLogin()"
-          class="flex items-center gap-1 text-[#002046] mb-4"
+          class="flex items-center gap-1 text-primary mb-4"
         >
           <span class="material-symbols-outlined text-[18px]">arrow_back_ios</span>
           Volver
         </button>
 
-        <h1 class="text-2xl font-bold text-[#002046]">
+        <h1 class="text-2xl font-bold text-primary">
           Soporte Técnico
         </h1>
 
@@ -27,8 +27,8 @@
             (click)="role='padre'"
             class="flex-1 py-2 rounded-lg border text-sm font-semibold"
             [ngClass]="role === 'padre'
-              ? 'bg-[#002046] text-white'
-              : 'bg-white text-[#002046]'"
+              ? 'bg-primary text-white'
+              : 'bg-white text-primary'"
           >
             Padre
           </button>
@@ -38,8 +38,8 @@
             (click)="role='docente'"
             class="flex-1 py-2 rounded-lg border text-sm font-semibold"
             [ngClass]="role === 'docente'
-              ? 'bg-[#002046] text-white'
-              : 'bg-white text-[#002046]'"
+              ? 'bg-primary text-white'
+              : 'bg-white text-primary'"
           >
             Docente
           </button>
@@ -62,7 +62,7 @@
           <!-- ===================== -->
           <div>
 
-            <label class="block text-sm font-semibold mb-2 text-[#0b1c30]">
+            <label class="block text-sm font-semibold mb-2 text-on-background">
               {{ role === 'padre' ? 'Matrícula del Alumno' : 'ID del Docente' }}
             </label>
 
@@ -79,7 +79,7 @@
           <!-- DATE OF BIRTH (PADRE ONLY) -->
 <div *ngIf="role === 'padre'">
 
-  <label class="block text-sm font-semibold mb-2 text-[#0b1c30]">
+  <label class="block text-sm font-semibold mb-2 text-on-background">
     Fecha de Nacimiento
   </label>
 
@@ -144,12 +144,12 @@
 <button
   type="button"
   (click)="fileInput.click()"
-  class="px-4 py-2 bg-[#002046] text-white rounded-lg"
+  class="px-4 py-2 bg-primary text-white rounded-lg"
 >
   Seleccionar archivos
 </button>
 
-<div class="mt-2 text-sm text-gray-600">
+<div class="mt-2 text-sm text-outline">
 
   <span *ngIf="selectedFiles.length === 0">
     Ningún archivo seleccionado
@@ -181,7 +181,7 @@
       📎 {{ file.name }}
     </span>
 
-    <span class="text-xs text-gray-500">
+    <span class="text-xs text-outline">
       {{ (file.size / 1024).toFixed(1) }} KB
     </span>
 
@@ -219,7 +219,7 @@
           <button
             type="submit"
             [disabled]="isSubmitting || !supportForm.valid"
-            class="w-full py-3 rounded-lg bg-[#002046] text-white"
+            class="w-full py-3 rounded-lg bg-primary text-white"
           >
             {{ isSubmitting ? 'Enviando...' : 'Enviar Ticket' }}
           </button>

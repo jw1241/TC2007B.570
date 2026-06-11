@@ -61,6 +61,13 @@ export class AdminImportPage implements OnInit {
   nuevoAlumno = { matricula: '', nombre_estudiante: '', nombre_padre: '', grado: null, seccion: '' };
   nuevoProfesor = { docente_id: '', nombre_completo: '', nombre_materia: '', grado: null, seccion: '' };
 
+  isSubmitting: Record<FileType, boolean> = {
+    grupos: false,
+    alumnos: false,
+    materias: false,
+    profesores: false
+  };
+
   isUploading = false;
 
   constructor(
@@ -148,6 +155,9 @@ export class AdminImportPage implements OnInit {
   }
 
   async submitManual(type: FileType) {
+    if (this.isSubmitting[type]) return;
+    this.isSubmitting[type] = true;
+
     try {
       let payload;
       let endpoint = '';
@@ -180,6 +190,8 @@ export class AdminImportPage implements OnInit {
       console.error('MANUAL CREATE FAILED:', err);
       const msg = err?.error?.message || 'Verifica que los datos sean correctos.';
       alert('Error al registrar manualmente: ' + msg);
+    } finally {
+      this.isSubmitting[type] = false;
     }
   }
 

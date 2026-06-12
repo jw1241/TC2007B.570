@@ -32,19 +32,12 @@ export class ParentMensajesPage implements OnInit {
 
   async ngOnInit() {
   const me = await this.api.get<any>('/auth/me');
-
-  console.log("AUTH RESPONSE:", me);
-
   this.currentUserId = me?.data?.id ?? me?.id ?? me?.user?.id;
-
   await this.loadStudents();
 }
 
   async loadStudents() {
   const res = await this.api.get<any>('/mensajes/contactos');
-
-  console.log("CONTACTOS RESPONSE:", res);
-
   this.students = res.data || [];
 }
 
@@ -68,10 +61,6 @@ export class ParentMensajesPage implements OnInit {
   const chat = await this.api.get<any>(
     `/mensajes/chat/${this.selectedStudent.id}/${teacher.id}`
   );
-
-  console.log("CHAT RESPONSE:", chat);
-
-  console.log("RAW CHAT RESPONSE:", JSON.stringify(chat, null, 2));
 
 const payload = chat?.data;
 
@@ -110,8 +99,6 @@ this.mensajes =
   const chat = await this.api.get<any>(
   `/mensajes/chat/${this.selectedStudent.id}/${this.selectedTeacher.id}`
 );
-
-console.log("RAW CHAT RESPONSE:", JSON.stringify(chat, null, 2));
 
 const payload = chat?.data;
 

@@ -92,13 +92,13 @@
       </div>
 
       <!-- MESSAGES -->
-      <div class="h-[55vh] overflow-y-auto bg-surface border p-3 rounded-xl space-y-2">
+      <div class="min-h-[200px] max-h-[55vh] overflow-y-auto bg-surface border p-3 rounded-xl space-y-2">
 
         <div
           *ngFor="let m of mensajes"
           class="max-w-[75%] px-3 py-2 rounded-lg text-sm"
           [ngClass]="m.remitente_id === currentUserId
-            ? 'bg-gray-200 ml-auto'
+            ? 'bg-gray-200 text-black ml-auto'
             : 'bg-primary text-white mr-auto'"
         >
           {{ m.contenido }}

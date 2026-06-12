@@ -64,33 +64,25 @@
       <!-- CHAT HEADER -->
       <div class="flex items-center justify-between mb-4 bg-surface p-3 rounded-xl border">
 
-  <button (click)="back()" class="text-primary font-semibold">
-    ← Volver
-  </button>
+        <button (click)="back()" class="text-primary font-semibold">
+          ← Volver
+        </button>
 
-  <div class="flex items-center justify-between mb-4 bg-surface p-3 rounded-xl border">
+        <div class="text-right">
+          <p class="font-bold text-on-background">
+            {{ selectedStudent.nombre_completo }}
+          </p>
+          <div class="text-xs text-outline">
+            <p *ngFor="let p of selectedParents">
+              👨‍👩‍👧 {{ p.nombre_completo }}
+            </p>
+          </div>
+        </div>
 
-
-  <div class="text-right">
-    
-    <p class="font-bold text-on-background">
-      {{ selectedStudent.nombre_completo }}
-    </p>
-
-    <div class="text-xs text-outline">
-      <p *ngFor="let p of selectedParents">
-        👨‍👩‍👧 {{ p.nombre_completo }}
-      </p>
-    </div>
-
-  </div>
-
-</div>
-
-</div>
+      </div>
 
       <!-- MESSAGES -->
-      <div class="space-y-3 h-[55vh] overflow-y-auto bg-surface p-4 rounded-xl border border-outline-variant">
+      <div class="space-y-3 min-h-[200px] max-h-[55vh] overflow-y-auto bg-surface p-4 rounded-xl border border-outline-variant">
 
         <div *ngFor="let m of mensajes"
      class="max-w-[75%] px-3 py-2 rounded-lg text-sm"

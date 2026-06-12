@@ -28,18 +28,22 @@
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
+ * DISABLED: We force light mode across the entire app.
+ * The dark.system.css import was overriding our light theme
+ * variables when the OS was in dark mode, causing black
+ * backgrounds to bleed through.
  */
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
 
 :root {
-  /* Enforce premium minimal background */
-  --ion-background-color: #f9fafb;
-  --ion-text-color: #111827;
+  /* Enforce light theme – override any dark mode media query residue */
+  --ion-background-color: #f9f9ff;
+  --ion-background-color-rgb: 249, 249, 255;
+  --ion-text-color: #151c27;
+  --ion-text-color-rgb: 21, 28, 39;
   --ion-color-primary: #003d9b;
   --ion-color-secondary: #006c49;
   --ion-color-tertiary: #603b00;
@@ -47,7 +51,52 @@
   --ion-color-warning: #ba1a1a;
   --ion-color-danger: #ba1a1a;
   --ion-font-family: 'Inter', sans-serif;
+
+  --ion-toolbar-background: #f9f9ff;
+  --ion-toolbar-color: #151c27;
+  --ion-item-background: #f9f9ff;
+  --ion-card-background: #ffffff;
+  --ion-tab-bar-background: #f9f9ff;
 }
+
+/* Force light mode even when OS prefers dark */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: #f9f9ff;
+    --ion-background-color-rgb: 249, 249, 255;
+    --ion-text-color: #151c27;
+    --ion-text-color-rgb: 21, 28, 39;
+    --ion-toolbar-background: #f9f9ff;
+    --ion-toolbar-color: #151c27;
+    --ion-item-background: #f9f9ff;
+    --ion-card-background: #ffffff;
+    --ion-tab-bar-background: #f9f9ff;
+  }
+
+  body {
+    --ion-background-color: #f9f9ff;
+    --ion-background-color-rgb: 249, 249, 255;
+    --ion-text-color: #151c27;
+    --ion-text-color-rgb: 21, 28, 39;
+  }
+}
+
+/* Ensure html/body never show black */
+html,
+body {
+  background-color: #f9f9ff !important;
+  color: #151c27;
+}
+
+/* Ensure ion-content and ion-page fill properly with the light background */
+ion-content {
+  --background: #f9f9ff;
+}
+
+ion-page {
+  background: #f9f9ff;
+}
+
 @layer base {
   input[type="text"], 
   input[type="email"], 
@@ -62,4 +111,3 @@
     @apply text-gray-900 bg-white border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary placeholder-gray-400 transition-all duration-200;
   }
 }
-

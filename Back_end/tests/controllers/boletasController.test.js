@@ -90,15 +90,20 @@ describe("Boletas Controller Unit Tests", () => {
     it("debería generar el PDF correctamente si el alumno existe", async () => {
       req.params = { alumno_id: "real-uuid" };
 
-      // Configurar la secuencia para `eq` y `order`
-      // 1ra llamada: en `alumnos`, retorna la cadena para poder llamar a `.single()`
+      // Configurar la secuencia
+      // 1. alumnos -> eq() -> single()
       mockSupabaseChain.eq.mockReturnValueOnce(mockSupabaseChain);
-      mockSupabaseChain.eq.mockReturnValueOnce(mockSupabaseChain); // para calificaciones
-
-      // en calificaciones se llama a order al final
+      
+      // 2. periodos -> order() resolves
       mockSupabaseChain.order.mockResolvedValueOnce({
+        data: [{ id: 1, mes_inicio: "enero" }],
+        error: null
+      });
+
+      // 3. calificaciones -> eq() resolves directly since there is no single/maybeSingle
+      mockSupabaseChain.eq.mockResolvedValueOnce({
         data: [
-          { trimestre: 1, calificacion: 10, materias: { nombre: "Matemáticas" } }
+          { periodo_id: 1, nota: 10, materias: { nombre: "Matemáticas" } }
         ],
         error: null
       });

@@ -217,12 +217,11 @@ describe("Mensajes Controller Unit Tests", () => {
         error: null
       });
 
-      // 2. verifyAccessToStudent (Docente) -> eq(), maybeSingle(), eq(), eq(), maybeSingle()
+      // 2. verifyAccessToStudent (Docente) -> eq() resolves array, then eq(), in(), maybeSingle()
+      mockSupabaseChain.eq.mockResolvedValueOnce({ data: [{ grupo_id: 1 }], error: null });
       mockSupabaseChain.eq.mockReturnValueOnce(mockSupabaseChain);
-      mockSupabaseChain.maybeSingle.mockResolvedValueOnce({ data: { grupo_id: 1 }, error: null });
-      mockSupabaseChain.eq.mockReturnValueOnce(mockSupabaseChain);
-      mockSupabaseChain.eq.mockReturnValueOnce(mockSupabaseChain);
-      mockSupabaseChain.maybeSingle.mockResolvedValueOnce({ data: { docente_id: "doc-uuid" }, error: null });
+      mockSupabaseChain.in.mockReturnValueOnce(mockSupabaseChain);
+      mockSupabaseChain.maybeSingle.mockResolvedValueOnce({ data: { id: "alumno-uuid" }, error: null });
 
       // 3. get parents -> select, eq
       mockSupabaseChain.eq.mockResolvedValueOnce({

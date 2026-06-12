@@ -10,8 +10,7 @@
           <div class="w-10 h-10 rounded-full overflow-hidden bg-white shadow-sm">
             <img
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcTWCjl-iswn9qGwnguEnmCjn29P95J5eJcgVmSm-NintYMIKF7lpE0P_1gvyd1BCZFtKAtfHruKCz7klA9sXpOfpzIQRkSutztO_sgTxMl9UyK9D_8iFjX0_bTPR4LEiuqJxro6cJ_FQ7Xnk17eMfhjeTMRRjF93F_k_0tWPTsyMC4oDzq6z96jN6uCQs4Zl_f6BJ6HbyNXFj_KYMvEEJnJO1AnKrD0vb2-b_cr_62foul5WzCTEFA89lFl3dFUVL1UYdDOKA9zs"
-              class="w-full h-full object-cover"
-            />
+              class="w-full h-full object-cover" />
           </div>
 
           <div class="flex flex-col leading-tight">
@@ -34,32 +33,29 @@
     <!-- ================= CONTACT LIST ================= -->
     <section *ngIf="!selectedStudent">
 
-  <div
-    *ngFor="let c of contactos"
-    (click)="selectStudent(c)"
-    class="bg-surface border p-4 rounded-xl cursor-pointer flex justify-between items-center"
-  >
+      <div *ngFor="let c of contactos" (click)="selectStudent(c)"
+        class="bg-surface border p-4 rounded-xl cursor-pointer flex justify-between items-center">
 
-    <div>
-      <p class="font-semibold text-on-background">
-        {{ c.nombre_completo }}
-      </p>
+        <div>
+          <p class="font-semibold text-on-background">
+            {{ c.nombre_completo }}
+          </p>
 
-      <p class="text-xs text-outline">
-        {{ c.grado }}° {{ c.seccion }}
-      </p>
-    </div>
+          <p class="text-xs text-outline">
+            {{ c.grado }}° {{ c.seccion }}
+          </p>
+        </div>
 
-    <span class="material-symbols-outlined text-primary">
-      school
-    </span>
+        <span class="material-symbols-outlined text-primary">
+          school
+        </span>
 
-  </div>
+      </div>
 
-</section>
+    </section>
 
     <!-- ================= CHAT VIEW ================= -->
-   <section *ngIf="selectedStudent && selectedParents.length">
+    <section *ngIf="selectedStudent && selectedParents.length">
 
       <!-- CHAT HEADER -->
       <div class="flex items-center justify-between mb-4 bg-surface p-3 rounded-xl border">
@@ -74,7 +70,7 @@
           </p>
           <div class="text-xs text-outline">
             <p *ngFor="let p of selectedParents">
-              👨‍👩‍👧 {{ p.nombre_completo }}
+              {{ p.nombre_completo }}
             </p>
           </div>
         </div>
@@ -82,34 +78,27 @@
       </div>
 
       <!-- MESSAGES -->
-      <div class="space-y-3 min-h-[200px] max-h-[55vh] overflow-y-auto bg-surface p-4 rounded-xl border border-outline-variant">
+      <div
+        class="space-y-3 min-h-[200px] max-h-[55vh] overflow-y-auto bg-surface p-4 rounded-xl border border-outline-variant">
 
-        <div *ngFor="let m of mensajes"
-     class="max-w-[75%] px-3 py-2 rounded-lg text-sm"
-     [ngClass]="m.remitente_id === currentUserId
+        <div *ngFor="let m of mensajes" class="max-w-[75%] px-3 py-2 rounded-lg text-sm" [ngClass]="m.remitente_id === currentUserId
        ? 'bg-gray-200 text-black ml-auto'
        : 'bg-primary text-white mr-auto'">
 
-  {{ m.contenido }}
-</div>
+          {{ m.contenido }}
+        </div>
 
       </div>
 
       <!-- INPUT -->
       <div class="flex gap-2 mt-4 bg-surface p-3 rounded-xl border border-outline-variant">
 
-        <input
-  [(ngModel)]="mensajeTexto"
-  class="flex-1 p-2 border rounded-lg bg-white"
-  placeholder="Escribe un mensaje..."
-/>
+        <input [(ngModel)]="mensajeTexto" class="flex-1 p-2 border rounded-lg bg-white"
+          placeholder="Escribe un mensaje..." />
 
-<button
-  (click)="sendMessage()"
-  class="bg-primary text-white px-4 rounded-lg"
->
-  Enviar
-</button>
+        <button (click)="sendMessage()" class="bg-primary text-white px-4 rounded-lg">
+          Enviar
+        </button>
 
       </div>
 
@@ -117,76 +106,60 @@
 
   </div>
 
-  <nav
-  class="fixed bottom-0 left-0 right-0 bg-surface border-t border-surface-dim z-50"
->
-  <div class="grid grid-cols-4 h-16 max-w-container-max mx-auto">
+  <nav class="fixed bottom-0 left-0 right-0 bg-surface border-t border-surface-dim z-50">
+    <div class="grid grid-cols-4 h-16 max-w-container-max mx-auto">
 
-    <!-- Inicio -->
-    <button
-      routerLink="/inicio-resumen-profesor"
-  routerLinkActive="text-primary"
-  [routerLinkActiveOptions]="{ exact: true }"
-  class="flex flex-col items-center justify-center text-on-surface-variant"
-    >
-      <span class="material-symbols-outlined">
-        home
-      </span>
+      <!-- Inicio -->
+      <button routerLink="/inicio-resumen-profesor" routerLinkActive="text-primary"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="flex flex-col items-center justify-center text-on-surface-variant">
+        <span class="material-symbols-outlined">
+          home
+        </span>
 
-      <span class="text-xs">
-        Inicio
-      </span>
-    </button>
+        <span class="text-xs">
+          Inicio
+        </span>
+      </button>
 
-    <!-- Calificaciones -->
-    <button
-      routerLink="/captura-calificaciones"
-      routerLinkActive="text-primary"
-  [routerLinkActiveOptions]="{ exact: true }"
-  class="flex flex-col items-center justify-center text-on-surface-variant"
-    >
-      <span class="material-symbols-outlined">
-        grading
-      </span>
+      <!-- Calificaciones -->
+      <button routerLink="/captura-calificaciones" routerLinkActive="text-primary"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="flex flex-col items-center justify-center text-on-surface-variant">
+        <span class="material-symbols-outlined">
+          grading
+        </span>
 
-      <span class="text-xs">
-        Calificaciones
-      </span>
-    </button>
+        <span class="text-xs">
+          Calificaciones
+        </span>
+      </button>
 
-    <!-- Mensajes -->
-    <button
-      routerLink="/mensajes"
-      routerLinkActive="text-primary"
-  [routerLinkActiveOptions]="{ exact: true }"
-  class="flex flex-col items-center justify-center text-on-surface-variant"
-    >
-      <span class="material-symbols-outlined">
-        chat
-      </span>
+      <!-- Mensajes -->
+      <button routerLink="/mensajes" routerLinkActive="text-primary" [routerLinkActiveOptions]="{ exact: true }"
+        class="flex flex-col items-center justify-center text-on-surface-variant">
+        <span class="material-symbols-outlined">
+          chat
+        </span>
 
-      <span class="text-xs">
-        Mensajes
-      </span>
-    </button>
+        <span class="text-xs">
+          Mensajes
+        </span>
+      </button>
 
-    <!-- Perfil -->
-    <button
-      routerLink="/iniciar-sesion"
-      routerLinkActive="text-primary"
-  [routerLinkActiveOptions]="{ exact: true }"
-  class="flex flex-col items-center justify-center text-on-surface-variant"
-    >
-      <span class="material-symbols-outlined">
-        person
-      </span>
+      <!-- Perfil -->
+      <button routerLink="/iniciar-sesion" routerLinkActive="text-primary" [routerLinkActiveOptions]="{ exact: true }"
+        class="flex flex-col items-center justify-center text-on-surface-variant">
+        <span class="material-symbols-outlined">
+          person
+        </span>
 
-      <span class="text-xs">
-        Cerrar sesión
-      </span>
-    </button>
+        <span class="text-xs">
+          Cerrar sesión
+        </span>
+      </button>
 
-  </div>
-</nav>
+    </div>
+  </nav>
 
 </ion-content>

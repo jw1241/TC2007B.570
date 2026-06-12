@@ -33,7 +33,7 @@ async function getCalificacionesHijo(req, res, next) {
 
     const { data: parentesco, error: parError } = await supabaseAdmin
       .from("parentescos")
-      .select("id")
+      .select("padre_id")
       .eq("padre_id", padreId)
       .eq("alumno_id", alumno_id)
       .single();
@@ -91,7 +91,7 @@ async function firmarAcuse(req, res, next) {
 
     const { data: parentesco, error: parError } = await supabaseAdmin
       .from("parentescos")
-      .select("id")
+      .select("padre_id")
       .eq("padre_id", padreId)
       .eq("alumno_id", alumno_id)
       .single();
@@ -183,11 +183,12 @@ async function getBoletaData(req, res, next) {
       .eq("id", periodoId)
       .single();
 
-    const { data: publicada } = await supabaseAdmin
+    const { data: boletaRows } = await supabaseAdmin
       .from("boletas_publicadas")
       .select("id")
       .eq("periodo_id", periodoId)
-      .maybeSingle();
+      .limit(1);
+    const publicada = boletaRows?.[0] || null;
 
     const { data: grades, error: gradesError } = await supabaseAdmin
       .from("calificaciones")
@@ -280,11 +281,12 @@ async function generarPDF(req, res, next) {
       return res.status(403).json({ error: { message: "Acceso denegado" } });
     }
 
-    const { data: publicada } = await supabaseAdmin
+    const { data: boletaRows } = await supabaseAdmin
       .from("boletas_publicadas")
       .select("id")
       .eq("periodo_id", periodoId)
-      .maybeSingle();
+      .limit(1);
+    const publicada = boletaRows?.[0] || null;
 
     if (!publicada) {
       return res.status(403).json({ error: { message: "La boleta aún no ha sido publicada" } });

@@ -166,13 +166,13 @@ router.post(
 
         alumno: {
 
-  matricula:
-    alumno.matricula,
+          matricula:
+            alumno.matricula,
 
-  nombre_completo:
-    alumno.nombre_completo
+          nombre_completo:
+            alumno.nombre_completo
 
-},
+        },
 
         padre: {
 
@@ -283,8 +283,8 @@ router.post(
         .eq("codigo_registro", registrationCode)
         .maybeSingle();
 
-        console.log("DOCENTE RESULT:", docente);
-        console.log("DOCENTE ERROR:", docenteError);
+      console.log("DOCENTE RESULT:", docente);
+      console.log("DOCENTE ERROR:", docenteError);
 
       if (docenteError || !docente) {
 
@@ -472,7 +472,7 @@ router.post("/activate-account", async (req, res, next) => {
      * CREATE PARENTESCO (ONLY FOR PADRE)
      */
     if (role === "padre") {
-      console.log("👨‍👩‍👧 CREATING PARENTESCO...");
+      console.log(" CREATING PARENTESCO...");
 
       const { data: alumnos, error: alumnosError } =
         await supabaseAdmin
@@ -513,46 +513,46 @@ router.post("/activate-account", async (req, res, next) => {
       }
     }
 
-            /**
- * INVALIDATE REGISTRATION CODE
- */
-const { error: clearCodeError } =
-  await supabaseAdmin
-    .from("alumnos")
-    .update({
-      codigo_registro: null
-    })
-    .eq(
-    "codigo_registro",
-    registrationCode
-  );
+    /**
+* INVALIDATE REGISTRATION CODE
+*/
+    const { error: clearCodeError } =
+      await supabaseAdmin
+        .from("alumnos")
+        .update({
+          codigo_registro: null
+        })
+        .eq(
+          "codigo_registro",
+          registrationCode
+        );
 
-console.log("ALUMNO UPDATE ERROR:", clearCodeError);
+    console.log("ALUMNO UPDATE ERROR:", clearCodeError);
 
-  await supabaseAdmin
-  .from("usuarios")
-  .update({
-    codigo_registro: null
-  })
-  .eq(
-    "codigo_registro",
-    registrationCode
-  );
+    await supabaseAdmin
+      .from("usuarios")
+      .update({
+        codigo_registro: null
+      })
+      .eq(
+        "codigo_registro",
+        registrationCode
+      );
 
 
 
-if (clearCodeError) {
-  console.error(
-    "❌ CLEAR CODE ERROR:",
-    clearCodeError
-  );
+    if (clearCodeError) {
+      console.error(
+        "❌ CLEAR CODE ERROR:",
+        clearCodeError
+      );
 
-  return res.status(400).json({
-    error: {
-      message: clearCodeError.message
+      return res.status(400).json({
+        error: {
+          message: clearCodeError.message
+        }
+      });
     }
-  });
-}
 
     /**
      * SUCCESS RESPONSE

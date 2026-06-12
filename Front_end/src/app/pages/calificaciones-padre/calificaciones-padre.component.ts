@@ -125,7 +125,7 @@ async loadGrades() {
   async firmarBoleta() {
 
     await this.api.post(
-  `/padre/${this.alumno.id}/firmar`,
+  `/padre/hijo/${this.alumno.id}/firmar-acuse`,
   {
     periodo_id: this.selectedPeriodoId
   }

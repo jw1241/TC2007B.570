@@ -77,7 +77,7 @@ CREATE TABLE public.alumnos (
 
 CREATE TABLE public.boletas_publicadas (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
-  periodo_id uuid NOT NULL REFERENCES public.periodos_evaluacion(id),
+  periodo_id uuid NOT NULL UNIQUE REFERENCES public.periodos_evaluacion(id),
   publicada boolean DEFAULT false,
   publicada_por uuid REFERENCES public.usuarios(id),
   publicada_en timestamp without time zone DEFAULT now()

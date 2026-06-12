@@ -350,14 +350,18 @@ async function getPeriodoStatus(req, res, next) {
 async function publicarBoleta(req, res, next) {
   try {
     const { periodoId } = req.params;
-    const { usuarioId } = req.body;
+
+    await supabaseAdmin
+      .from("boletas_publicadas")
+      .delete()
+      .eq("periodo_id", periodoId);
 
     const { error } = await supabaseAdmin
       .from("boletas_publicadas")
-      .upsert({
+      .insert({
         periodo_id: periodoId,
         publicada: true,
-        publicada_por: usuarioId,
+        publicada_por: req.user.id,
         publicada_en: new Date()
       });
 

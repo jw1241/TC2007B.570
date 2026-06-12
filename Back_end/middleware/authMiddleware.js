@@ -102,7 +102,6 @@ const authMiddleware = async (
      * SAFE USER OBJECT
      */
 
-    console.log("REQ.USER =", profile);
     req.user = {
   id: profile.id,
   auth_user_id: user.id,
@@ -128,17 +127,6 @@ const authMiddleware = async (
           }
         }
       );
-
-    if (
-      process.env.NODE_ENV !== "production"
-    ) {
-
-      console.log(
-        "AUTH OK:",
-        user.id
-      );
-
-    }
 
     next();
 

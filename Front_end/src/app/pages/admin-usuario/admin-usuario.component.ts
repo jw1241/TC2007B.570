@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api';
@@ -58,8 +58,8 @@ export class AdminImportPage implements OnInit {
 
   nuevoGrupo = { grado: null, seccion: '' };
   nuevaMateria = { nombre_materia: '', es_general: false };
-  nuevoAlumno = { matricula: '', nombre_estudiante: '', nombre_padre: '', grado: null, seccion: '' };
-  nuevoProfesor = { docente_id: '', nombre_completo: '', nombre_materia: '', grado: null, seccion: '' };
+  nuevoAlumno = { nombre_estudiante: '', nombre_padre: '', grado: null, seccion: '' };
+  nuevoProfesor = { nombre_completo: '', nombre_materia: '', grado: null, seccion: '' };
 
   isSubmitting: Record<FileType, boolean> = {
     grupos: false,
@@ -70,9 +70,24 @@ export class AdminImportPage implements OnInit {
 
   isUploading = false;
 
+  // =========================
+  // MODAL STATE
+  // =========================
+  isModalOpen = false;
+  modalType: FileType | null = null;
+  itemToEdit: any = null;
+
+  // =========================
+  // ASSIGN MODAL STATE
+  // =========================
+  isAssignModalOpen = false;
+  isAssigning = false;
+  assignData: any = { identificacion_docente: '', nombre_materia: '', grado: null, seccion: '' };
+
   constructor(
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private toastController: ToastController
   ) {}
 
   // =========================
@@ -182,8 +197,8 @@ export class AdminImportPage implements OnInit {
       // Reset form
       if (type === 'grupos') this.nuevoGrupo = { grado: null, seccion: '' };
       if (type === 'materias') this.nuevaMateria = { nombre_materia: '', es_general: false };
-      if (type === 'alumnos') this.nuevoAlumno = { matricula: '', nombre_estudiante: '', nombre_padre: '', grado: null, seccion: '' };
-      if (type === 'profesores') this.nuevoProfesor = { docente_id: '', nombre_completo: '', nombre_materia: '', grado: null, seccion: '' };
+      if (type === 'alumnos') this.nuevoAlumno = { nombre_estudiante: '', nombre_padre: '', grado: null, seccion: '' };
+      if (type === 'profesores') this.nuevoProfesor = { nombre_completo: '', nombre_materia: '', grado: null, seccion: '' };
       
       this.showForm[type] = false;
     } catch (err: any) {
@@ -192,6 +207,131 @@ export class AdminImportPage implements OnInit {
       alert('Error al registrar manualmente: ' + msg);
     } finally {
       this.isSubmitting[type] = false;
+    }
+  }
+
+  // =========================
+  // CRUD (EDIT & DELETE)
+  // =========================
+  async eliminarRegistro(type: FileType, id: any) {
+    if (!confirm('¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.')) return;
+    
+    let endpoint = '';
+    if (type === 'grupos') endpoint = `/admin-usuarios/grupos/${id}`;
+    if (type === 'materias') endpoint = `/admin-usuarios/materias/${id}`;
+    if (type === 'alumnos') endpoint = `/admin-usuarios/alumnos/${id}`;
+    if (type === 'profesores') endpoint = `/admin-usuarios/profesores/${id}`;
+
+    try {
+      await this.api.delete(endpoint);
+      alert('Registro eliminado con éxito.');
+      await this.cargarTodo();
+    } catch (err: any) {
+      console.error('ERROR AL ELIMINAR:', err);
+      alert('Error al eliminar: ' + (err?.error?.message || err.message));
+    }
+  }
+
+  // Edit logic: open modal with a copy of the item
+  abrirModalEdicion(type: FileType, item: any) {
+    this.modalType = type;
+    this.itemToEdit = JSON.parse(JSON.stringify(item));
+    this.isModalOpen = true;
+  }
+
+  cerrarModal() {
+    this.isModalOpen = false;
+    this.modalType = null;
+    this.itemToEdit = null;
+  }
+
+  // =========================
+  // ASIGNAR MATERIA
+  // =========================
+  abrirModalAsignacion(profesor: any) {
+    this.assignData = {
+      identificacion_docente: profesor.docente_id,
+      nombre_materia: '',
+      grado: null,
+      seccion: ''
+    };
+    this.isAssignModalOpen = true;
+  }
+
+  cerrarModalAsignacion() {
+    this.isAssignModalOpen = false;
+  }
+
+  async submitAssign() {
+    this.isAssigning = true;
+    try {
+      await this.api.post('/admin-usuarios/profesor/asignar', this.assignData);
+      
+      const toast = await this.toastController.create({
+        message: 'Materia asignada con éxito al profesor.',
+        duration: 2500,
+        color: 'success',
+        icon: 'checkmark-circle'
+      });
+      await toast.present();
+
+      this.cerrarModalAsignacion();
+      await this.cargarTodo();
+    } catch (err: any) {
+      console.error('ASSIGN FAILED:', err);
+      const msg = err?.error?.message || 'Error al asignar la materia.';
+      
+      const toast = await this.toastController.create({
+        message: 'Error: ' + msg,
+        duration: 3500,
+        color: 'danger',
+        icon: 'alert-circle'
+      });
+      await toast.present();
+    } finally {
+      this.isAssigning = false;
+    }
+  }
+
+  async guardarEdicion() {
+    if (!this.modalType || !this.itemToEdit) return;
+
+    let endpoint = '';
+    let payload = {};
+    let id = this.itemToEdit.id;
+    const type = this.modalType;
+    const item = this.itemToEdit;
+
+    if (type === 'grupos') {
+      endpoint = `/admin-usuarios/grupos/${id}`;
+      if (!item.grado || !item.seccion) return;
+      payload = { grado: parseInt(item.grado), seccion: item.seccion };
+    } 
+    else if (type === 'materias') {
+      endpoint = `/admin-usuarios/materias/${id}`;
+      if (!item.nombre_materia) return;
+      payload = { nombre_materia: item.nombre_materia, es_general: item.es_general };
+    }
+    else if (type === 'alumnos') {
+      endpoint = `/admin-usuarios/alumnos/${id}`;
+      if (!item.nombre_estudiante || !item.grado || !item.seccion) return;
+      payload = { nombre_estudiante: item.nombre_estudiante, grado: parseInt(item.grado), seccion: item.seccion };
+    }
+    else if (type === 'profesores') {
+      id = item.docente_id; // For profesores we use docente_id
+      endpoint = `/admin-usuarios/profesores/${id}`;
+      if (!item.nombre_completo) return;
+      payload = { nombre_completo: item.nombre_completo };
+    }
+
+    try {
+      await this.api.put(endpoint, payload);
+      alert('Registro actualizado con éxito.');
+      this.cerrarModal();
+      await this.cargarTodo();
+    } catch (err: any) {
+      console.error('ERROR AL ACTUALIZAR:', err);
+      alert('Error al actualizar: ' + (err?.error?.message || err.message));
     }
   }
 

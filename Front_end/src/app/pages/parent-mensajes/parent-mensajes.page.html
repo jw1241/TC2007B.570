@@ -30,7 +30,7 @@
         class="bg-surface border p-4 rounded-xl cursor-pointer flex justify-between items-center mb-3"
       >
         <div>
-          <p class="font-semibold">{{ s.nombre_completo }}</p>
+          <p class="font-semibold text-on-background">{{ s.nombre_completo }}</p>
           <p class="text-xs text-outline">
             {{ s.grado }}° {{ s.seccion }}
           </p>
@@ -53,7 +53,7 @@
       </div>
 
       <div class="bg-surface border p-4 rounded-xl mb-4">
-        <p class="font-bold">
+        <p class="font-bold text-on-background">
           {{ selectedStudent.nombre_completo }}
         </p>
       </div>
@@ -63,7 +63,7 @@
         (click)="selectTeacher(t)"
         class="bg-surface border p-4 rounded-xl cursor-pointer mb-3 flex justify-between"
       >
-        <p class="font-semibold">{{ t.nombre_completo }}</p>
+        <p class="font-semibold text-on-background">{{ t.nombre_completo }}</p>
 
         <span class="material-symbols-outlined text-primary">
           person
@@ -83,7 +83,7 @@
         </button>
 
         <div class="text-right">
-          <p class="font-bold">{{ selectedTeacher.nombre_completo }}</p>
+          <p class="font-bold text-on-background">{{ selectedTeacher.nombre_completo }}</p>
           <p class="text-xs text-outline">
             {{ selectedStudent.nombre_completo }}
           </p>

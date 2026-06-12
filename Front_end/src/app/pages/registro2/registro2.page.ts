@@ -30,6 +30,7 @@ export class Registro2Page implements OnInit {
   registrationCode: string = '';
 
   email: string = '';
+  isPredefinedEmail: boolean = false;
 
   password: string = '';
 
@@ -41,7 +42,9 @@ export class Registro2Page implements OnInit {
   ) {}
 
   ngOnInit() {
+  }
 
+  ionViewWillEnter() {
     const state = history.state;
 
     console.log(
@@ -64,13 +67,17 @@ export class Registro2Page implements OnInit {
     this.nombreCompleto =
       state?.nombre || '';
 
+    this.email = state?.email || '';
+    this.isPredefinedEmail = this.role === 'docente';
+
     console.log(
       '✅ FINAL PAGE STATE:',
       {
         role: this.role,
         usuarioId: this.usuarioId,
         registrationCode: this.registrationCode,
-        nombreCompleto: this.nombreCompleto
+        nombreCompleto: this.nombreCompleto,
+        email: this.email
       }
     );
 

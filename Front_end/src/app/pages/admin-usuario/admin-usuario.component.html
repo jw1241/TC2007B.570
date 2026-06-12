@@ -70,11 +70,11 @@
         <div class="grid grid-cols-2 gap-4 mb-4">
           <div>
             <label class="block text-xs text-outline mb-1">Grado</label>
-            <input type="number" [(ngModel)]="nuevoGrupo.grado" name="grado" required class="w-full border rounded p-2 text-sm" placeholder="Ej. 1">
+            <input type="number" [(ngModel)]="nuevoGrupo.grado" name="grado" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white" placeholder="Ej. 1">
           </div>
           <div>
             <label class="block text-xs text-outline mb-1">Sección</label>
-            <input type="text" [(ngModel)]="nuevoGrupo.seccion" name="seccion" required class="w-full border rounded p-2 text-sm" placeholder="Ej. A">
+            <input type="text" [(ngModel)]="nuevoGrupo.seccion" name="seccion" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white" placeholder="Ej. A">
           </div>
         </div>
         <button type="submit" [disabled]="isSubmitting['grupos']" class="px-4 py-2 bg-secondary hover:bg-secondary-container text-white text-sm rounded-lg font-bold disabled:opacity-50 flex items-center justify-center gap-2">
@@ -88,6 +88,7 @@
           <tr>
             <th class="text-left p-2">Grado</th>
             <th class="text-left p-2">Sección</th>
+            <th class="text-center p-2 w-24">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -95,6 +96,12 @@
     class="border-t border-outline-variant bg-surface hover:bg-surface-bright transition">
   <td class="p-2 text-on-surface">{{ g.grado }}</td>
   <td class="p-2 text-on-surface">{{ g.seccion }}</td>
+  <td class="p-2 text-center">
+    <div class="flex items-center justify-center gap-3">
+      <button (click)="abrirModalEdicion('grupos', g)" class="text-blue-600 hover:text-blue-800"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+      <button (click)="eliminarRegistro('grupos', g.id)" class="text-red-600 hover:text-red-800"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+    </div>
+  </td>
 </tr>
         </tbody>
       </table>
@@ -138,24 +145,20 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
             <label class="block text-xs text-outline mb-1">Nombre Alumno</label>
-            <input type="text" [(ngModel)]="nuevoAlumno.nombre_estudiante" name="nombre_estudiante" required class="w-full border rounded p-2 text-sm" placeholder="Nombre completo">
-          </div>
-          <div>
-            <label class="block text-xs text-outline mb-1">Matrícula</label>
-            <input type="text" [(ngModel)]="nuevoAlumno.matricula" name="matricula" required class="w-full border rounded p-2 text-sm" placeholder="Matrícula">
+            <input type="text" [(ngModel)]="nuevoAlumno.nombre_estudiante" name="nombre_estudiante" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white" placeholder="Nombre completo">
           </div>
           <div>
             <label class="block text-xs text-outline mb-1">Nombre Tutor</label>
-            <input type="text" [(ngModel)]="nuevoAlumno.nombre_padre" name="nombre_padre" required class="w-full border rounded p-2 text-sm" placeholder="Nombre del tutor/padre">
+            <input type="text" [(ngModel)]="nuevoAlumno.nombre_padre" name="nombre_padre" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white" placeholder="Nombre del tutor/padre">
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
               <label class="block text-xs text-outline mb-1">Grado</label>
-              <input type="number" [(ngModel)]="nuevoAlumno.grado" name="grado" required class="w-full border rounded p-2 text-sm" placeholder="Ej. 1">
+              <input type="number" [(ngModel)]="nuevoAlumno.grado" name="grado" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white" placeholder="Ej. 1">
             </div>
             <div>
               <label class="block text-xs text-outline mb-1">Sección</label>
-              <input type="text" [(ngModel)]="nuevoAlumno.seccion" name="seccion" required class="w-full border rounded p-2 text-sm" placeholder="Ej. A">
+              <input type="text" [(ngModel)]="nuevoAlumno.seccion" name="seccion" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white" placeholder="Ej. A">
             </div>
           </div>
         </div>
@@ -170,9 +173,11 @@
           <tr>
             <th class="p-2 text-left">Nombre Padre</th>
             <th class="p-2 text-left">Matrícula</th>
+            <th class="p-2 text-left">Cód. Registro</th>
             <th class="p-2 text-left">Estudiante</th>
             <th class="p-2 text-left">Grado</th>
             <th class="p-2 text-left">Sección</th>
+            <th class="p-2 text-center w-24">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -181,10 +186,16 @@
 
   <td class="p-2 text-on-surface">{{ a.nombre_padre }}</td>
   <td class="p-2 text-on-surface">{{ a.matricula }}</td>
+  <td class="p-2 text-on-surface font-mono font-bold text-primary">{{ a.codigo_registro || 'ACTIVADO' }}</td>
   <td class="p-2 text-on-surface">{{ a.nombre_estudiante }}</td>
   <td class="p-2 text-on-surface">{{ a.grado }}</td>
   <td class="p-2 text-on-surface">{{ a.seccion }}</td>
-
+  <td class="p-2 text-center">
+    <div class="flex items-center justify-center gap-3">
+      <button (click)="abrirModalEdicion('alumnos', a)" class="text-blue-600 hover:text-blue-800"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+      <button (click)="eliminarRegistro('alumnos', a.id)" class="text-red-600 hover:text-red-800"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+    </div>
+  </td>
 </tr>
         </tbody>
       </table>
@@ -228,7 +239,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
             <label class="block text-xs text-outline mb-1">Nombre de la Materia</label>
-            <input type="text" [(ngModel)]="nuevaMateria.nombre_materia" name="nombre_materia" required class="w-full border rounded p-2 text-sm" placeholder="Ej. Matemáticas">
+            <input type="text" [(ngModel)]="nuevaMateria.nombre_materia" name="nombre_materia" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white" placeholder="Ej. Matemáticas">
           </div>
           <div class="flex items-end mb-2">
             <label class="flex items-center gap-2 cursor-pointer">
@@ -248,6 +259,7 @@
           <tr>
             <th class="p-2 text-left">Materia</th>
             <th class="p-2 text-left">General</th>
+            <th class="p-2 text-center w-24">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -255,6 +267,12 @@
     class="border-t border-outline-variant bg-surface hover:bg-surface-bright transition">
   <td class="p-2 text-on-surface">{{ m.nombre_materia }}</td>
   <td class="p-2 text-on-surface">{{ m.es_general }}</td>
+  <td class="p-2 text-center">
+    <div class="flex items-center justify-center gap-3">
+      <button (click)="abrirModalEdicion('materias', m)" class="text-blue-600 hover:text-blue-800"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+      <button (click)="eliminarRegistro('materias', m.id)" class="text-red-600 hover:text-red-800"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+    </div>
+  </td>
 </tr>
         </tbody>
       </table>
@@ -298,24 +316,32 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
             <label class="block text-xs text-outline mb-1">Nombre Completo</label>
-            <input type="text" [(ngModel)]="nuevoProfesor.nombre_completo" name="nombre_completo" required class="w-full border rounded p-2 text-sm" placeholder="Nombre completo">
+            <input type="text" [(ngModel)]="nuevoProfesor.nombre_completo" name="nombre_completo" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white" placeholder="Nombre completo">
           </div>
           <div>
-            <label class="block text-xs text-outline mb-1">ID Docente (Matrícula)</label>
-            <input type="text" [(ngModel)]="nuevoProfesor.docente_id" name="docente_id" required class="w-full border rounded p-2 text-sm" placeholder="Ej. DOC-1234">
-          </div>
-          <div>
-            <label class="block text-xs text-outline mb-1">Nombre Materia Asignada</label>
-            <input type="text" [(ngModel)]="nuevoProfesor.nombre_materia" name="nombre_materia" required class="w-full border rounded p-2 text-sm" placeholder="Materia que impartirá">
+            <label class="block text-xs text-outline mb-1">Materia Asignada</label>
+            <select [(ngModel)]="nuevoProfesor.nombre_materia" name="nombre_materia" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white">
+              <option value="">Seleccione una materia</option>
+              <option *ngFor="let m of materias" [value]="m.nombre_materia">{{ m.nombre_materia }}</option>
+            </select>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-xs text-outline mb-1">Grado (Grupo)</label>
-              <input type="number" [(ngModel)]="nuevoProfesor.grado" name="grado" required class="w-full border rounded p-2 text-sm" placeholder="Ej. 1">
+              <label class="block text-xs text-outline mb-1">Grado</label>
+              <select [(ngModel)]="nuevoProfesor.grado" name="grado" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white">
+                <option [ngValue]="null">Seleccione</option>
+                <option *ngFor="let g of [1,2,3,4,5,6]" [ngValue]="g">{{ g }}º</option>
+              </select>
             </div>
             <div>
               <label class="block text-xs text-outline mb-1">Sección</label>
-              <input type="text" [(ngModel)]="nuevoProfesor.seccion" name="seccion" required class="w-full border rounded p-2 text-sm" placeholder="Ej. A">
+              <select [(ngModel)]="nuevoProfesor.seccion" name="seccion" required class="w-full border border-gray-300 rounded p-2 text-sm text-gray-900 bg-white">
+                <option value="">Seleccione</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="X">X (General)</option>
+              </select>
             </div>
           </div>
         </div>
@@ -330,9 +356,12 @@
           <tr>
             <th class="p-2 text-left">Nombre</th>
             <th class="p-2 text-left">Docente ID</th>
+            <th class="p-2 text-left">Cód. Registro</th>
+            <th class="p-2 text-left">Correo Inst.</th>
             <th class="p-2 text-left">Materia</th>
             <th class="p-2 text-left">Grado</th>
             <th class="p-2 text-left">Sección</th>
+            <th class="p-2 text-center w-24">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -340,9 +369,18 @@
     class="border-t border-outline-variant bg-surface hover:bg-surface-bright transition">
   <td class="p-2 text-on-surface">{{ p.nombre_completo }}</td>
   <td class="p-2 text-on-surface">{{ p.docente_id }}</td>
+  <td class="p-2 text-on-surface font-mono font-bold text-primary">{{ p.codigo_registro || 'ACTIVADO' }}</td>
+  <td class="p-2 text-on-surface text-xs font-mono text-outline">{{ p.email }}</td>
   <td class="p-2 text-on-surface">{{ p.nombre_materia }}</td>
   <td class="p-2 text-on-surface">{{ p.grado }}</td>
   <td class="p-2 text-on-surface">{{ p.seccion }}</td>
+  <td class="p-2 text-center">
+    <div class="flex items-center justify-center gap-3">
+      <button (click)="abrirModalAsignacion(p)" class="text-green-600 hover:text-green-800" title="Asignar Materia"><span class="material-symbols-outlined text-[18px]">add_circle</span></button>
+      <button (click)="abrirModalEdicion('profesores', p)" class="text-blue-600 hover:text-blue-800"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+      <button (click)="eliminarRegistro('profesores', p.docente_id)" class="text-red-600 hover:text-red-800"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+    </div>
+  </td>
 </tr>
         </tbody>
       </table>
@@ -379,4 +417,139 @@
 
   </div>
 </nav>
+
+<!-- ION MODAL PARA EDICION -->
+<ion-modal [isOpen]="isModalOpen" (didDismiss)="cerrarModal()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="bg-surface">
+        <ion-title class="text-on-background font-bold text-lg">Editar {{ modalType | titlecase }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarModal()" class="text-outline">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding bg-background" *ngIf="itemToEdit">
+      
+      <div class="space-y-4" *ngIf="modalType === 'grupos'">
+        <div>
+          <label class="block text-sm text-outline mb-1">Grado</label>
+          <input type="number" [(ngModel)]="itemToEdit.grado" class="w-full border border-gray-300 rounded-lg p-3 text-gray-900 bg-white">
+        </div>
+        <div>
+          <label class="block text-sm text-outline mb-1">Sección</label>
+          <input type="text" [(ngModel)]="itemToEdit.seccion" class="w-full border border-gray-300 rounded-lg p-3 text-gray-900 bg-white">
+        </div>
+      </div>
+
+      <div class="space-y-4" *ngIf="modalType === 'materias'">
+        <div>
+          <label class="block text-sm text-outline mb-1">Nombre de la Materia</label>
+          <input type="text" [(ngModel)]="itemToEdit.nombre_materia" class="w-full border border-gray-300 rounded-lg p-3 text-gray-900 bg-white">
+        </div>
+        <div class="flex items-center gap-2 mt-2">
+          <input type="checkbox" [(ngModel)]="itemToEdit.es_general" class="w-5 h-5 text-primary border-gray-300 rounded">
+          <label class="text-sm text-on-surface-variant">Es materia general</label>
+        </div>
+      </div>
+
+      <div class="space-y-4" *ngIf="modalType === 'alumnos'">
+        <div>
+          <label class="block text-sm text-outline mb-1">Nombre Estudiante</label>
+          <input type="text" [(ngModel)]="itemToEdit.nombre_estudiante" class="w-full border border-gray-300 rounded-lg p-3 text-gray-900 bg-white">
+        </div>
+        <div>
+          <label class="block text-sm text-outline mb-1">Grado</label>
+          <input type="number" [(ngModel)]="itemToEdit.grado" class="w-full border border-gray-300 rounded-lg p-3 text-gray-900 bg-white">
+        </div>
+        <div>
+          <label class="block text-sm text-outline mb-1">Sección</label>
+          <input type="text" [(ngModel)]="itemToEdit.seccion" class="w-full border border-gray-300 rounded-lg p-3 text-gray-900 bg-white">
+        </div>
+      </div>
+
+      <div class="space-y-4" *ngIf="modalType === 'profesores'">
+        <div>
+          <label class="block text-sm text-outline mb-1">Nombre del Profesor</label>
+          <input type="text" [(ngModel)]="itemToEdit.nombre_completo" class="w-full border border-gray-300 rounded-lg p-3 text-gray-900 bg-white">
+        </div>
+      </div>
+
+      <div class="mt-8 flex justify-end">
+        <button class="px-6 py-3 bg-secondary hover:bg-secondary-container text-white rounded-xl font-bold shadow-sm" (click)="guardarEdicion()">
+          Guardar Cambios
+        </button>
+      </div>
+
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<!-- ASSIGN MODAL -->
+<ion-modal [isOpen]="isAssignModalOpen" (didDismiss)="cerrarModalAsignacion()">
+  <ng-template>
+    <ion-header class="ion-no-border shadow-sm">
+      <ion-toolbar color="light">
+        <ion-title class="text-lg font-bold text-primary">Asignar Materia</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarModalAsignacion()" color="medium">
+            <span class="material-symbols-outlined">close</span>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding bg-surface">
+      <div class="max-w-xl mx-auto space-y-6 pt-2 pb-8">
+        
+        <p class="text-sm text-on-surface-variant">
+          Asignando una nueva materia al docente con ID: 
+          <strong class="text-primary">{{ assignData.identificacion_docente }}</strong>
+        </p>
+
+        <!-- Seleccionar Materia -->
+        <div>
+          <label class="block text-sm font-semibold text-on-background mb-2">Materia</label>
+          <select [(ngModel)]="assignData.nombre_materia" class="w-full px-4 py-3 border border-outline-variant rounded-lg bg-white text-gray-900 focus:ring-1 focus:ring-primary focus:border-primary transition-colors">
+            <option value="">Seleccione una materia</option>
+            <option *ngFor="let m of materias" [value]="m.nombre_materia">{{ m.nombre_materia }}</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Grado -->
+          <div>
+            <label class="block text-sm font-semibold text-on-background mb-2">Grado</label>
+            <select [(ngModel)]="assignData.grado" class="w-full px-4 py-3 border border-outline-variant rounded-lg bg-white text-gray-900 focus:ring-1 focus:ring-primary focus:border-primary transition-colors">
+              <option [ngValue]="null">Seleccione un grado</option>
+              <option *ngFor="let g of [1,2,3,4,5,6]" [ngValue]="g">{{ g }}º</option>
+            </select>
+          </div>
+
+          <!-- Sección -->
+          <div>
+            <label class="block text-sm font-semibold text-on-background mb-2">Sección</label>
+            <select [(ngModel)]="assignData.seccion" class="w-full px-4 py-3 border border-outline-variant rounded-lg bg-white text-gray-900 focus:ring-1 focus:ring-primary focus:border-primary transition-colors">
+              <option value="">Seleccione una sección</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="X">X (General)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-6 border-t border-outline-variant">
+          <button (click)="submitAssign()" 
+                  [disabled]="!assignData.nombre_materia || !assignData.grado || !assignData.seccion || isAssigning"
+                  class="w-full py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary-container disabled:opacity-50 transition-all flex items-center justify-center gap-2">
+            <span *ngIf="isAssigning" class="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
+            {{ isAssigning ? 'Asignando...' : 'Asignar Materia' }}
+          </button>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
 </ion-content>

@@ -82,8 +82,10 @@
               [(ngModel)]="email"
               name="email"
               required
+              [readonly]="isPredefinedEmail"
               placeholder="ejemplo@correo.com"
-              class="w-full px-4 py-3 border border-outline-variant rounded-lg bg-white text-on-background focus:ring-1 focus:ring-[#002046] focus:border-primary transition-colors"
+              [ngClass]="isPredefinedEmail ? 'bg-surface-dim text-on-surface-variant cursor-not-allowed' : 'bg-white text-on-background'"
+              class="w-full px-4 py-3 border border-outline-variant rounded-lg focus:ring-1 focus:ring-[#002046] focus:border-primary transition-colors"
             />
           </div>
 

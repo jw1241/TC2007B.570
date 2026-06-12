@@ -73,6 +73,20 @@ Pese a los detalles de arquitectura, el proyecto implementa patrones altamente d
 
 ---
 
+## > [!WARNING]
+## 5. Falla Funcional Crítica: Ausencia de CRUD Completo en Administración
+
+Como defecto funcional principal, se detectó que el Panel de Administración (y sus rutas subyacentes como `adminUsuario.js`) carece de un **CRUD (Create, Read, Update, Delete)** verdadero.
+
+- **Estado Actual:** El sistema únicamente permite **Crear (C)** y **Leer (R)** registros (Alumnos, Profesores, Materias, Grupos).
+- **El Problema:** Una vez que un registro es creado y guardado en la base de datos (Supabase), la interfaz y el backend **no exponen ningún método para Editar (Update) o Eliminar/Desactivar (Delete) dichos registros**. Si el administrador comete un error ortográfico al agregar un usuario o si un maestro abandona la escuela, el sistema se queda atascado sin forma de gestionar este ciclo de vida de los datos, volviéndolo inutilizable en un escenario de la vida real.
+- **Impacto:** Un panel de administración sin métodos `PUT`, `PATCH` o `DELETE` viola los requisitos básicos de gestión de datos, forzando a recurrir al acceso directo a la base de datos para correcciones rutinarias.
+
+### Solución Recomendada:
+Extender inmediatamente los controladores y el UI de Angular para incluir modales de "Edición" y "Confirmación de Borrado Lógico", respaldados por sus respectivos Endpoints (`PUT /api/admin-usuarios/alumnos/:id`, `DELETE /api/admin-usuarios/materias/:id`).
+
+---
+
 ## Plan de Acción para la Deuda Técnica (Roadmap)
 Si se entregara este código a un equipo nuevo, el Sprint 0 debería consistir obligatoriamente en:
 1. **Limpieza (1 día):** Borrar todos los archivos de testing del root y los componentes de Angular duplicados.

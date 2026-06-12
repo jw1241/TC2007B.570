@@ -8,7 +8,8 @@ const validateStudentSchema = Joi.object({
 
   studentId: Joi.string()
     .trim()
-    .max(30)
+    .pattern(/^ALU-\d{5}$/)
+    .message("La matrícula debe tener el formato ALU-XXXXX")
     .required(),
 
   registrationCode: Joi.string()
@@ -207,6 +208,8 @@ const validateDocenteSchema = Joi.object({
 
   docenteId: Joi.string()
     .trim()
+    .pattern(/^DOC-\d{5}$/)
+    .message("La identificación debe tener el formato DOC-XXXXX")
     .required(),
 
   registrationCode: Joi.string()
@@ -496,9 +499,9 @@ router.post("/activate-account", async (req, res, next) => {
         const { error: parentescoError } =
           await supabaseAdmin
             .from("parentescos")
-            .insert(parentescos);
+            .upsert(parentescos);
 
-        if (parentescoError) {
+        if (parentescoError && parentescoError.code !== '23505') {
           console.error("❌ PARENTESCO ERROR:", parentescoError);
 
           return res.status(400).json({

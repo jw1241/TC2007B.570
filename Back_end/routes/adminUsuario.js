@@ -22,8 +22,20 @@ router.get("/profesores", authMiddleware, requireRole([ROLES.ADMIN]), adminUsuar
 
 // ── Manual creation ───────────────────────────────────────────────────────────
 router.post("/grupo",     authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.crearGrupo);
+router.put("/grupos/:id", authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.updateGrupo);
+router.delete("/grupos/:id", authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.deleteGrupo);
+
 router.post("/materia",   authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.crearMateria);
+router.put("/materias/:id", authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.updateMateria);
+router.delete("/materias/:id", authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.deleteMateria);
+
 router.post("/alumno",    authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.crearAlumno);
+router.put("/alumnos/:id", authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.updateAlumno);
+router.delete("/alumnos/:id", authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.deleteAlumno);
+
 router.post("/profesor",  authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.crearProfesor);
+router.post("/profesor/asignar", authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.asignarProfesor);
+router.put("/profesores/:id", authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.updateProfesor);
+router.delete("/profesores/:id", authMiddleware, requireRole([ROLES.ADMIN]), adminUsuarioController.deleteProfesor);
 
 module.exports = router;

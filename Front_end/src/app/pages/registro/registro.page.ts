@@ -91,7 +91,8 @@ async continuar() {
     role: 'docente',
     usuarioId: res.docente.usuario_id,
     registrationCode: this.registrationCode,
-    nombre: res.docente.nombre_completo
+    nombre: res.docente.nombre_completo,
+    email: res.docente.email
   }
 });
 

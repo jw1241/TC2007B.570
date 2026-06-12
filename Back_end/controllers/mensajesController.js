@@ -24,10 +24,22 @@ const verifyAccessToStudent = async (usuario, alumno_id) => {
     return !!data;
   }
   if (usuario.rol_id === ROLES.DOCENTE) {
-    const { data: alumno } = await supabaseAdmin.from("alumnos").select("grupo_id").eq("id", alumno_id).maybeSingle();
-    if (!alumno || !alumno.grupo_id) return false;
-    const { data } = await supabaseAdmin.from("asignaciones_docentes").select("docente_id").eq("docente_id", usuario.id).eq("grupo_id", alumno.grupo_id).maybeSingle();
-    return !!data;
+    const { data: asignaciones } = await supabaseAdmin
+      .from("asignaciones_docentes")
+      .select("grupo_id")
+      .eq("docente_id", usuario.id);
+
+    const grupoIds = (asignaciones || []).map(a => a.grupo_id);
+    if (!grupoIds.length) return false;
+
+    const { data: alumno } = await supabaseAdmin
+      .from("alumnos")
+      .select("id")
+      .eq("id", alumno_id)
+      .in("grupo_id", grupoIds)
+      .maybeSingle();
+
+    return !!alumno;
   }
   return false;
 };

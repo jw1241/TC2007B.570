@@ -1,24 +1,33 @@
-const errorHandler = (err, req, res, next) => {
-  // Log the real error internally
-  console.error(`[ERROR] ${new Date().toISOString()} - ${err.stack || err.message}`);
+const winston = require('winston');
 
-  // Default to 500 server error
-  const statusCode = err.statusCode || 500;
-  
-  // Do not leak stack traces or raw database error details to the client
-  const response = {
-    error: {
-      message: statusCode === 500 ? "Error interno del servidor. Por favor, contacta a soporte." : err.message,
-    }
-  };
+// Configuración de Winston para el logger
+const logger = winston.createLogger({
+  level: 'error',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.Console()
+  ]
+});
 
-  // For validation errors (Joi, etc.), we can safely expose the message
-  if (err.isJoi || statusCode === 400) {
-    response.error.message = err.message;
-    if (err.details) response.error.details = err.details;
-  }
+// Middleware Global de Errores (Checklist Punto 11)
+const globalErrorHandler = (err, req, res, next) => {
+  // Loggear el error detallado internamente
+  logger.error({
+    message: err.message,
+    stack: err.stack,
+    path: req.path,
+    method: req.method
+  });
 
-  res.status(statusCode).json(response);
+  // Retornar respuesta genérica al cliente para no filtrar información sensible (prevención de fugas)
+  res.status(err.status || 500).json({
+    success: false,
+    message: "Ha ocurrido un error interno en el servidor. Por favor, inténtelo más tarde."
+  });
 };
 
-module.exports = errorHandler;
+module.exports = { globalErrorHandler, logger };

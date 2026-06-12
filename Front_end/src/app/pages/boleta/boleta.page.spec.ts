@@ -30,8 +30,7 @@ describe('BoletaPage Unit Tests', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BoletaPage],
-      imports: [IonicModule.forRoot()],
+      imports: [IonicModule.forRoot(), BoletaPage],
       providers: [
         { provide: ApiService, useClass: MockApiService },
         { provide: AuthService, useClass: MockAuthService },

@@ -7,14 +7,14 @@ describe('Flujos de UAT - La Luz', () => {
   });
 
   describe('RF07, RF08, RNF03: Flujo del Padre (Iniciar sesión, descargar y firmar)', () => {
-    
+
     it('Debe permitir iniciar sesión con credenciales válidas y requerir < 3 clics para firmar boleta', () => {
       cy.visit('http://localhost:4200/iniciar-sesion');
 
       // EP01_InciaSesiónExitosa
-      cy.get('input[type="email"]').type('padre@ejemplo.com');
-      cy.get('input[type="password"]').type('Password123!');
-      cy.get('ion-button').contains('Iniciar Sesión').click();
+      cy.get('input#identifier').type('alumno123@test.com');
+      cy.get('input#password').type('Password123!');
+      cy.get('button[type="submit"]').contains('Acceso Institucional').click();
 
       // Debería redirigir al resumen del padre / alumno
       cy.url().should('include', '/inicio-resumen-alumno');
@@ -42,9 +42,9 @@ describe('Flujos de UAT - La Luz', () => {
       cy.visit('http://localhost:4200/iniciar-sesion');
 
       // Login Profesor
-      cy.get('input[type="email"]').type('profesor@ejemplo.com');
-      cy.get('input[type="password"]').type('Password123!');
-      cy.get('ion-button').contains('Iniciar Sesión').click();
+      cy.get('input#identifier').type('profesor@ejemplo.com');
+      cy.get('input#password').type('Password123!');
+      cy.get('button[type="submit"]').contains('Acceso Institucional').click();
 
       cy.url().should('include', '/inicio-resumen-profesor');
 
@@ -70,11 +70,15 @@ describe('Flujos de UAT - La Luz', () => {
     it('EEX01_CredencialIncorrecta - Login Fallido', () => {
       cy.visit('http://localhost:4200/iniciar-sesion');
 
-      cy.get('input[type="email"]').type('invalido@ejemplo.com');
-      cy.get('input[type="password"]').type('1234');
-      cy.get('ion-button').contains('Iniciar Sesión').click();
+      const stub = cy.stub();
+      cy.on('window:alert', stub);
 
-      cy.get('.error-message').should('contain', 'Credenciales incorrectas');
+      cy.get('input#identifier').type('invalido@ejemplo.com');
+      cy.get('input#password').type('1234');
+      cy.get('button[type="submit"]').contains('Acceso Institucional').click().then(() => {
+        expect(stub).to.be.called;
+      });
+
       cy.url().should('include', '/iniciar-sesion');
     });
   });

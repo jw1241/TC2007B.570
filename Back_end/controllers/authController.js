@@ -131,14 +131,16 @@ const updatePassword = async (req, res, next) => {
     const authClient = createAuthClient(token);
 
     const schema = Joi.object({
-      newPassword: Joi.string().min(8).max(72).required()
+      newPassword: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$/).required().messages({
+        'string.pattern.base': 'La contraseña debe tener al menos 12 caracteres, una mayúscula, una minúscula, un número y un símbolo.'
+      })
     });
 
     const validation = schema.validate(req.body);
 
     if (validation.error) {
       return res.status(400).json({
-        error: { message: "Password too weak (min 8 chars)" }
+        error: { message: validation.error.details[0].message }
       });
     }
 
@@ -178,7 +180,9 @@ const registroPadres = async (req, res, next) => {
   try {
     const schema = Joi.object({
       email: Joi.string().email().required(),
-      password: Joi.string().min(8).required(),
+      password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$/).required().messages({
+        'string.pattern.base': 'La contraseña debe tener al menos 12 caracteres, una mayúscula, una minúscula, un número y un símbolo.'
+      }),
       nombre_completo: Joi.string().required(),
       matricula: Joi.string().required(),
       fecha_nacimiento: Joi.string().isoDate().required()

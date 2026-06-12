@@ -24,6 +24,9 @@ const {
 const ROLES =
   require("./constants/roles");
 
+const { globalErrorHandler, logger } = require("./middleware/errorHandler");
+const { sanitizeInputs } = require("./middleware/sanitizeMiddleware");
+
 /**
  * ROUTES
  */
@@ -185,6 +188,11 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 
 /**
+ * XSS SANITIZATION
+ */
+app.use(sanitizeInputs);
+
+/**
  * GLOBAL RATE LIMITER
  */
 const limiter = rateLimit({
@@ -227,6 +235,21 @@ if (
   });
 
 }
+
+/**
+ * PRODUCTION AUDIT LOG (Checklist Punto 6)
+ */
+app.use((req, res, next) => {
+  logger.info({
+    type: 'access',
+    method: req.method,
+    url: req.originalUrl,
+    ip: req.ip,
+    user: req.user ? req.user.id : 'guest',
+    timestamp: new Date().toISOString()
+  });
+  next();
+});
 
 /**
  * PUBLIC ROUTES
@@ -332,7 +355,7 @@ if (
  * GLOBAL ERROR HANDLER
  * MUST BE LAST
  */
-app.use(errorHandler);
+app.use(globalErrorHandler);
 
 /**
  * START SERVER

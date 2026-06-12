@@ -37,9 +37,9 @@
 @import '@ionic/angular/css/palettes/dark.system.css';
 
 :root {
-  /* Enforce Academic Clarity background to override Ionic default background */
-  --ion-background-color: #f9f9ff;
-  --ion-text-color: #151c27;
+  /* Enforce premium minimal background */
+  --ion-background-color: #f9fafb;
+  --ion-text-color: #111827;
   --ion-color-primary: #003d9b;
   --ion-color-secondary: #006c49;
   --ion-color-tertiary: #603b00;
@@ -47,5 +47,21 @@
   --ion-color-warning: #ba1a1a;
   --ion-color-danger: #ba1a1a;
   --ion-font-family: 'Inter', sans-serif;
+}
+}
+
+@layer base {
+  input[type="text"], 
+  input[type="email"], 
+  input[type="password"], 
+  input[type="number"],
+  textarea {
+    @apply text-gray-900 bg-white outline-none;
+  }
+  
+  /* Agregamos una clase premium si quieren usarla, sin forzar anchos */
+  .premium-input {
+    @apply text-gray-900 bg-white border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary placeholder-gray-400 transition-all duration-200;
+  }
 }
 

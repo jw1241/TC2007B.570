@@ -242,7 +242,7 @@ async function getBoletaData(req, res, next) {
       promedio,
       boletaDisponible: !!publicada,
       firmada: !!firma,
-      fechaFirma: firma?.firmado_en || null
+      fechaFirma: firma?.firmado_en ? new Date(firma.firmado_en + 'Z').toISOString() : null
     });
   } catch (err) {
     next(err);

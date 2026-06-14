@@ -352,6 +352,11 @@ async function publicarBoleta(req, res, next) {
     const { periodoId } = req.params;
 
     await supabaseAdmin
+      .from("firmas_boletas")
+      .delete()
+      .eq("periodo_id", periodoId);
+
+    await supabaseAdmin
       .from("boletas_publicadas")
       .delete()
       .eq("periodo_id", periodoId);
@@ -489,6 +494,23 @@ async function deleteCalificacion(req, res, next) {
 async function getFirmasByPeriodo(req, res, next) {
   try {
     const { periodoId } = req.params;
+    const docenteId = req.user.id;
+
+    const { data: asignaciones } = await supabaseAdmin
+      .from("asignaciones_docentes")
+      .select("grupo_id")
+      .eq("docente_id", docenteId);
+
+    const grupoIds = (asignaciones || []).map(a => a.grupo_id);
+    if (!grupoIds.length) return res.json([]);
+
+    const { data: alumnosDelDocente } = await supabaseAdmin
+      .from("alumnos")
+      .select("id")
+      .in("grupo_id", grupoIds);
+
+    const alumnoIds = (alumnosDelDocente || []).map(a => a.id);
+    if (!alumnoIds.length) return res.json([]);
 
     const { data: parentescos, error } = await supabaseAdmin
       .from("parentescos")
@@ -497,7 +519,8 @@ async function getFirmasByPeriodo(req, res, next) {
         padre_id,
         alumnos ( nombre_completo ),
         usuarios ( nombre_completo )
-      `);
+      `)
+      .in("alumno_id", alumnoIds);
 
     if (error) return res.status(500).json(error);
 
@@ -516,7 +539,7 @@ async function getFirmasByPeriodo(req, res, next) {
         alumno: p.alumnos.nombre_completo,
         padre: p.usuarios.nombre_completo,
         firmada: !!firma,
-        fechaFirma: firma?.firmado_en || null
+        fechaFirma: firma?.firmado_en ? new Date(firma.firmado_en + 'Z').toISOString() : null
       };
     }));
   } catch (err) {
